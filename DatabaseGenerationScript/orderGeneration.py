@@ -5,9 +5,9 @@ from datetime import datetime,date,time,timedelta
 #add more 
 
 
-NAMEPOOL = ["Josh","Jacob","Bart","Tom","Sydney","Ashton","Claire","Noah","James","Charles",
-            "Amelia","Liam","Mia","Luca","Apollo","Hazel","Grover","George","John","Thomas",
-            "Marilyn", "Madison"]
+NAMEPOOL = ["Josh", "Jacob", "Bart", "Tom", "Sydney", "Ashton", "Claire", "Noah", "James", "Charles",
+            "Amelia", "Liam", "Mia", "Luca", "Apollo", "Hazel", "Grover", "George", "John", "Thomas",
+            "Marilyn", "Madison", "Nathan", "Lynda", "Ted", "Franklin", "Christian", "Danny", "Kasey", "Lillian"]
 
 #TODO Katelyn
 EMPLOYEEIDPOOL = [1, 2, 3, 4, 5, 6]
@@ -19,7 +19,7 @@ MENUITEMSPOOL = []
 class OrderGenerator:
     
     db = None
-    def CreateOrder(self,date):
+    def CreateOrder(self, date):
         name = NAMEPOOL[random.randrange(0, len(NAMEPOOL))]
         #Pick a random name with equal weight to all choices(Katelyn TODO)
 
@@ -36,20 +36,20 @@ class OrderGenerator:
         #Generate time can be equal weight or proritize rush traffic but must be during hours that revs is open (Katelyn TODO)
         dayOfTheWeek = date.weekday()
         if (dayOfTheWeek >= 0 and dayOfTheWeek <=3): #Mondays - Thursdays
-            openHours = list(range(10,22))           #open from 10am - 9pm
+            openHours = list(range(10, 22))          #open from 10am - 9pm
             openWeights = [1,4,4,2,1,1,1,3,4,5,3,1]
         elif (dayOfTheWeek == 4):                    #Fridays
-            openHours = list(range(10,21))           #open from 10am - 8pm
+            openHours = list(range(10, 21))          #open from 10am - 8pm
             openWeights = [1,4,4,2,1,1,1,3,4,3,1] 
         else:                                        #Saturdays - Sundays
-            openHours = list(range(11,21))           #open from 11am - 8pm
+            openHours = list(range(11, 21))          #open from 11am - 8pm
             openWeights = [1,2,4,2,1,1,1,3,3,2] 
 
         t = time(hour = random.choices(openHours, openWeights, k=1)[0], minute = random.randrange(0, 59), second = random.randrange(0, 59))
         #is an object of the time class https://docs.python.org/3/library/datetime.html#time-objects    
-        dt= datetime.combine(date,t)
+        dt= datetime.combine(date, t)
         
-        self.db.cur.execute("INSERT INTO Orders (CustomerName, TaxPrice, OrderDateTime, EmployeeID) VALUES (%s, %s, %s, %s)",(name, tax, dt,empID))
+        self.db.cur.execute("INSERT INTO Orders (CustomerName, TaxPrice, OrderDateTime, EmployeeID) VALUES (%s, %s, %s, %s)",(name, tax, dt, empID))
         
         #insert into junction table between order and menu items 
         return
@@ -62,9 +62,9 @@ class OrderGenerator:
     def __init__(self): 
         self.db = databaseGenerator.DbGenerator()
         password = input("Please enter the password: ")
-        if not self.db.Connect("csce315_902_01_db","csce315_902_01_user",password,"csce-315-db.engr.tamu.edu"):
+        if not self.db.Connect("csce315_902_01_db", "csce315_902_01_user", password, "csce-315-db.engr.tamu.edu"):
             raise ConnectionError("woah this means you are probably not on tamu wifi, do better")
-        self.db.InitTable("Orders",["CustomerName varchar","TaxPrice decimal","OrderDateTime timestamp","EmployeeID integer"],IDpkey="OrderID")
+        self.db.InitTable("Orders", ["CustomerName varchar", "TaxPrice decimal", "OrderDateTime timestamp", "EmployeeID integer"], IDpkey="OrderID")
 
 
 def Main():
