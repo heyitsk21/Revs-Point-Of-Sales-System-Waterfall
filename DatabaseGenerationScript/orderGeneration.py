@@ -20,9 +20,10 @@ class OrderGenerator:
     
     db = None
     def CreateOrder(self,date):
-        name = random()
+        name = NAMEPOOL[random(0, len(NAMEPOOL))]
         #Pick a random name with equal weight to all choices(Katelyn TODO)
-        empID = 0
+
+        empID = EMPLOYEEIDPOOL[random(0, len(EMPLOYEEIDPOOL))]
         #Pick a random employee ID with equal weight to all choices(Katelyn TODO)
 
         #Pick from the MENUITEMS POOL a menu item(s) Joseph can do this part and it requires the CSV 
