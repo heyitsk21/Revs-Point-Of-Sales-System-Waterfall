@@ -1,3 +1,4 @@
+--CREATE TABLES AND JUNCTIONTABLE BELOW
 -- Create Ingredients table
 CREATE TABLE Ingredients (
     IngredientID SERIAL PRIMARY KEY,
@@ -48,6 +49,8 @@ CREATE TABLE MenuItemIngredients (
     PRIMARY KEY (MenuID, IngredientID)
 );
 
+
+--COPY CHUNKS BELOW
 -- Copy data from CSV files into Ingredients tables
 COPY Ingredients (IngredientID, IngredientName, PPU, Count)
 FROM 'DatabaseGenerationScript/Ingredients.csv' DELIMITER ',' CSV HEADER;
