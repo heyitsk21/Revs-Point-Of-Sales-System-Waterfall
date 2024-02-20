@@ -32,10 +32,10 @@ class OrderGenerator:
         #Calcuate Tax with function below  (Katelyn TODO)
         tax = self.CalculateTax(totalPrice)
         #Generate time can be equal wieght or proritize rush traffic but must be during hours that revs is open (Katelyn TODO)
-        time = None
+        t = time(hour = 1, minute = 1, second = 1)
         #is an object of the time class https://docs.python.org/3/library/datetime.html#time-objects    
-        dt= datetime.combine(date,time)
-
+        dt= datetime.combine(date,t)
+        
         self.db.cur.execute("INSERT INTO Orders (CustomerName, TaxPrice, OrderDateTime, EmployeeID) VALUES (%s, %s, %s, %s)",(name, tax, dt,empID))
         
         #insert into junction table between order and menu items 
@@ -46,22 +46,27 @@ class OrderGenerator:
         return price
     
     def __init__(self): 
-        db = databaseGenerator.DbGenerator()
+        self.db = databaseGenerator.DbGenerator()
         password = input("Please enter the password: ")
-        if not db.Connect("csce315_902_01_db","csce315_902_01_user",password,"csce-315-db.engr.tamu.edu"):
+        if not self.db.Connect("csce315_902_01_db","csce315_902_01_user",password,"csce-315-db.engr.tamu.edu"):
             raise ConnectionError("woah this means you are probably not on tamu wifi, do better")
-        db.InitTable("Orders",["CustomerName varchar","TaxPrice decimal","OrderDateTime timestamp","EmployeeID integer"],IDpkey="OrderID")
+        self.db.InitTable("Orders",["CustomerName varchar","TaxPrice decimal","OrderDateTime timestamp","EmployeeID integer"],IDpkey="OrderID")
 
 
 def Main():
     og = OrderGenerator()
-    day = date.fromisoformat('2019-12-04')
+    day = date.fromisoformat('2023-02-19')
     delta = timedelta(days = 1)
     for i in range(0,365):
         # generate a random number of requests per day  (TODO Joseph)
-        og.CreateOrder(day)
+        for j in range(0,650):
+            og.CreateOrder(day)
+            print(j,end=" ")
+        if(day  == date.fromisoformat('2023-01-19') or  day  == date.fromisoformat('2023-08-19')):
+            for j in range(0,650):
+                og.CreateOrder(day)
         day += delta
-    
+        print(day.day)
     return
 
 if __name__ == "__main__":

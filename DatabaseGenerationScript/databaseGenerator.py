@@ -37,7 +37,7 @@ class DbGenerator:
            if index != len(attributes) - 1:
                self.atrs += ", "
                arg += ", "
-
+        self.cur.execute("DROP TABLE "+ self.tablename)
         self.cur.execute("CREATE TABLE "+self.tablename+" (" + arg + ");")
         return
     
