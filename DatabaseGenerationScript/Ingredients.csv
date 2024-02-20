@@ -1,0 +1,60 @@
+IngredientID,IngeredientName,PPU,Count
+1,Bacon,$0.10,0
+2,Cheese,$0.05,0
+3,Bun,$0.08,0
+4,Hamburger patty,$0.50,0
+5,Chicken breast,$1.00,0
+6,Onions,$0.03,0
+7,Texas Toast,$0.15,0
+8,Black bean patty,$0.60,0
+9,Grilled chicken breast,$1.20,0
+10,Sandwich bun,$0.10,0
+11,Spicy chicken breast,$1.30,0
+12,Chicken breast,$0.05,0
+13,Lettuce,$0.10,0
+14,Tomato,$0.75,0
+15,Corn Dog,$0.50,0
+16,Hot Dog,$0.80,0
+17,Chicken Tenders,$0.03,0
+18,Potato fries,$0.50,0
+19,Shake base - Chocolate,$0.60,0
+20,Shake base - Oreo Cookie,$0.40,0
+21,Shake base - Vanilla,$0.45,0
+22,Shake base - Strawberry,$0.50,0
+23,Ice cream,$0.10,0
+24,Cookie crumbles,$0.25,0
+25,Root beer,$0.15,0
+26,16 oz. of Aquafina water,$0.20,0
+27,20 oz. of Aquafina water,$0.10,0
+28,Fountain drink,$0.25,0
+29,Wrap,$1.50,0
+30,BBQ ribs,$0.05,0
+31,BBQ sauce,$0.05,0
+32,American cheese,$0.05,0
+33,Pickles,$1.00,0
+34,Gravy,$0.05,0
+35,Steak fingers,$0.05,0
+36,Gig em sauce,$0.10,0
+37,Onion rings,$0.01,0
+38,Texas toast,$0.01,0
+39,Napkins,$0.02,0
+40,Straws,$0.02,0
+41,Forks,$0.02,0
+42,Knives,$0.05,0
+43,Spoons,$0.05,0
+44,Cups,$0.10,0
+45,Plates,$0.01,0
+46,Utensils,$0.01,0
+47,Condiments,$0.10,0
+48,Salt packets,$0.10,0
+49,Pepper packets,$1.00,0
+50,Salad dressing packets,$1.00,0
+51,To-go containers,$0.05,0
+52,Paper towels,$0.10,0
+53,Cleaning supplies,$1.00,0
+54,Receipt paper,$0.15,0
+55,Trash bags,$1.00,0
+56,Ice,$0.50,0
+57,Freezer bags,$1.00,0
+58,Oven mitts,$1.00,0
+59,Food prep containers,$1.00,0
