@@ -36,7 +36,7 @@ CREATE TABLE Order (
 CREATE TABLE InventoryLog (
     LogID SERIAL PRIMARY KEY,
     IngredientID INT REFERENCES Ingredients(IngredientID),
-    AmountChanged INT,
+    AmountChanged NUMERIC(10, 2), -- Same as above ^
     LogMessage TEXT,
     LogDateTime TIMESTAMP
 );
@@ -47,3 +47,27 @@ CREATE TABLE MenuItemIngredients (
     IngredientID INT REFERENCES Ingredients(IngredientID),
     PRIMARY KEY (MenuID, IngredientID)
 );
+
+-- Copy data from CSV files into Ingredients tables
+COPY Ingredients (IngredientID, IngredientName, PPU, Count)
+FROM 'DatabaseGenerationScript/Ingredients.csv' DELIMITER ',' CSV HEADER;
+
+-- Copy data from CSV files into MenuItemIngredients tables
+COPY MenuItemIngredients (MenuID, IngredientID)
+FROM 'DatabaseGenerationScript/MenuItemIngredients.csv' DELIMITER ',' CSV HEADER;
+
+-- Copy data from CSV files into MenuItems tables
+COPY MenuItems (MenuID, ItemName, Price)
+FROM 'DatabaseGenerationScript/MenuItems.csv' DELIMITER ',' CSV HEADER;
+
+-- Copy data from CSV files into Employee tables
+COPY Employee (EmployeeID, EmployeeName, IsManager, Salary, Password)
+FROM 'DatabaseGenerationScript/Employee.csv' DELIMITER ',' CSV HEADER;
+
+-- Copy data from CSV files into Order tables
+COPY Order (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID)
+FROM 'DatabaseGenerationScript/Order.csv' DELIMITER ',' CSV HEADER;
+
+-- Copy data from CSV files into InventoryLog tables
+COPY InventoryLog (LogID, IngredientID, AmountChanged, "Log message", LogDateTime)
+FROM 'DatabaseGenerationScript/InventoryLog.csv' DELIMITER ',' CSV HEADER;
