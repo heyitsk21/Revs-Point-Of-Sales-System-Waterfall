@@ -5,9 +5,9 @@ from datetime import datetime,date,time,timedelta
 #add more 
 
 
-NAMEPOOL = ["Josh","Jacob","Bart","Tom","Sydney","Ashton","Claire","Noah","James","Charles"
-            "Amelia","Liam","Mia","Luca","Apollo","Hazel","Grover","George","John","Thomas","Marilyn"
-            "Madison"]
+NAMEPOOL = ["Josh","Jacob","Bart","Tom","Sydney","Ashton","Claire","Noah","James","Charles",
+            "Amelia","Liam","Mia","Luca","Apollo","Hazel","Grover","George","John","Thomas",
+            "Marilyn", "Madison"]
 
 #TODO Katelyn
 EMPLOYEEIDPOOL = [1, 2, 3, 4, 5, 6]
@@ -20,10 +20,10 @@ class OrderGenerator:
     
     db = None
     def CreateOrder(self,date):
-        name = NAMEPOOL[random(0, len(NAMEPOOL))]
+        name = NAMEPOOL[random.randrange(0, len(NAMEPOOL))]
         #Pick a random name with equal weight to all choices(Katelyn TODO)
 
-        empID = EMPLOYEEIDPOOL[random(0, len(EMPLOYEEIDPOOL))]
+        empID = EMPLOYEEIDPOOL[random.randrange(0, len(EMPLOYEEIDPOOL))]
         #Pick a random employee ID with equal weight to all choices(Katelyn TODO)
 
         #Pick from the MENUITEMS POOL a menu item(s) Joseph can do this part and it requires the CSV 
@@ -34,10 +34,6 @@ class OrderGenerator:
         tax = self.CalculateTax(totalPrice)
 
         #Generate time can be equal weight or proritize rush traffic but must be during hours that revs is open (Katelyn TODO)
-            #OPENED HOURS:
-                #Mon-Thurs: 10a-9p = .weekday()=[0,3]
-                #Fri: 10a-8p = .weekday() = [4]
-                #Sat-Sun: 11a-8p = .weekday() = [5,6]
         dayOfTheWeek = date.weekday()
         if (dayOfTheWeek >= 0 and dayOfTheWeek <=3): #Mondays - Thursdays
             openHours = list(range(10,22))           #open from 10am - 9pm
@@ -49,7 +45,7 @@ class OrderGenerator:
             openHours = list(range(11,21))           #open from 11am - 8pm
             openWeights = [1,2,4,2,1,1,1,3,3,2] 
 
-        t = time(hour = choices(openHours, openWeights, k=1)[0], minute = random(0, 59), second = random(0, 59))
+        t = time(hour = random.choices(openHours, openWeights, k=1)[0], minute = random.randrange(0, 59), second = random.randrange(0, 59))
         #is an object of the time class https://docs.python.org/3/library/datetime.html#time-objects    
         dt= datetime.combine(date,t)
         
