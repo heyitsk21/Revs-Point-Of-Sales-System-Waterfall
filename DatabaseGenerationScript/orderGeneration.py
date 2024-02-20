@@ -53,11 +53,13 @@ class OrderGenerator:
 
         #Pick from the MENUITEMS POOL a menu item(s) Joseph can do this part and it requires the CSV 
         #Joseph TODO read from menu CSV and get items 
-        numberOfMenuItems = random.choices([1,2,3,4,5,6,7,8,9,10],[7,5,3,2,1,1,1,1,1,1],k=1)[0]
+        numberOfMenuItems = random.choices([1,2,3,4,5,6,7,8,9,10],[7,10,3,2,1,1,1,1,1,1],k=1)[0]
         
         for i in range(numberOfMenuItems):
-            item = random #incomplete
-            totalPrice += item
+            item = random.choices(list(range(25)),
+                [4,4,4,4,4,4,4,4,1,1,1,1,1,1,1,1,1,1,4,4,4,4,4,4,1,1]) 
+            itemPrice = 0
+            totalPrice += itemPrice
             #insert into sql junction table
         totalPrice = 0
 
