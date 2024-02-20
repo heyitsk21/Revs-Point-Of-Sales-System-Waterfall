@@ -28,8 +28,8 @@ class OrderGenerator:
 
         #Pick from the MENUITEMS POOL a menu item(s) Joseph can do this part and it requires the CSV 
         #Joseph TODO read from menu CSV and get items 
-        
         totalPrice = 0
+
         #Calcuate Tax with function below  (Katelyn TODO)
         tax = self.CalculateTax(totalPrice)
 
@@ -39,15 +39,15 @@ class OrderGenerator:
                 #Fri: 10a-8p = .weekday() = [4]
                 #Sat-Sun: 11a-8p = .weekday() = [5,6]
         dayOfTheWeek = date.weekday()
-        if (dayOfTheWeek >= 0 and dayOfTheWeek <=3):
-            openHours = list(range(10,22))
+        if (dayOfTheWeek >= 0 and dayOfTheWeek <=3): #Mondays - Thursdays
+            openHours = list(range(10,22))           #open from 10am - 9pm
             openWeights = [1,4,4,2,1,1,1,3,4,5,3,1]
-        elif (dayOfTheWeek == 4):
-            openHours = list(range(10,21))
-            openWeights = [1,4,4,2,1,1,1,3,4,3,1]
-        else:
-            openHours = list(range(11,21))
-            openWeights = [1,2,4,2,1,1,1,3,3,2]
+        elif (dayOfTheWeek == 4):                    #Fridays
+            openHours = list(range(10,21))           #open from 10am - 8pm
+            openWeights = [1,4,4,2,1,1,1,3,4,3,1] 
+        else:                                        #Saturdays - Sundays
+            openHours = list(range(11,21))           #open from 11am - 8pm
+            openWeights = [1,2,4,2,1,1,1,3,3,2] 
 
         t = time(hour = choices(openHours, openWeights, k=1)[0], minute = random(0, 59), second = random(0, 59))
         #is an object of the time class https://docs.python.org/3/library/datetime.html#time-objects    
@@ -58,8 +58,9 @@ class OrderGenerator:
         #insert into junction table between order and menu items 
         return
 
-    def CalculateTax(self,price):
+    def CalculateTax(self, price):
         #TODO (Katelyn)
+        price *= 0.0825
         return price
     
     def __init__(self): 
