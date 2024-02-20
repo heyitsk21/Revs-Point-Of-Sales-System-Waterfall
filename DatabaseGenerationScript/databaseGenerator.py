@@ -57,7 +57,7 @@ class DbGenerator:
 
         self.cur.execute("INSERT INTO " + self.tablename + " ("+ self.atrs +") VALUES ("+ arg+ ");")  
 
-
+    #constructor
     def __init__(self):
         self.hasIdPk = False
         self.atrs = ""

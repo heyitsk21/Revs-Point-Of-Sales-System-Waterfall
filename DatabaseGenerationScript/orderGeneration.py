@@ -10,7 +10,7 @@ NAMEPOOL = ["Josh","Jacob","Bart","Tom","Sydney","Ashton","Claire","Noah","James
             "Madison"]
 
 #TODO Katelyn
-EMPLOYEEIDPOOL = []
+EMPLOYEEIDPOOL = [1, 2, 3, 4, 5, 6]
 
 #TODO MENUITEMS pool for Joseph 
 MENUITEMSPOOL = []
@@ -20,7 +20,7 @@ class OrderGenerator:
     
     db = None
     def CreateOrder(self,date):
-        name = ""
+        name = random()
         #Pick a random name with equal weight to all choices(Katelyn TODO)
         empID = 0
         #Pick a random employee ID with equal weight to all choices(Katelyn TODO)
@@ -31,8 +31,24 @@ class OrderGenerator:
         totalPrice = 0
         #Calcuate Tax with function below  (Katelyn TODO)
         tax = self.CalculateTax(totalPrice)
-        #Generate time can be equal wieght or proritize rush traffic but must be during hours that revs is open (Katelyn TODO)
-        t = time(hour = 1, minute = 1, second = 1)
+
+        #Generate time can be equal weight or proritize rush traffic but must be during hours that revs is open (Katelyn TODO)
+            #OPENED HOURS:
+                #Mon-Thurs: 10a-9p = .weekday()=[0,3]
+                #Fri: 10a-8p = .weekday() = [4]
+                #Sat-Sun: 11a-8p = .weekday() = [5,6]
+        dayOfTheWeek = date.weekday()
+        if (dayOfTheWeek >= 0 and dayOfTheWeek <=3):
+            openHours = list(range(10,22))
+            openWeights = [1,4,4,2,1,1,1,3,4,5,3,1]
+        elif (dayOfTheWeek == 4):
+            openHours = list(range(10,21))
+            openWeights = [1,4,4,2,1,1,1,3,4,3,1]
+        else:
+            openHours = list(range(11,21))
+            openWeights = [1,2,4,2,1,1,1,3,3,2]
+
+        t = time(hour = choices(openHours, openWeights, k=1)[0], minute = random(0, 59), second = random(0, 59))
         #is an object of the time class https://docs.python.org/3/library/datetime.html#time-objects    
         dt= datetime.combine(date,t)
         
@@ -59,11 +75,11 @@ def Main():
     delta = timedelta(days = 1)
     for i in range(0,365):
         # generate a random number of requests per day  (TODO Joseph)
-        for j in range(0,650):
+        for j in range(0,550):
             og.CreateOrder(day)
-            print(j,end=" ")
+            #print(j,end=" ")
         if(day  == date.fromisoformat('2023-01-19') or  day  == date.fromisoformat('2023-08-19')):
-            for j in range(0,650):
+            for j in range(0,550):
                 og.CreateOrder(day)
         day += delta
         print(day.day)
