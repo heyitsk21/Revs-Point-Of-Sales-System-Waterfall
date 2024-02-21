@@ -73,9 +73,10 @@ CREATE TABLE MenuItemIngredients (
 
 -- Create OrderMenuItems junction table
 CREATE TABLE OrderMenuItems (
+    JoinID SERIAL,
     OrderID INT,
     MenuID INT,
-    PRIMARY KEY (OrderID, MenuID),
+    PRIMARY KEY (JoinID),
     CONSTRAINT fk_menu
         FOREIGN KEY(MenuID) 
         REFERENCES MenuItems(MenuID),
@@ -87,28 +88,21 @@ CREATE TABLE OrderMenuItems (
 
 --COPY CHUNKS BELOW
 -- Copy data from CSV files into Ingredients tables
-COPY Ingredients (IngredientID, IngredientName, PPU, Count)
-FROM 'DatabaseGenerationScript/Ingredients.csv' DELIMITER ',' CSV HEADER;
-
--- Copy data from CSV files into MenuItemIngredients tables
-COPY MenuItemIngredients (MenuID, IngredientID)
-FROM 'DatabaseGenerationScript/MenuItemIngredients.csv' DELIMITER ',' CSV HEADER;
+\COPY Ingredients (IngredientID, IngredientName, PPU, Count) FROM 'DatabaseGenerationScript/Ingredients.csv' DELIMITER ',' CSV HEADER;
 
 -- Copy data from CSV files into MenuItems tables
-COPY MenuItems (MenuID, ItemName, Price)
-FROM 'DatabaseGenerationScript/MenuItems.csv' DELIMITER ',' CSV HEADER;
+\COPY MenuItems (MenuID, ItemName, Price) FROM 'DatabaseGenerationScript/MenuItems.csv' DELIMITER ',' CSV HEADER;
+
+-- Copy data from CSV files into MenuItemIngredients tables
+\COPY MenuItemIngredients (MenuID, IngredientID) FROM 'DatabaseGenerationScript/MenuItemsIngredients.csv' DELIMITER ',' CSV HEADER;
 
 -- Copy data from CSV files into Employee tables
-COPY Employee (EmployeeID, EmployeeName, IsManager, Salary, Password)
-FROM 'DatabaseGenerationScript/Employee.csv' DELIMITER ',' CSV HEADER;
+\COPY Employee (EmployeeID, EmployeeName, IsManager, Salary, Password) FROM 'DatabaseGenerationScript/Employee.csv' DELIMITER ',' CSV HEADER;
 
 -- Copy data from CSV files into Order tables
-COPY Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID)
-FROM 'DatabaseGenerationScript/Orders.csv' DELIMITER ',' CSV HEADER;
+\COPY Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) FROM 'DatabaseGenerationScript/Orders.csv' DELIMITER ',' CSV HEADER;
 
 -- Copy data from CSV files into InventoryLog tables
-COPY InventoryLog (LogID, IngredientID, AmountChanged, "Log message", LogDateTime)
-FROM 'DatabaseGenerationScript/InventoryLog.csv' DELIMITER ',' CSV HEADER;
+\COPY InventoryLog (LogID, IngredientID, AmountChanged, LogMessage, LogDateTime) FROM 'DatabaseGenerationScript/InventoryLog.csv' DELIMITER ',' CSV HEADER;
 
-COPY OrderMenuItems  (OrderID, MenuID)
-FROM 'DatabaseGenerationScript/JunctionOrdersMenu.csv' DELIMITER ',' CSV HEADER;
+\COPY OrderMenuItems  (OrderID, MenuID) FROM 'DatabaseGenerationScript/JunctionOrdersMenu.csv' DELIMITER ',' CSV HEADER;
