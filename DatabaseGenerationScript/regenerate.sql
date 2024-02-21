@@ -106,3 +106,5 @@ CREATE TABLE OrderMenuItems (
 \COPY InventoryLog (LogID, IngredientID, AmountChanged, LogMessage, LogDateTime) FROM 'DatabaseGenerationScript/InventoryLog.csv' DELIMITER ',' CSV HEADER;
 
 \COPY OrderMenuItems  (OrderID, MenuID) FROM 'DatabaseGenerationScript/JunctionOrdersMenu.csv' DELIMITER ',' CSV HEADER;
+
+-- For demo, Josephs path: \i C:/Users/jnucc/Desktop/CSCE/project-2-database-gui-group-21/DatabaseGenerationScript/regenerate.sql
