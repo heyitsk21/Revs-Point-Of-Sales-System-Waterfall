@@ -91,7 +91,7 @@ class OrderGenerator:
         t = time(hour = random.choices(openHours, openWeights, k=1)[0], minute = random.randrange(0, 59), second = random.randrange(0, 59))
         #is an object of the time class https://docs.python.org/3/library/datetime.html#time-objects    
         dt= datetime.combine(date, t)
-        self.f1.write(str(ID)+','+name + ',' + str(tax) + ',' + str(dt) + ',' + str(empID)+'\n')
+        self.f1.write(str(ID)+','+name + ',' + str(tax) + ','+ str(totalPrice) +',' + str(dt) + ',' + str(empID)+'\n')
         #insert into junction table between order and menu items 
         return
 
@@ -103,7 +103,7 @@ class OrderGenerator:
     def __init__(self): 
         self.f1 = open("Orders.csv","w")
         self.f2 = open("JunctionOrdersMenu.csv","w")
-        self.f1.write("OrderID,Name,Tax,Time,EID\n")
+        self.f1.write("OrderID,CustomerName,TaxPrice,BasePrice,OrderDateTime,EmployeeID\n")
         self.f2.write("OrderID,MenuID\n")
 
     def __del__(self):
