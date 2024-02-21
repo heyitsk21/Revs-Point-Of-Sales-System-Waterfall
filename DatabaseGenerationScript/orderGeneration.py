@@ -61,7 +61,7 @@ class OrderGenerator:
 
         #Pick from the MENUITEMS POOL a menu item(s) Joseph can do this part and it requires the CSV 
         #Joseph TODO read from menu CSV and get items 
-        numberOfMenuItems = random.choices([1,2,3,4,5,6,7,8,9,10],[7,10,3,2,1,1,1,1,1,1],k=1)[0]
+        numberOfMenuItems = random.choices([1,2,3,4,5,6,7,8,9,10,50],[4000,5000,4300,200,100,100,100,100,100,100,1],k=1)[0]
         
         totalPrice = 0
         for i in range(numberOfMenuItems):
