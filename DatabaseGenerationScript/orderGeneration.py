@@ -7,7 +7,10 @@ from datetime import datetime,date,time,timedelta
 
 NAMEPOOL = ["Josh", "Jacob", "Bart", "Tom", "Sydney", "Ashton", "Claire", "Noah", "James", "Charles",
             "Amelia", "Liam", "Mia", "Luca", "Apollo", "Hazel", "Grover", "George", "John", "Thomas",
-            "Marilyn", "Madison", "Nathan", "Lynda", "Ted", "Franklin", "Christian", "Danny", "Kasey", "Lillian"]
+            "Marilyn", "Madison", "Nathan", "Lynda", "Ted", "Franklin", "Christian", "Danny", "Kasey", "Lillian",
+            "Michelle","Alex","Alexander","Michael","Jenna","Izzy","Travis","Abe","Donna","Elmo","Grover","Oscar",
+            "Count","Kermit","Bonzo","Gonzo","Scooter","Beaker","Rizzo","Animal","SamEagle","Statler","Waldorf",
+            "Walter","Bobo","Clifford","Sweetums","SweedishChef"]
 
 #TODO Katelyn
 EMPLOYEEIDPOOL = [1, 2, 3, 4, 5, 6]
