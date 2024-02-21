@@ -4,26 +4,6 @@ import csv
 from datetime import datetime,date,time,timedelta
 #add more 
 
-
-NAMEPOOL = ["Josh", "Jacob", "Bart", "Tom", "Sydney", "Ashton", "Claire", "Noah", "James", "Charles",
-            "Amelia", "Liam", "Mia", "Luca", "Apollo", "Hazel", "Grover", "George", "John", "Thomas",
-            "Marilyn", "Madison", "Nathan", "Lynda", "Ted", "Franklin", "Christian", "Danny", "Kasey", "Lillian",
-            "Michelle","Alex","Alexander","Michael","Jenna","Izzy","Travis","Abe","Donna","Elmo","Grover","Oscar",
-            "Count","Kermit","Bonzo","Gonzo","Scooter","Beaker","Rizzo","Animal","SamEagle","Statler","Waldorf",
-            "Walter","Bobo","Clifford","Sweetums","SweedishChef","Edward","Bella","Charile","Alice","Emmet","Carlise",
-            "Renee","Esme","Jasper","Karen","Rensemee","Jason","Katniss","Snow","Peeta","Gale","Haymitch","Effie",
-            "Cinna","Prim","Tigris","Lucy","Ceaser","Plutarch","Seneca","Marvel","Glimmer","Cato","Foxface",
-            "Thresh","Rue","Beete","Finnick","Johanna","Mags","Wirees","Gloss","Woof", "Emma", "Olivia", "Isabelle", 
-            "Ava", "Sophie", "Emily", "Madison", "Mia", "Hannah", "Anna", "Abigail", "Chloe", "Ella", "Grace", "Charlotte", 
-            "Avery", "Emery", "Sarah", "Sarahbeth", "Samantha", "Alexis", "Taylor", "Addison", "Natalie", "Hailey", 
-            "Hailey", "Zoe", "Victoria", "Riley", "Harper", "Lauren", "Savannah", "Evelyn", "Ellie", "Kayla", "Sydney", 
-            "Alyssa", "Julia", "Audrey", "Maya", "Maia", "Mackenzie", "Aubrey", "Zoey", "Morgan", "Claire", "Brianna", 
-            "Brooke", "Brooklyn", "Leah", "Lillian", "Kaylee", "Ariana", "Gabriella", "Troy", "Ashley", "Lucy", "Kaitlyn", 
-            "Kylie", "Madeline", "Allison", "Allyson", "Peyton", "Stella", "Megan", "Meghan", "Jasmine", "Ariel", "Aurora", 
-            "Caroline", "Alexandra", "Eva", "Isabelle", "Aaliyah", "Paige", "Nora", "Kennedy", "Luna", "Jess", "Arianna", 
-            "Violet", "Maria", "Skylar", "Rachel", "Abby", "Faith", "Sara", "Penelope", "Katie", "Bailey", "Camila", 
-            "Nevaeh", "Alexa", "Sadie"]
-
 #TODO Katelyn
 EMPLOYEEIDPOOL = [1, 2, 3, 4, 5, 6]
 
@@ -62,7 +42,7 @@ class OrderGenerator:
     f2 = None
 
     def CreateOrder(self, date, ID):
-        name = NAMEPOOL[random.randrange(0, len(NAMEPOOL))]
+        name = random.choice(self.NAMEPOOL)
         #Pick a random name with equal weight to all choices(Katelyn TODO)
 
         empID = EMPLOYEEIDPOOL[random.randrange(0, len(EMPLOYEEIDPOOL))]
@@ -110,6 +90,8 @@ class OrderGenerator:
         return price
     
     def __init__(self): 
+        with open("names.txt", "r") as file:
+            self.NAMEPOOL = [name.strip() for name in file.readlines()]
         self.f1 = open("Orders.csv","w")
         self.f2 = open("JunctionOrdersMenu.csv","w")
         self.f1.write("OrderID,CustomerName,TaxPrice,BasePrice,OrderDateTime,EmployeeID\n")
