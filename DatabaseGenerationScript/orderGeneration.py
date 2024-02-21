@@ -60,11 +60,10 @@ class OrderGenerator:
         totalPrice = 0
         for i in range(numberOfMenuItems):
             item = random.choices(list(range(25)),
-                [4,4,4,4,4,4,4,4,1,1,1,1,1,1,1,1,1,1,4,4,4,4,4,4,1,1]) 
-            item = MENUITEMSPOOL.keys(item)
-            
-            itemPrice = MENUITEMSPOOL[item]
-            
+                [4,4,4,4,4,4,4,4,1,1,1,1,1,1,1,1,1,1,4,4,4,4,4,4,1])[0] 
+            itemID = list(MENUITEMSPOOL.keys())[item]
+            totalPrice += MENUITEMSPOOL[itemID]
+            self.f2.write(str(ID) + ',' + str(itemID) +'\n')
             #insert into sql junction table
         
 
@@ -86,7 +85,7 @@ class OrderGenerator:
         t = time(hour = random.choices(openHours, openWeights, k=1)[0], minute = random.randrange(0, 59), second = random.randrange(0, 59))
         #is an object of the time class https://docs.python.org/3/library/datetime.html#time-objects    
         dt= datetime.combine(date, t)
-        
+        self.f1.write(str(ID)+','+name + ',' + str(tax) + ',' + str(dt) + ',' + str(empID)+'\n')
         #insert into junction table between order and menu items 
         return
 
@@ -97,8 +96,9 @@ class OrderGenerator:
     
     def __init__(self): 
         self.f1 = open("Orders.csv","w")
-        self.f2 = open("JunctionOrdfersMenu.csv","w")
-        self.f1.write("OrderID,")
+        self.f2 = open("JunctionOrdersMenu.csv","w")
+        self.f1.write("OrderID,Name,Tax,Time,EID\n")
+        self.f2.write("OrderID,MenuID\n")
 
     def __del__(self):
         self.f1.close()
@@ -111,11 +111,13 @@ def Main():
     og = OrderGenerator()
     day = date.fromisoformat('2023-02-19')
     delta = timedelta(days = 1)
-    for i in range(0,365):
+    ID = 0
+    for i in range(0,3):
         # generate a random number of requests per day  (TODO Joseph)
         orderMod = random.randrange(0,100)
         for j in range(0,500 + orderMod):
-            og.CreateOrder(day)
+            og.CreateOrder(day,ID)
+            ID += 1
             #print(j,end=" ")
         if(day  == date.fromisoformat('2023-01-19') or  day  == date.fromisoformat('2023-08-19')):
             for j in range(0,550):
