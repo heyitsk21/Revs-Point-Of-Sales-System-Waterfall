@@ -1,6 +1,6 @@
 
 import random
-import databaseGenerator
+import csv
 from datetime import datetime,date,time,timedelta
 #add more 
 
@@ -37,14 +37,16 @@ MENUITEMSPOOL = {
 601	: 4.99,
 602	: 4.99,
 603	: 4.99,
-701	: 6,
-702	: 7.99,}
+701	: 6.00,
+702	: 7.99}
 
 
 class OrderGenerator:
     
-    db = None
-    def CreateOrder(self, date):
+    f1 = None
+    f2 = None
+
+    def CreateOrder(self, date, ID):
         name = NAMEPOOL[random.randrange(0, len(NAMEPOOL))]
         #Pick a random name with equal weight to all choices(Katelyn TODO)
 
@@ -55,13 +57,16 @@ class OrderGenerator:
         #Joseph TODO read from menu CSV and get items 
         numberOfMenuItems = random.choices([1,2,3,4,5,6,7,8,9,10],[7,10,3,2,1,1,1,1,1,1],k=1)[0]
         
+        totalPrice = 0
         for i in range(numberOfMenuItems):
             item = random.choices(list(range(25)),
                 [4,4,4,4,4,4,4,4,1,1,1,1,1,1,1,1,1,1,4,4,4,4,4,4,1,1]) 
-            itemPrice = 0
-            totalPrice += itemPrice
+            item = MENUITEMSPOOL.keys(item)
+            
+            itemPrice = MENUITEMSPOOL[item]
+            
             #insert into sql junction table
-        totalPrice = 0
+        
 
         #Calcuate Tax with function below  (Katelyn TODO)
         tax = self.CalculateTax(totalPrice)
@@ -82,8 +87,6 @@ class OrderGenerator:
         #is an object of the time class https://docs.python.org/3/library/datetime.html#time-objects    
         dt= datetime.combine(date, t)
         
-        self.db.cur.execute("INSERT INTO Orders (CustomerName, TaxPrice, OrderDateTime, EmployeeID) VALUES (%s, %s, %s, %s)",(name, tax, dt, empID))
-        
         #insert into junction table between order and menu items 
         return
 
@@ -93,11 +96,15 @@ class OrderGenerator:
         return price
     
     def __init__(self): 
-        self.db = databaseGenerator.DbGenerator()
-        password = input("Please enter the password: ")
-        if not self.db.Connect("csce315_902_01_db", "csce315_902_01_user", password, "csce-315-db.engr.tamu.edu"):
-            raise ConnectionError("woah this means you are probably not on tamu wifi, do better")
-        self.db.InitTable("Orders", ["CustomerName varchar", "TaxPrice decimal", "OrderDateTime timestamp", "EmployeeID integer"], IDpkey="OrderID")
+        self.f1 = open("Orders.csv","w")
+        self.f2 = open("JunctionOrdfersMenu.csv","w")
+        self.f1.write("OrderID,")
+
+    def __del__(self):
+        self.f1.close()
+        self.f2.close()
+
+
 
 
 def Main():
@@ -106,7 +113,8 @@ def Main():
     delta = timedelta(days = 1)
     for i in range(0,365):
         # generate a random number of requests per day  (TODO Joseph)
-        for j in range(0,550):
+        orderMod = random.randrange(0,100)
+        for j in range(0,500 + orderMod):
             og.CreateOrder(day)
             #print(j,end=" ")
         if(day  == date.fromisoformat('2023-01-19') or  day  == date.fromisoformat('2023-08-19')):
