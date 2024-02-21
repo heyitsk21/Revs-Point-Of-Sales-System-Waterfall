@@ -112,18 +112,19 @@ def Main():
     day = date.fromisoformat('2023-02-19')
     delta = timedelta(days = 1)
     ID = 0
-    for i in range(0,3):
+    for i in range(0,365):
         # generate a random number of requests per day  (TODO Joseph)
         orderMod = random.randrange(0,100)
         for j in range(0,500 + orderMod):
             og.CreateOrder(day,ID)
             ID += 1
             #print(j,end=" ")
-        if(day  == date.fromisoformat('2023-01-19') or  day  == date.fromisoformat('2023-08-19')):
+        if(day  == date.fromisoformat('2024-01-19') or  day  == date.fromisoformat('2023-08-19')):
             for j in range(0,550):
-                og.CreateOrder(day)
+                og.CreateOrder(day,ID)
+                ID += 1
         day += delta
-        print(day.day)
+        print(day)
     return
 
 if __name__ == "__main__":
