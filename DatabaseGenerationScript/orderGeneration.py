@@ -11,7 +11,9 @@ NAMEPOOL = ["Josh", "Jacob", "Bart", "Tom", "Sydney", "Ashton", "Claire", "Noah"
             "Michelle","Alex","Alexander","Michael","Jenna","Izzy","Travis","Abe","Donna","Elmo","Grover","Oscar",
             "Count","Kermit","Bonzo","Gonzo","Scooter","Beaker","Rizzo","Animal","SamEagle","Statler","Waldorf",
             "Walter","Bobo","Clifford","Sweetums","SweedishChef","Edward","Bella","Charile","Alice","Emmet","Carlise",
-            "Renee","Esme","Jasper","Karen","Rensemee","Jason"]
+            "Renee","Esme","Jasper","Karen","Rensemee","Jason","Katniss","Snow","Peeta","Gale","Haymitch","Effie",
+            "Cinna","Prim","Tigris","Lucy","Ceaser","Plutarch","Seneca","Marvel","Glimmer","Cato","Foxface",
+            "Thresh","Rue","Beete","Finnick","Johanna","Mags","Wirees","Gloss","Woof"]
 
 #TODO Katelyn
 EMPLOYEEIDPOOL = [1, 2, 3, 4, 5, 6]
