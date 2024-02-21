@@ -4,7 +4,7 @@ SELECT DATE_TRUNC('week', OrderDateTime) AS OrderWeek, COUNT(*) AS OrderCount
 FROM Orders GROUP BY OrderWeek ORDER BY OrderWeek;
 
 2
-"Realistic sales historysum of order total grouped by hour
+"Realistic sales history sum of order total grouped by hour"
 SELECT EXTRACT(HOUR FROM OrderDateTime) AS OrderHour, COUNT(*) AS OrderCount, 
 SUM(TaxPrice + BasePrice) AS TotalSum FROM Orders GROUP BY EXTRACT(HOUR FROM OrderDateTime) 
 ORDER BY OrderHour;
@@ -12,7 +12,7 @@ ORDER BY OrderHour;
 3
 "2 peak days"
 SELECT DATE_TRUNC('day', OrderDateTime) AS OrderDate, SUM(TaxPrice + BasePrice) 
-AS TotalSum FROM Orders GROUP BY OrderDate ORDER BY TotalSum DESC LIMIT 2;
+AS TotalSum FROM Orders GROUP BY OrderDate ORDER BY TotalSum DESC LIMIT 10;
 
 4
 "Inventory items for 20 menu items"
