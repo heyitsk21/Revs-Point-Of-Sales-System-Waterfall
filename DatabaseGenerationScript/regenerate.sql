@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS Employee CASCADE;
+DROP TABLE IF EXISTS Ingredients CASCADE;
+DROP TABLE IF EXISTS MenuItems CASCADE;
+DROP TABLE IF EXISTS Orders CASCADE;
+DROP TABLE IF EXISTS InventoryLog CASCADE;
+DROP TABLE IF EXISTS MenuItemIngredients CASCADE;
+DROP TABLE IF EXISTS OrderMenuItems CASCADE;
+
+
 --CREATE TABLES AND JUNCTIONTABLE BELOW
 -- Create Ingredients table
 CREATE TABLE Ingredients (
@@ -24,37 +33,55 @@ CREATE TABLE Employee (
 );
 
 -- Create Order table
-CREATE TABLE Order (
+CREATE TABLE Orders (
     OrderID SERIAL PRIMARY KEY,
     CustomerName VARCHAR(100),
     TaxPrice NUMERIC(10, 2), -- Same as above ^
     BasePrice NUMERIC(10, 2), -- Same as above ^
     OrderDateTime TIMESTAMP,
-    EmployeeID INT REFERENCES Employee(EmployeeID)
+    EmployeeID INT, 
+    CONSTRAINT fk_employee
+        FOREIGN KEY(EmployeeID) 
+        REFERENCES Employee(EmployeeID)
 );
 
 -- Create InventoryLog table
 CREATE TABLE InventoryLog (
     LogID SERIAL PRIMARY KEY,
-    IngredientID INT REFERENCES Ingredients(IngredientID),
+    IngredientID INT,
     AmountChanged NUMERIC(10, 2), -- Same as above ^
     LogMessage TEXT,
-    LogDateTime TIMESTAMP
+    LogDateTime TIMESTAMP,
+    CONSTRAINT fk_ingredient
+        FOREIGN KEY(IngredientID) 
+        REFERENCES Ingredients(IngredientID)
 );
 
 -- Create MenuItemIngredients junction table
 CREATE TABLE MenuItemIngredients (
-    MenuID INT REFERENCES MenuItems(MenuID),
-    IngredientID INT REFERENCES Ingredients(IngredientID),
-    PRIMARY KEY (MenuID, IngredientID)
+    MenuID INT ,
+    IngredientID INT,
+    PRIMARY KEY (MenuID, IngredientID),
+    CONSTRAINT fk_ingredient
+        FOREIGN KEY(IngredientID) 
+        REFERENCES Ingredients(IngredientID),
+    CONSTRAINT fk_menu
+        FOREIGN KEY(MenuID) 
+        REFERENCES MenuItems(MenuID)
 );
 
 
 -- Create OrderMenuItems junction table
 CREATE TABLE OrderMenuItems (
-    OrderID INT REFERENCES Order(OrderID),
-    MenuID INT REFERENCES MenuItems(MenuID),
-    PRIMARY KEY (OrderID, MenuID)
+    OrderID INT,
+    MenuID INT,
+    PRIMARY KEY (OrderID, MenuID),
+    CONSTRAINT fk_menu
+        FOREIGN KEY(MenuID) 
+        REFERENCES MenuItems(MenuID),
+    CONSTRAINT fk_order
+        FOREIGN KEY(OrderID) 
+        REFERENCES Orders(OrderID)   
 );
 
 
@@ -76,7 +103,7 @@ COPY Employee (EmployeeID, EmployeeName, IsManager, Salary, Password)
 FROM 'DatabaseGenerationScript/Employee.csv' DELIMITER ',' CSV HEADER;
 
 -- Copy data from CSV files into Order tables
-COPY Order (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID)
+COPY Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID)
 FROM 'DatabaseGenerationScript/Orders.csv' DELIMITER ',' CSV HEADER;
 
 -- Copy data from CSV files into InventoryLog tables
