@@ -13,7 +13,16 @@ NAMEPOOL = ["Josh", "Jacob", "Bart", "Tom", "Sydney", "Ashton", "Claire", "Noah"
             "Walter","Bobo","Clifford","Sweetums","SweedishChef","Edward","Bella","Charile","Alice","Emmet","Carlise",
             "Renee","Esme","Jasper","Karen","Rensemee","Jason","Katniss","Snow","Peeta","Gale","Haymitch","Effie",
             "Cinna","Prim","Tigris","Lucy","Ceaser","Plutarch","Seneca","Marvel","Glimmer","Cato","Foxface",
-            "Thresh","Rue","Beete","Finnick","Johanna","Mags","Wirees","Gloss","Woof"]
+            "Thresh","Rue","Beete","Finnick","Johanna","Mags","Wirees","Gloss","Woof", "Emma", "Olivia", "Isabelle", 
+            "Ava", "Sophie", "Emily", "Madison", "Mia", "Hannah", "Anna", "Abigail", "Chloe", "Ella", "Grace", "Charlotte", 
+            "Avery", "Emery", "Sarah", "Sarahbeth", "Samantha", "Alexis", "Taylor", "Addison", "Natalie", "Hailey", 
+            "Hailey", "Zoe", "Victoria", "Riley", "Harper", "Lauren", "Savannah", "Evelyn", "Ellie", "Kayla", "Sydney", 
+            "Alyssa", "Julia", "Audrey", "Maya", "Maia", "Mackenzie", "Aubrey", "Zoey", "Morgan", "Claire", "Brianna", 
+            "Brooke", "Brooklyn", "Leah", "Lillian", "Kaylee", "Ariana", "Gabriella", "Troy", "Ashley", "Lucy", "Kaitlyn", 
+            "Kylie", "Madeline", "Allison", "Allyson", "Peyton", "Stella", "Megan", "Meghan", "Jasmine", "Ariel", "Aurora", 
+            "Caroline", "Alexandra", "Eva", "Isabelle", "Aaliyah", "Paige", "Nora", "Kennedy", "Luna", "Jess", "Arianna", 
+            "Violet", "Maria", "Skylar", "Rachel", "Abby", "Faith", "Sara", "Penelope", "Katie", "Bailey", "Camila", 
+            "Nevaeh", "Alexa", "Sadie"]
 
 #TODO Katelyn
 EMPLOYEEIDPOOL = [1, 2, 3, 4, 5, 6]
