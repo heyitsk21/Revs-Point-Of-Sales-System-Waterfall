@@ -50,6 +50,14 @@ CREATE TABLE MenuItemIngredients (
 );
 
 
+-- Create OrderMenuItems junction table
+CREATE TABLE OrderMenuItems (
+    OrderID INT REFERENCES Order(OrderID),
+    MenuID INT REFERENCES MenuItems(MenuID),
+    PRIMARY KEY (OrderID, MenuID)
+);
+
+
 --COPY CHUNKS BELOW
 -- Copy data from CSV files into Ingredients tables
 COPY Ingredients (IngredientID, IngredientName, PPU, Count)
@@ -69,8 +77,11 @@ FROM 'DatabaseGenerationScript/Employee.csv' DELIMITER ',' CSV HEADER;
 
 -- Copy data from CSV files into Order tables
 COPY Order (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID)
-FROM 'DatabaseGenerationScript/Order.csv' DELIMITER ',' CSV HEADER;
+FROM 'DatabaseGenerationScript/Orders.csv' DELIMITER ',' CSV HEADER;
 
 -- Copy data from CSV files into InventoryLog tables
 COPY InventoryLog (LogID, IngredientID, AmountChanged, "Log message", LogDateTime)
 FROM 'DatabaseGenerationScript/InventoryLog.csv' DELIMITER ',' CSV HEADER;
+
+COPY OrderMenuItems  (OrderID, MenuID)
+FROM 'DatabaseGenerationScript/JunctionOrdersMenu.csv' DELIMITER ',' CSV HEADER;
