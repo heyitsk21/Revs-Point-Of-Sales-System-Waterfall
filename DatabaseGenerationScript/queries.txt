@@ -1,0 +1,72 @@
+1
+"52 weeks of sales history"
+SELECT DATE_TRUNC('week', OrderDateTime) AS OrderWeek, COUNT(*) AS OrderCount
+FROM Orders GROUP BY OrderWeek ORDER BY OrderWeek;
+
+2
+"Realistic sales historysum of order total grouped by hour
+SELECT EXTRACT(HOUR FROM OrderDateTime) AS OrderHour, COUNT(*) AS OrderCount, 
+SUM(TaxPrice + BasePrice) AS TotalSum FROM Orders GROUP BY EXTRACT(HOUR FROM OrderDateTime) 
+ORDER BY OrderHour;
+
+3
+"2 peak days"
+SELECT DATE_TRUNC('day', OrderDateTime) AS OrderDate, SUM(TaxPrice + BasePrice) 
+AS TotalSum FROM Orders GROUP BY OrderDate ORDER BY TotalSum DESC LIMIT 2;
+
+4
+"Inventory items for 20 menu items"
+SELECT MenuItems.MenuID,  MenuItems.ItemName, COUNT(MenuItemIngredients.IngredientID) 
+AS ItemCount FROM  MenuItemIngredients JOIN MenuItems ON MenuItemIngredients.MenuID = MenuItems.MenuID 
+GROUP BY MenuItems.MenuID, MenuItems.ItemName LIMIT 20; 
+
+5
+“List all the orders made by a EmployeeID=4 on 8/20/2023”:
+SELECT OrderID, CustomerName, OrderDateTime FROM 	Orders WHERE EmployeeID = 4 
+AND DATE(OrderDateTime) = '2023-02-21';
+
+6
+“Count the number of days an employee with EmployeeID=3 worked”
+SELECT COUNT(DISTINCT DATE(OrderDateTime)) FROM Orders WHERE EmployeeID =3;
+
+7
+“Find the employee that inputted the most number of orders between the dates of 12/01/23 - 12/04/23”
+SELECT EmployeeID, COUNT (*) AS EmpOrders FROM Orders WHERE DATE(OrderDateTime) BETWEEN '2023-12-01 23:00:00' 
+AND '2023-12-04 23:00:00' GROUP BY EmployeeID ORDER BY EmpOrders DESC;
+
+8
+“Show all the orders made under the customer names Katniss, Primrose, and Rue.” 
+SELECT * FROM Orders WHERE customername IN ('Katniss', 'Prim', 'Rue');
+
+9
+“show the three most expensive orders placed under the name SweedishChef”
+SELECT * FROM orders WHERE customername='SweedishChef' ORDER BY baseprice DESC LIMIT 3;
+
+10
+“Show me the Cullen vampires ranked by the amount they spent at revs from lowest to highest”
+SELECT customername,SUM(TaxPrice + BasePrice) AS TotalSum FROM ORDERS WHERE customername 
+IN ('Edward','Esme','Jasper','Carlise','Alice','Emmet') GROUP BY customername ORDER BY TotalSum ASC;
+
+11
+“Show me the amount of classic hamburgers ordered by ‘kermit’
+SELECT COUNT(*) AS ClassicHamburgerCountKermit FROM Orders 
+JOIN OrderMenuItems  ON Orders.OrderID = OrderMenuItems.OrderID 
+JOIN MenuItems ON OrderMenuItems.MenuID = MenuItems.MenuID WHERE Orders.customername = 'Kermit' 
+AND MenuItems.ItemName = 'Classic Hamburger';
+
+12
+“Show me total profit of each first letter of the customer name”
+SELECT LEFT(CustomerName, 1) AS FirstLetter, SUM(TaxPrice + BasePrice) 
+AS Total FROM Orders GROUP BY FirstLetter ORDER BY Total DESC;
+
+13
+“List all menu items that are below $5.00 and more than $3.00 descending sorted”
+SELECT * FROM MenuItems WHERE Price < 5.00 AND Price > 3.00 ORDER BY Price DESC;
+
+14
+“Find number of orders placed between 11am-1pm”:  
+SELECT COUNT(*) As OrderCount FROM Orders WHERE EXTRACT(HOUR FROM OrderDateTime) BETWEEN 11 AND 13;
+
+15
+“List all customers who have placed an order whos name is less than 5 letters”
+SELECT DISTINCT customername FROM orders WHERE LENGTH(customername) < 5;
