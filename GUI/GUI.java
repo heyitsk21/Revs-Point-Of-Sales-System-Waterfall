@@ -20,7 +20,7 @@ public class GUI extends JFrame implements ActionListener {
       //TODO STEP 1 (see line 7)
       String database_name = "csce315_902_01_db";
       String database_user = "csce315_902_01_user";
-      String database_password = "team21";
+      String database_password = "";
       String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%s", database_name);
       try {
         conn = DriverManager.getConnection(database_url, database_user, database_password);
