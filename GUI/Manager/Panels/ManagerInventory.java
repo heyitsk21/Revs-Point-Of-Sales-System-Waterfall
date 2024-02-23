@@ -6,10 +6,14 @@ import java.awt.*;
 
 public class ManagerInventory extends JPanel {
     public ManagerInventory() {
-        add(new JLabel("First Panel"));
-    }
+        JLabel placeholderLabel = new JLabel("This is manager inventory");
+        placeholderLabel.setHorizontalAlignment(JLabel.CENTER);
+        placeholderLabel.setVerticalAlignment(JLabel.CENTER);
 
-    private void populateButtonsFromDatabase() {
-        
+        // Set some styles for better visibility
+        placeholderLabel.setForeground(Color.GRAY);
+
+        // Add the placeholder label to the panel
+        add(placeholderLabel, BorderLayout.CENTER);
     }
 }
