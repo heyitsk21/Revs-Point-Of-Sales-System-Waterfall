@@ -8,6 +8,10 @@ public class GUI extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         // Read credentials from login.txt
+        SwingUtilities.invokeLater(() -> {
+            new LogInScreen().setVisible(true);
+        });
+
         String database_user = "";
         String database_password = "";
         try (BufferedReader br = new BufferedReader(new FileReader("login.txt"))) {
