@@ -20,15 +20,15 @@ public class ManagerInventory extends JPanel {
     JPanel leftPanel = new JPanel();
 
     public ManagerInventory() {
-        setLayout(new GridBagLayout());
-        createLeft();
-        createRight();
         managerCmds manCmds = new managerCmds();
         sqlObjects.Inventory inventory = manCmds.getInventory();
         this.ingredientIDs = inventory.ingredientIDs;
         this.names = inventory.names;
         this.ppu = inventory.ppu;
         this.count = inventory.count;
+        setLayout(new GridBagLayout());
+        createLeft();
+        createRight();
     }
 
     void createLeft() {

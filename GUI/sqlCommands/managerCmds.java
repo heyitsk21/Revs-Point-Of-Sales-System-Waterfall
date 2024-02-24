@@ -20,10 +20,10 @@ public class managerCmds {
         int size = 0;
         PreparedStatement prep;
         ResultSet allIngredients;
-        int[] ingredientIDs = new int[size]; // TODO get all ingredient IDs
-        String[] ingredientNames = new String[size]; // TODO get all ingredient names
-        float[] ppu = new float[size]; // TODO get price per units
-        int[] count = new int[size]; // TODO get number of each ingredient
+        int[] ingredientIDs = new int[size];
+        String[] ingredientNames = new String[size];
+        float[] ppu = new float[size];
+        int[] count = new int[size];
         try {
             String cmd = "SELECT * FROM Ingredients;";
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -46,6 +46,7 @@ public class managerCmds {
                 ingredientNames[counter] = allIngredients.getString("IngredientName");
                 ppu[counter] = allIngredients.getFloat("ppu");
                 count[counter] = allIngredients.getInt("count");
+                counter++;
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
