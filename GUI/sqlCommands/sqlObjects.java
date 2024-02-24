@@ -1,45 +1,54 @@
 public class sqlObjects {
-    public class Inventory {
+    public static class Inventory {
         int[] ingredientIDs;
-        string[] names;
+        String[] names;
         float[] ppu;
         int[] count;
-        Inventory(int[] ingredientIDs, string[] names, float[] ppu, int[] count){
+
+        Inventory(int[] ingredientIDs, String[] names, float[] ppu, int[] count) {
             this.ingredientIDs = ingredientIDs;
             this.names = names;
             this.ppu = ppu;
             this.count = count;
         }
-        int length(){
-            return size(ingredientIDs);
+
+        int length() {
+            return ingredientIDs.length;
         }
     }
+
     public class Menu {
-        string[] names;
+        String[] names;
         float[] price;
-        Menu(string[] names, float[] price){
+
+        Menu(String[] names, float[] price) {
             this.names = names;
             this.price = price;
         }
-        int length(){
-            return size(names);
+
+        int length() {
+            return names.length;
         }
     }
+
     public class OrderList {
-        string[] orderIDs;
-        string[] customerNames;
+        String[] orderIDs;
+        String[] customerNames;
         float[] taxPrices;
-        string[] orderTimes;
+        String[] orderTimes;
         int[] employeeIDs;
-        OrderList(string[] orderIDs, string[] customerNames, float[] taxPrices, string[] orderTimes, int[] employeeIDs){
+
+        OrderList(String[] orderIDs, String[] customerNames, float[] taxPrices, String[] orderTimes,
+                int[] employeeIDs) {
             this.orderIDs = orderIDs;
             this.customerNames = customerNames;
             this.taxPrices = taxPrices;
             this.orderTimes = orderTimes;
             this.employeeIDs = employeeIDs;
         }
-        int length(){
-            return size(orderIDs);
+
+        int length() {
+            return orderIDs.length;
         }
     }
 }
