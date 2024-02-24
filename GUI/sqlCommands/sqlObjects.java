@@ -31,4 +31,9 @@ public class sqlObjects {
             this.employeeIDs = employeeIDs;
         }
     }
+    public class Employee{
+        string employeeNames;
+        string password;
+        boolean isManager;
+    }
 }
