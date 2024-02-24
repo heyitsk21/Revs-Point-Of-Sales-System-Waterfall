@@ -35,5 +35,11 @@ public class sqlObjects {
         string employeeNames;
         string password;
         boolean isManager;
+        
+        Employee(string employeeNames, string password, boolean isManager){
+            this.employeeNames = employeeNames;
+            this.password = password;
+            this.isManager = isManager;
+        }
     }
 }

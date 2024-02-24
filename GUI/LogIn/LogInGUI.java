@@ -58,34 +58,18 @@ public class LogInGUI extends JFrame implements ActionListener {
         add(posMessage);
     }
 
-    public boolean authenticate(String username, String password) {
-
-        ResultSet result = db.executeSQL(conn, "SELECT employeename, password FROM employee;");
+    //function to authenticate the user and check if they are a manager or employee
+    //connects to the database and checks if the username and password are valid
+    private boolean authenticate(String username, String password, boolean isManager) {
+        String query = "SELECT employeename, password, ismanager FROM employee WHERE employeename = '" + username + "' AND password = '" + password + "';";
+        ResultSet result = db.executeSQL(conn, query);
         try {
-            while (result.next()) {
-                if (result.getString("employeename").equals(username) && result.getString("password").equals(password)) {
-                    return true;
-                }
+            if (result.next()) {
+                return isManager == result.getBoolean("ismanager");
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error accessing Database.");
+            JOptionPane.showMessageDialog(null,"Error accessing Database.");
         }
-
-        return false;
-    }
-
-    public boolean isManager(String username) {
-        ResultSet result = db.executeSQL(conn, "SELECT employeename, ismanager FROM employee;");
-        try {
-            while (result.next()) {
-                if (result.getString("employeename").equals(username) && result.getBoolean("ismanager")) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error accessing Database.");
-        }
-
         return false;
     }
 
@@ -95,11 +79,11 @@ public class LogInGUI extends JFrame implements ActionListener {
         String password = new String(passwordField.getPassword());
 
         // Check if the entered credentials are valid
-        if (authenticate(username,password)&&isManager(username)) {
+        if (authenticate(username,password,true)) {
             //TODO: When Manager Screen java is created, switch to that screen instead of this message
             JOptionPane.showMessageDialog(this, "Switch to Manager Screen");
         } 
-        else if(authenticate(username,password)&&!isManager(username)){
+        else if(authenticate(username,password,false)){
             //TODO: When Employee Screen java is created, switch to that screen instead of this message
             JOptionPane.showMessageDialog(this, "Switch to Employee Screen");
         }
