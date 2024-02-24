@@ -29,4 +29,8 @@ public class managerCmds {
         int[] employeeIDs = //TODO get all employeeIDs
         return sqlObjects.OrderList(orderIDs, customerNames, taxPrices, orderTimes, employeeIDs);
     }
+
+    static void updateIngredients(int ingredientID, int newCount){
+        //update database
+    }
 }
