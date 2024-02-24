@@ -1,22 +1,19 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.awt.Font;
 
-
-
-public class LogInScreen extends JFrame implements ActionListener {
+public class LogInGUI extends JFrame implements ActionListener {
 
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JLabel passwordLabel, usernameLabel, posMessage;
     private JButton loginButton;
+    private Database db = new Database();
+    private Connection conn = db.connectToDatabase();
     
-    
-
-    public LogInScreen() {
+    public LogInGUI() {
 
         //create frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -62,7 +59,34 @@ public class LogInScreen extends JFrame implements ActionListener {
     }
 
     public boolean authenticate(String username, String password) {
-        return username.equals("placeholder") && password.equals("placeholder");
+
+        ResultSet result = db.executeSQL(conn, "SELECT employeename, password FROM employee;");
+        try {
+            while (result.next()) {
+                if (result.getString("employeename").equals(username) && result.getString("password").equals(password)) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error accessing Database.");
+        }
+
+        return false;
+    }
+
+    public boolean isManager(String username) {
+        ResultSet result = db.executeSQL(conn, "SELECT employeename, ismanager FROM employee;");
+        try {
+            while (result.next()) {
+                if (result.getString("employeename").equals(username) && result.getBoolean("ismanager")) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error accessing Database.");
+        }
+
+        return false;
     }
 
     @Override
@@ -71,22 +95,16 @@ public class LogInScreen extends JFrame implements ActionListener {
         String password = new String(passwordField.getPassword());
 
         // Check if the entered credentials are valid
-        if (authenticate(username,password)) {
-            JOptionPane.showMessageDialog(this, "Login successful");
-        } else {
+        if (authenticate(username,password)&&isManager(username)) {
+            //TODO: When Manager Screen java is created, switch to that screen instead of this message
+            JOptionPane.showMessageDialog(this, "Switch to Manager Screen");
+        } 
+        else if(authenticate(username,password)&&!isManager(username)){
+            //TODO: When Employee Screen java is created, switch to that screen instead of this message
+            JOptionPane.showMessageDialog(this, "Switch to Employee Screen");
+        }
+        else {
             JOptionPane.showMessageDialog(this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    /*public static void main(String[] args) {
-        //connectToDatabase();
-        Database db = new Database();
-        Connection conn = db.connectToDatabase();
-        ResultSet result = db.executeSQL(conn, "SELECT * from employee;");
-
-        //TODO:  
-        SwingUtilities.invokeLater(() -> {
-            new LoginFrame().setVisible(true);
-        });
-    }*/ 
 }
