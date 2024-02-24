@@ -4,6 +4,9 @@
 # Log file
 *.log
 
+# Password
+login.txt
+
 # BlueJ files
 *.ctxt
 

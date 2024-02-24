@@ -91,6 +91,8 @@ public class GUI extends JFrame implements ActionListener {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Connection NOT Closed.");
         }
+        ManagerGUI managerGUI = new ManagerGUI();
+        managerGUI.setVisible(true);
     }
 
     // if button is pressed
