@@ -12,25 +12,35 @@ public class managerCmds {
 
     Database db;
 
-    public sqlObjects.Inventory getInventory() {
-        String cmd = "SELECT * FROM Ingredients;";
-        ResultSet allIngredients = db.executeSQL(cmd);
-        int size = 0;
-        try {
-            allIngredients.last();
-            size = allIngredients.getRow();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+    public managerCmds() {
+        db = new Database();
+    }
 
+    public sqlObjects.Inventory getInventory() {
+        int size = 0;
+        PreparedStatement prep;
+        ResultSet allIngredients;
         int[] ingredientIDs = new int[size]; // TODO get all ingredient IDs
         String[] ingredientNames = new String[size]; // TODO get all ingredient names
         float[] ppu = new float[size]; // TODO get price per units
         int[] count = new int[size]; // TODO get number of each ingredient
-
         try {
+            String cmd = "SELECT * FROM Ingredients;";
+            prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            allIngredients = prep.executeQuery();
+
+            // find the size of allIngredients
+            allIngredients.last();
+            size = allIngredients.getRow();
+
+            ingredientIDs = new int[size];
+            ingredientNames = new String[size];
+            ppu = new float[size];
+            count = new int[size];
+
             allIngredients.first();
             int counter = 0;
+
             while (allIngredients.next()) {
                 ingredientIDs[counter] = allIngredients.getInt("IngredientID");
                 ingredientNames[counter] = allIngredients.getString("IngredientName");
