@@ -1,12 +1,17 @@
 public class sqlObjects {
     public class Inventory {
+        int[] ingredientIDs;
         string[] names;
         float[] ppu;
         int[] count;
-        Inventory(string[] names, float[] ppu, int[] count){
+        Inventory(int[] ingredientIDs, string[] names, float[] ppu, int[] count){
+            this.ingredientIDs = ingredientIDs;
             this.names = names;
             this.ppu = ppu;
             this.count = count;
+        }
+        int length(){
+            return size(ingredientIDs);
         }
     }
     public class Menu {
@@ -15,6 +20,9 @@ public class sqlObjects {
         Menu(string[] names, float[] price){
             this.names = names;
             this.price = price;
+        }
+        int length(){
+            return size(names);
         }
     }
     public class OrderList {
@@ -29,6 +37,9 @@ public class sqlObjects {
             this.taxPrices = taxPrices;
             this.orderTimes = orderTimes;
             this.employeeIDs = employeeIDs;
+        }
+        int length(){
+            return size(orderIDs);
         }
     }
 }
