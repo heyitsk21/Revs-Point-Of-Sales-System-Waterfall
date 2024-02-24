@@ -10,10 +10,11 @@ public class managerCmds {
     */
 
     static sqlObjects.Inventory getInventory(){
+        int[] ingredientIDs = //TODO get all ingredient IDs
         string[] ingredientNames = //TODO get all ingredient names
         float[] ppu = //TODO get price per units
         int[] count = //TODO get number of each ingredient
-        return sqlObjects.Inventory(ingredientNames, ppu, count);
+        return sqlObjects.Inventory(ingredientIDs, ingredientNames, ppu, count);
     }
     static sqlObjects.Menu getMenu(){
         string[] names = //TODO get all menu names

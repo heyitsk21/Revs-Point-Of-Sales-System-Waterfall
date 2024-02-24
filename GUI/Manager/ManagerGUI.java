@@ -1,6 +1,8 @@
 import java.sql.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+
 import java.io.*;
 import java.awt.*;
 
@@ -30,9 +32,13 @@ public class ManagerGUI extends JFrame {
 
         // Create buttons
         JButton trendsBtn = createButton("Trends");
+        trendsBtn.setFont(new Font("Arial", Font.PLAIN, 25));
         JButton inventoryBtn = createButton("Inventory");
+        inventoryBtn.setFont(new Font("Arial", Font.PLAIN, 25));
         JButton menuBtn = createButton("Menu Items");
+        menuBtn.setFont(new Font("Arial", Font.PLAIN, 25));
         JButton orderBtn = createButton("Order History");
+        orderBtn.setFont(new Font("Arial", Font.PLAIN, 25));
 
         // Add buttons to a panel at the bottom
         JPanel buttonPanel = new JPanel();
@@ -49,8 +55,28 @@ public class ManagerGUI extends JFrame {
         frame.setSize(1280, 720);
         // Center the frame
         frame.setLocationRelativeTo(null);
+        
+
+        // Adds a panel at the top
+        JPanel topPanel = new JPanel();
+
+        JLabel dateTimeLabel = new JLabel();
+        java.util.Date date = new java.util.Date();
+        String dateTimeString = "Date/Time: " + date.toString();
+        dateTimeLabel.setText(dateTimeString);
+
+
+        JLabel usernameLabel = new JLabel("Username: YOUR_USERNAME");
+
+        topPanel.add(dateTimeLabel);
+        topPanel.add(usernameLabel);
+        topPanel.setBorder(new EtchedBorder());
+
+        frame.add(topPanel, BorderLayout.NORTH);
+
         frame.setVisible(true);
     }
+
 
     private JButton createButton(String panelName) {
         JButton button = new JButton(panelName);
