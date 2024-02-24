@@ -93,6 +93,11 @@ public class GUI extends JFrame implements ActionListener {
         }
         ManagerGUI managerGUI = new ManagerGUI();
         managerGUI.setVisible(true);
+
+        SwingUtilities.invokeLater(() -> {
+            new LogInGUI().setVisible(true);
+        });
+        
     }
 
     // if button is pressed

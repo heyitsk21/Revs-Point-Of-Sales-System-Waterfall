@@ -60,7 +60,7 @@ public class LogInGUI extends JFrame implements ActionListener {
 
     public boolean authenticate(String username, String password) {
 
-        ResultSet result = db.executeSQL(conn, "SELECT * employeename, password, ismanager FROM employee;");
+        ResultSet result = db.executeSQL(conn, "SELECT employeename, password FROM employee;");
         try {
             while (result.next()) {
                 if (result.getString("employeename").equals(username) && result.getString("password").equals(password)) {
