@@ -284,12 +284,6 @@ public class managerCmds {
             System.err.println(e.getMessage());
             return false;
         }
-
-        String insertLogCmd = String.format( //TODO: parameterize this!
-            "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
-            newID, price, "YOOO I CREATED A NEW INGREDIENT WITH NAME " + menuItemName);
-        db.executeSQL(insertLogCmd);
-
         return true;
     }
 
