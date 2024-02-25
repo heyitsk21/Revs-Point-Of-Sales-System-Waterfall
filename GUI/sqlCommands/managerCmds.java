@@ -299,10 +299,6 @@ public class managerCmds {
         return false;
     }
 
-    public boolean addOrder(/*TODO*/){
-        return false;
-    }
-
     public boolean updateOrder(/*TODO*/){
         return false;
     }
