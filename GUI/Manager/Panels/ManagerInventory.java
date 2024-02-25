@@ -11,7 +11,7 @@ public class ManagerInventory extends JPanel {
     //Inventory myInventory = managerCmds.getInventory();
     int numberOfItems = 5; //= myInventory.length();
     int[] ingredientIDs = {1,2,3,4,5}; //= myInventory.ingredientIDs;
-    String[] names = {"Item 1", "another ing", "cheese", "bread", "knucle sandwich"};
+    String[] names = {"Item 1", "another ing", "cheese", "bread", "knuckle sandwich"};
     int[] count = {2,5,3,99,32,45};
     double[] ppu = {1.234, 1.234, 1.234, 1.234, 1.234};
     int currIngredientIndex = 0;
@@ -31,7 +31,7 @@ public class ManagerInventory extends JPanel {
 
         for (int i = 0; i < numberOfItems; i++) {
             JButton button = new JButton(names[i] + ", Count: " + count[i]);
-            button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
+            button.addActionListener(new ButtonClickListener(String.valueOf(i)));
             button.setPreferredSize(new Dimension(300, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));
             leftPanel.add(button);
@@ -114,7 +114,7 @@ public class ManagerInventory extends JPanel {
         leftPanel.removeAll();
         for (int i = 0; i < numberOfItems; i++) {
             JButton button = new JButton(names[i] + ", Count: " + count[i]);
-            button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
+            button.addActionListener(new ButtonClickListener(String.valueOf(i)));
             button.setPreferredSize(new Dimension(300, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));
             leftPanel.add(button);
@@ -124,11 +124,9 @@ public class ManagerInventory extends JPanel {
     }
 
     private class ButtonClickListener implements ActionListener {
-        private ManagerInventory managerInventory;
         private String buttonName;
 
-        public ButtonClickListener(ManagerInventory managerInventory, String buttonName) {
-            this.managerInventory = managerInventory;
+        public ButtonClickListener(String buttonName) {
             this.buttonName = buttonName;
         }
 
