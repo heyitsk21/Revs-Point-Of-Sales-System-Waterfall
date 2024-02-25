@@ -17,14 +17,11 @@ public class managerCmds {
     }
 
     public sqlObjects.Inventory getInventory() {
-        int size = 0;
-        PreparedStatement prep;
-        ResultSet allIngredients;
-        int[] ingredientIDs = new int[size];
-        String[] ingredientNames = new String[size];
-        float[] ppu = new float[size];
-        int[] count = new int[size];
         try {
+            int size = 0;
+            PreparedStatement prep;
+            ResultSet allIngredients;
+
             String cmd = "SELECT * FROM Ingredients;";
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             allIngredients = prep.executeQuery();
@@ -33,10 +30,10 @@ public class managerCmds {
             allIngredients.last();
             size = allIngredients.getRow();
 
-            ingredientIDs = new int[size];
-            ingredientNames = new String[size];
-            ppu = new float[size];
-            count = new int[size];
+            int[] ingredientIDs = new int[size];
+            String[] ingredientNames = new String[size];
+            float[] ppu = new float[size];
+            int[] count = new int[size];
 
             allIngredients.first();
             int counter = 0;
@@ -48,11 +45,12 @@ public class managerCmds {
                 count[counter] = allIngredients.getInt("count");
                 counter++;
             }
+            sqlObjects.Inventory inventoryObj = new sqlObjects.Inventory(ingredientIDs, ingredientNames, ppu, count);
+            return inventoryObj;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        sqlObjects.Inventory inventoryObj = new sqlObjects.Inventory(ingredientIDs, ingredientNames, ppu, count);
-        return inventoryObj;
+        return null;
     }
 
     // static sqlObjects.Menu getMenu(){
