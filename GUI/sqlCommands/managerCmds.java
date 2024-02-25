@@ -22,7 +22,7 @@ public class managerCmds {
             PreparedStatement prep;
             ResultSet allIngredients;
 
-            String cmd = "SELECT * FROM Ingredients;";
+            String cmd = "SELECT * FROM Ingredients ORDER BY IngredientID;";
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             allIngredients = prep.executeQuery();
 
@@ -39,14 +39,14 @@ public class managerCmds {
             allIngredients.first();
             int counter = 0;
 
-            while (allIngredients.next()) {
+            do {
                 ingredientIDs[counter] = allIngredients.getInt("IngredientID");
                 ingredientNames[counter] = allIngredients.getString("IngredientName");
                 ppu[counter] = allIngredients.getFloat("ppu");
                 count[counter] = allIngredients.getInt("count");
                 minamount[counter] = allIngredients.getInt("minamount");
                 counter++;
-            }
+            }while (allIngredients.next()) ;
             sqlObjects.Inventory inventoryObj = new sqlObjects.Inventory(ingredientIDs, ingredientNames, ppu, count,
                     minamount);
             return inventoryObj;
@@ -77,12 +77,12 @@ public class managerCmds {
             allMenuItems.first();
             int counter = 0;
 
-            while (allMenuItems.next()) {
+            do {
                 menuItemIDs[counter] = allMenuItems.getInt("MenuID");
                 names[counter] = allMenuItems.getString("ItemName");
                 prices[counter] = allMenuItems.getFloat("Price");
                 counter++;
-            }
+            }while (allMenuItems.next()) ;
 
             sqlObjects.Menu menuItemObj = new sqlObjects.Menu(menuItemIDs, names, prices);
             return menuItemObj;
@@ -117,7 +117,7 @@ public class managerCmds {
             allOrders.first();
             int counter = 0;
 
-            while (allOrders.next()) {
+            do{
                 orderIDs[counter] = allOrders.getString("OrderID");
                 customerNames[counter] = allOrders.getString("CustomerName");
                 taxPrices[counter] = allOrders.getFloat("TaxPrice");
@@ -125,7 +125,7 @@ public class managerCmds {
                 orderTimes[counter] = allOrders.getString("OrderDateTime");
                 employeeIDs[counter] = allOrders.getInt("EmployeeID");
                 counter++;
-            }
+            }while (allOrders.next()) ;
 
             sqlObjects.OrderList orderList = new sqlObjects.OrderList(orderIDs, customerNames, taxPrices, basePrices,
                     orderTimes, employeeIDs);

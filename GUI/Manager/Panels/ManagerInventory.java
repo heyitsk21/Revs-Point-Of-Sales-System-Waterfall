@@ -30,7 +30,7 @@ public class ManagerInventory extends JPanel {
         this.ppu = inventory.ppu;
         this.count = inventory.count;
         this.minamount = inventory.minamount;
-        this.numberOfItems = ingredientIDs.length;
+        this.numberOfItems = 5;
         setLayout(new GridBagLayout());
         createLeft();
         createRight();
@@ -42,7 +42,7 @@ public class ManagerInventory extends JPanel {
         this.names = inventory.names;
         this.ppu = inventory.ppu;
         this.count = inventory.count;
-        this.numberOfItems = ingredientIDs.length;
+        this.numberOfItems = 5;
         updateRight();
         updateLeft();
     }
@@ -52,7 +52,7 @@ public class ManagerInventory extends JPanel {
         leftPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         for (int i = 0; i < numberOfItems; i++) {
-            JButton button = new JButton(names[i] + ", Count: " + count[i] + ", MinAmount: " + minamount[i]);
+            JButton button = new JButton(names[i] + ", Count: " + count[i]);
             button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
             button.setPreferredSize(new Dimension(300, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -183,6 +183,8 @@ public class ManagerInventory extends JPanel {
                 newAmount = Integer.parseInt(userInputField.getText());
             }
             System.out.println("New amount: " + newAmount);
+            RefreshGUI();
+            manCmds.updateIngredient(ingredientIDs[currIngredientIndex], count[currIngredientIndex], "", 0.0f, newAmount, "This change was prossesed by my the mangaer yo.");
             RefreshGUI();
             // TODO send the IngredientID and new amount to sql and update the database and
             // screen with new amounts

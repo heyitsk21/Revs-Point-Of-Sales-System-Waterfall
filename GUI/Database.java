@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class Database {
@@ -50,10 +51,14 @@ public class Database {
 
         try {
             Statement stmt = con.createStatement();
-            String sqlStatement = sql;
-            result = stmt.executeQuery(sqlStatement);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error accessing Database.");
+            if(sql.startsWith("SELECT")){
+                result = stmt.executeQuery(sql);
+            }
+            else{
+                stmt.executeUpdate(sql);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,e.getMessage() + " SQL COMMAND FAILED TO EXACUTE: " + sql);
         }
 
         return result;
