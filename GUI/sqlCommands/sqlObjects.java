@@ -4,12 +4,14 @@ public class sqlObjects {
         String[] names;
         float[] ppu;
         int[] count;
+        int[] minamount;
 
-        Inventory(int[] ingredientIDs, String[] names, float[] ppu, int[] count) {
+        Inventory(int[] ingredientIDs, String[] names, float[] ppu, int[] count, int[] minamount) {
             this.ingredientIDs = ingredientIDs;
             this.names = names;
             this.ppu = ppu;
             this.count = count;
+            this.minamount = minamount;
         }
 
         int length() {
@@ -17,11 +19,13 @@ public class sqlObjects {
         }
     }
 
-    public class Menu {
+    public static class Menu {
+        int[] menuItemIDs;
         String[] names;
         float[] price;
 
-        Menu(String[] names, float[] price) {
+        Menu(int[] menuItemIDs, String[] names, float[] price) {
+            this.menuItemIDs = menuItemIDs;
             this.names = names;
             this.price = price;
         }
@@ -31,18 +35,20 @@ public class sqlObjects {
         }
     }
 
-    public class OrderList {
+    public static class OrderList {
         String[] orderIDs;
         String[] customerNames;
         float[] taxPrices;
+        float[] basePrices;
         String[] orderTimes;
         int[] employeeIDs;
 
-        OrderList(String[] orderIDs, String[] customerNames, float[] taxPrices, String[] orderTimes,
+        OrderList(String[] orderIDs, String[] customerNames, float[] taxPrices, float[] basePrices, String[] orderTimes,
                 int[] employeeIDs) {
             this.orderIDs = orderIDs;
             this.customerNames = customerNames;
             this.taxPrices = taxPrices;
+            this.basePrices = basePrices;
             this.orderTimes = orderTimes;
             this.employeeIDs = employeeIDs;
         }
