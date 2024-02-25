@@ -136,8 +136,7 @@ public class managerCmds {
         return null;
     }
 
-    public boolean updateIngredient(int ingredientID, String newName, float newPPU, int deltaCount, String logMessage) {
-        try {
+    public boolean updateIngredient(int ingredientID, int currentCount, String newName, float newPPU, int deltaCount, String logMessage) {
             if (newName != null && !newName.isEmpty()) {
                 String updateNameCmd = String.format("UPDATE Ingredients SET IngredientName = '%s' WHERE IngredientID = %d;", newName, ingredientID);
                 db.executeSQL(updateNameCmd);
@@ -149,16 +148,10 @@ public class managerCmds {
             }
 
             if (deltaCount != 0) {
-                String checkCountCmd = String.format("SELECT Count FROM Ingredients WHERE IngredientID = %d;", ingredientID);
-                ResultSet countResult = db.executeSQL(checkCountCmd);
-                if (countResult.next()) 
+                int newCount = currentCount + deltaCount;
+                if (newCount < 0) 
                 {
-                    int currentCount = countResult.getInt("Count");
-                    int newCount = currentCount + deltaCount;
-                    if (newCount < 0) 
-                    {
-                        return false;
-                    }
+                    return false;
                 }
 
                 String updateCountCmd = String.format("UPDATE Ingredients SET Count = Count + %d WHERE IngredientID = %d;", deltaCount, ingredientID);
@@ -170,11 +163,7 @@ public class managerCmds {
             }
 
             return true; // Update successful
-        } catch (SQLException e) {
-            System.err.println("Error updating ingredient: " + e.getMessage());
-            return false;
         }
-    }
 
 
 }
