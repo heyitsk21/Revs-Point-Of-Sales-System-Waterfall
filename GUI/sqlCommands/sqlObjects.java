@@ -57,4 +57,18 @@ public class sqlObjects {
             return orderIDs.length;
         }
     }
+
+    public static class MenuItemIngredients{
+        int[] ingredientIDs;
+        String[] names;
+
+        MenuItemIngredients(int[] ingredientIDs, String[] names) {
+            this.ingredientIDs = ingredientIDs;
+            this.names = names;
+        }
+
+        int length() {
+            return ingredientIDs.length;
+        }
+    }
 }
