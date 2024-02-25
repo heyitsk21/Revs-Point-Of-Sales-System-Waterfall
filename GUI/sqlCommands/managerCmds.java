@@ -92,7 +92,7 @@ public class managerCmds {
         return null;
     }
 
-    public void /*TODO ADD SQL OBJECT */ getMenuItemIngredients(/*TODO*/){
+    public sqlObjects.MenuItemIngredients getMenuItemIngredients(/*TODO*/){
         return null;
     }
 
@@ -192,8 +192,22 @@ public class managerCmds {
         return true; // Update successful
     }
 
-    public boolean addIngredient(/*TODO*/){
-        return false;
+    public boolean addIngredient(int greatestID,String ingredientName,int count, float PPU, int minamount){
+        String updateNameCmd = "INSERT INTO Ingredients (IngredientID, Ingredientname, Count, PPU, minamount) VALUES (?,?,?,?,?);";
+        try {
+            PreparedStatement prep = db.con.prepareStatement(updateNameCmd);
+            prep.setInt(1,greatestID);
+            prep.setString(2, ingredientName);
+            prep.setInt(3, count);
+            prep.setFloat(4, PPU);
+            prep.setInt(5, minamount);
+            prep.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+      
     }
 
     public boolean deleteIngredient(/*TODO */){
