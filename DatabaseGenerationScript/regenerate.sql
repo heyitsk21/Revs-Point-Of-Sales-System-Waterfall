@@ -90,7 +90,7 @@ CREATE TABLE OrderMenuItems (
 --COPY CHUNKS BELOW
 -- Copy data from CSV files into their corresponding tables
 
-\COPY Ingredients (IngredientID, IngredientName, PPU, Count) FROM 'DatabaseGenerationScript/Ingredients.csv' DELIMITER ',' CSV HEADER;
+\COPY Ingredients (IngredientID, IngredientName, PPU, Count, MinAmount) FROM 'DatabaseGenerationScript/Ingredients.csv' DELIMITER ',' CSV HEADER;
 
 \COPY MenuItems (MenuID, ItemName, Price) FROM 'DatabaseGenerationScript/MenuItems.csv' DELIMITER ',' CSV HEADER;
 
