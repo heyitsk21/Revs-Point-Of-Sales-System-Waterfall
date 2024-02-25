@@ -12,8 +12,9 @@ DROP TABLE IF EXISTS OrderMenuItems CASCADE;
 CREATE TABLE Ingredients (
     IngredientID SERIAL PRIMARY KEY,
     IngredientName VARCHAR(100),
-    PPU NUMERIC(10, 2), -- I used NUMERIC (10,2) because it cuts us off to 2 decimal places for money.
-    Count INT
+    PPU NUMERIC(10, 2), -- I used NUMERIC (10,2) because it cuts us off to 2 decimal places for money
+    Count INT,
+    MinAmount INT
 );
 
 -- Create MenuItems table
