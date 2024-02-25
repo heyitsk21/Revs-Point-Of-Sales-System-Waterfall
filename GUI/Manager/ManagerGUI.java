@@ -22,13 +22,16 @@ public class ManagerGUI extends JFrame {
         frame.setLayout(new BorderLayout());
 
         // Create cardPanel and cardLayout
-        
+        System.out.println("Panels starting");
+
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         cardPanel.add(new ManagerTrends(), "Trends");
         cardPanel.add(new ManagerInventory(), "Inventory");
         cardPanel.add(new ManagerMenuItems(), "Menu Items");
-        cardPanel.add(new ManagerOrderHistory(), "Order History");
+        //cardPanel.add(new ManagerOrderHistory(), "Order History");
+
+        System.out.println("Panels made");
 
         // Create buttons
         JButton trendsBtn = createButton("Trends");
@@ -39,6 +42,8 @@ public class ManagerGUI extends JFrame {
         menuBtn.setFont(new Font("Arial", Font.PLAIN, 25));
         JButton orderBtn = createButton("Order History");
         orderBtn.setFont(new Font("Arial", Font.PLAIN, 25));
+
+        System.out.println("Building bottom panel");
 
         // Add buttons to a panel at the bottom
         JPanel buttonPanel = new JPanel();
@@ -56,6 +61,7 @@ public class ManagerGUI extends JFrame {
         // Center the frame
         frame.setLocationRelativeTo(null);
         
+        System.out.println("Building top panel");
 
         // Adds a panel at the top
         JPanel topPanel = new JPanel();
@@ -83,6 +89,7 @@ public class ManagerGUI extends JFrame {
         });
         timer.start();
 
+        System.out.println("Making visible");
         frame.setVisible(true);
     }
 
