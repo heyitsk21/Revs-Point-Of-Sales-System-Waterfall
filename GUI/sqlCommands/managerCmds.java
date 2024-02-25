@@ -66,7 +66,7 @@ public class managerCmds {
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             allMenuItems = prep.executeQuery();
 
-            // find the size of allIngredients
+            // find the size of allMenuItems
             allMenuItems.last();
             size = allMenuItems.getRow();
 
@@ -92,7 +92,40 @@ public class managerCmds {
         return null;
     }
 
-    public sqlObjects.MenuItemIngredients getMenuItemIngredients(/*TODO*/){
+    public sqlObjects.MenuItemIngredients getMenuItemIngredients(int menuItemID){
+        try{
+            int size = 0;
+            PreparedStatement prep;
+            ResultSet allMenuItemIngredients;
+
+            String cmd = String.format("SELECT Ingredients.IngredientID, Ingredients.IngredientName " +
+                "FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID " +
+                "JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID " +
+                "WHERE menuitems.MenuID = {};", menuItemID);
+            prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            allMenuItemIngredients = prep.executeQuery();
+
+            // find the size of allMenuItemIngredients
+            allMenuItemIngredients.last();
+            size = allMenuItemIngredients.getRow();
+
+            int[] ingredientIDs = new int[size];
+            String[] names = new String[size];
+
+            allMenuItemIngredients.first();
+            int counter = 0;
+
+            do {
+                ingredientIDs[counter] = allMenuItemIngredients.getInt("Ingredients.IngredientID");
+                names[counter] = allMenuItemIngredients.getString("Ingredients.IngredientName");
+                counter++;
+            } while (allMenuItemIngredients.next()) ;
+
+            sqlObjects.MenuItemIngredients menuItemIngredientObj = new sqlObjects.MenuItemIngredients(ingredientIDs, names);
+            return menuItemIngredientObj;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
         return null;
     }
 
@@ -107,7 +140,7 @@ public class managerCmds {
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             allOrders = prep.executeQuery();
 
-            // find the size of all orders
+            // find the size of allOrders
             allOrders.last();
             size = allOrders.getRow();
 
@@ -215,10 +248,6 @@ public class managerCmds {
         return true;
     }
 
-    public boolean deleteIngredient(/*TODO */){
-        return false;
-    }
-
     public boolean updateMenuItem(/*TODO*/){
         return false;
     }
@@ -230,12 +259,20 @@ public class managerCmds {
     public boolean deleteMenuItem(/*TODO*/){
         return false;
     }
+    
+    public boolean addMenuItemIngredient(int menuItemID){
+        return false;
+    }
 
-    public boolean updateOrder(/*TODO*/){
+    public boolean deleteMenuItemIngredient(/*TODO*/){
         return false;
     }
 
     public boolean addOrder(/*TODO*/){
+        return false;
+    }
+
+    public boolean updateOrder(/*TODO*/){
         return false;
     }
 
