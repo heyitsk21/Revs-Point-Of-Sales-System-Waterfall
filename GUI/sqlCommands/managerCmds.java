@@ -34,6 +34,7 @@ public class managerCmds {
             String[] ingredientNames = new String[size];
             float[] ppu = new float[size];
             int[] count = new int[size];
+            int[] minamount = new int[size];
 
             allIngredients.first();
             int counter = 0;
@@ -43,9 +44,11 @@ public class managerCmds {
                 ingredientNames[counter] = allIngredients.getString("IngredientName");
                 ppu[counter] = allIngredients.getFloat("ppu");
                 count[counter] = allIngredients.getInt("count");
+                minamount[counter] = allIngredients.getInt("minamount");
                 counter++;
             }
-            sqlObjects.Inventory inventoryObj = new sqlObjects.Inventory(ingredientIDs, ingredientNames, ppu, count);
+            sqlObjects.Inventory inventoryObj = new sqlObjects.Inventory(ingredientIDs, ingredientNames, ppu, count,
+                    minamount);
             return inventoryObj;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -90,47 +93,61 @@ public class managerCmds {
     }
 
     public sqlObjects.OrderList getOrders() {
-    try {
-        int size = 0;
-        PreparedStatement prep;
-        ResultSet allOrders;
+        try {
+            int size = 0;
+            PreparedStatement prep;
+            ResultSet allOrders;
 
-        //OrderID,CustomerName,TaxPrice,BasePrice,OrderDateTime,EmployeeID
-        String cmd = "SELECT OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID FROM Orders;";
-        prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        allOrders = prep.executeQuery();
+            // OrderID,CustomerName,TaxPrice,BasePrice,OrderDateTime,EmployeeID
+            String cmd = "SELECT OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID FROM Orders ORDER BY OrderDateTime DESC;";
+            prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            allOrders = prep.executeQuery();
 
-        // find the size of all orders
-        allOrders.last();
-        size = allOrders.getRow();
+            // find the size of all orders
+            allOrders.last();
+            size = allOrders.getRow();
 
-        String[] orderIDs = new String[size];
-        String[] customerNames = new String[size];
-        float[] taxPrices = new float[size];
-        float[] basePrices = new float[size];
-        String[] orderTimes = new String[size];
-        int[] employeeIDs = new int[size];
+            String[] orderIDs = new String[size];
+            String[] customerNames = new String[size];
+            float[] taxPrices = new float[size];
+            float[] basePrices = new float[size];
+            String[] orderTimes = new String[size];
+            int[] employeeIDs = new int[size];
 
-        allOrders.first();
-        int counter = 0;
+            allOrders.first();
+            int counter = 0;
 
-        while (allOrders.next()) 
-        {
-            orderIDs[counter] = allOrders.getString("OrderID");
-            customerNames[counter] = allOrders.getString("CustomerName");
-            taxPrices[counter] = allOrders.getFloat("TaxPrice");
-            basePrices[counter] = allOrders.getFloat("BasePrice");
-            orderTimes[counter] = allOrders.getString("OrderDateTime");
-            employeeIDs[counter] = allOrders.getInt("EmployeeID");
-            counter++;
+            while (allOrders.next()) {
+                orderIDs[counter] = allOrders.getString("OrderID");
+                customerNames[counter] = allOrders.getString("CustomerName");
+                taxPrices[counter] = allOrders.getFloat("TaxPrice");
+                basePrices[counter] = allOrders.getFloat("BasePrice");
+                orderTimes[counter] = allOrders.getString("OrderDateTime");
+                employeeIDs[counter] = allOrders.getInt("EmployeeID");
+                counter++;
+            }
+
+            sqlObjects.OrderList orderList = new sqlObjects.OrderList(orderIDs, customerNames, taxPrices, basePrices,
+                    orderTimes, employeeIDs);
+            return orderList;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-
-        sqlObjects.OrderList orderList = new sqlObjects.OrderList(orderIDs, customerNames, taxPrices, basePrices, orderTimes, employeeIDs);
-        return orderList;
-    } catch (SQLException e) {
-        System.err.println(e.getMessage());
+        return null;
     }
-    return null;
-}
+
+    // public sqlObjects.OrderList updateMenu(int deltaIngredient, int ) {
+    // try {
+    // int size = 0;
+    // PreparedStatement prep;
+
+    // String cmd = "SELECT ;";
+    // prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE,
+    // ResultSet.CONCUR_READ_ONLY);
+    // allOrders = prep.executeQuery();
+    // } catch {
+
+    // }
+    // }
 
 }

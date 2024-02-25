@@ -4,12 +4,14 @@ public class sqlObjects {
         String[] names;
         float[] ppu;
         int[] count;
+        int[] minamount;
 
-        Inventory(int[] ingredientIDs, String[] names, float[] ppu, int[] count) {
+        Inventory(int[] ingredientIDs, String[] names, float[] ppu, int[] count, int[] minamount) {
             this.ingredientIDs = ingredientIDs;
             this.names = names;
             this.ppu = ppu;
             this.count = count;
+            this.minamount = minamount;
         }
 
         int length() {
