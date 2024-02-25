@@ -157,11 +157,10 @@ public class managerCmds {
                 PreparedStatement prep = db.con.prepareStatement(updateNameCmd);
                 prep.setString(1, newName);
                 prep.setInt((2), ingredientID);
+                prep.executeUpdate();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-
-            db.executeSQL(updateNameCmd);
         }
 
         if (newPPU > 0) {
