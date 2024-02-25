@@ -92,6 +92,10 @@ public class managerCmds {
         return null;
     }
 
+    public void /*TODO ADD SQL OBJECT */ getMenuItemIngredients(/*TODO*/){
+        return null;
+    }
+
     public sqlObjects.OrderList getOrders() {
         try {
             int size = 0;
@@ -187,5 +191,38 @@ public class managerCmds {
 
         return true; // Update successful
     }
+
+    public boolean addIngredient(/*TODO*/){
+        return false;
+    }
+
+    public boolean deleteIngredient(/*TODO */){
+        return false;
+    }
+
+    public boolean updateMenuItem(/*TODO*/){
+        return false;
+    }
+
+    public boolean addMenuItem(/*TODO*/){
+        return false;
+    }
+
+    public boolean deleteMenuItem(/*TODO*/){
+        return false;
+    }
+
+    public boolean updateOrder(/*TODO*/){
+        return false;
+    }
+
+    public boolean addOrder(/*TODO*/){
+        return false;
+    }
+
+    public boolean deleteOrder(/*TODO*/){
+        return false;
+    }
+
 
 }
