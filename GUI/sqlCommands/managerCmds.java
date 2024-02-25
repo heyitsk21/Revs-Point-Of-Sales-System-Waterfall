@@ -223,9 +223,9 @@ public class managerCmds {
     }
 
     public boolean addIngredient(int newID,String ingredientName, int count, float PPU, int minamount){
-        String updateNameCmd = "INSERT INTO Ingredients (IngredientID, Ingredientname, Count, PPU, minamount) VALUES (?,?,?,?,?);";
+        String addIngredientCmd = "INSERT INTO Ingredients (IngredientID, Ingredientname, Count, PPU, minamount) VALUES (?,?,?,?,?);";
         try {
-            PreparedStatement prep = db.con.prepareStatement(updateNameCmd);
+            PreparedStatement prep = db.con.prepareStatement(addIngredientCmd);
             prep.setInt(1,newID);
             prep.setString(2, ingredientName);
             prep.setInt(3, count);
@@ -237,7 +237,7 @@ public class managerCmds {
             return false;
         }
 
-        String insertLogCmd = String.format(
+        String insertLogCmd = String.format( //TODO: parameterize this!
             "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
             newID, count, "YOOO I CREATED A NEW INGREDIENT WITH NAME " + ingredientName);
         db.executeSQL(insertLogCmd);
@@ -260,6 +260,7 @@ public class managerCmds {
                 prep.executeUpdate();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
+                return false;
             }
         }
 
@@ -271,8 +272,25 @@ public class managerCmds {
         return false;
     }
 
-    public boolean addMenuItem(/*TODO*/){
-        return false;
+    public boolean addMenuItem(int newID, String menuItemName, float price){
+        String addMenuItemCmd = "INSERT INTO MenuItems (MenuID, ItemName, Price) VALUES (?,?,?);";
+        try {
+            PreparedStatement prep = db.con.prepareStatement(addMenuItemCmd);
+            prep.setInt(1, newID);
+            prep.setString(3, menuItemName);
+            prep.setFloat(4, price);
+            prep.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+
+        String insertLogCmd = String.format( //TODO: parameterize this!
+            "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
+            newID, price, "YOOO I CREATED A NEW INGREDIENT WITH NAME " + menuItemName);
+        db.executeSQL(insertLogCmd);
+
+        return true;
     }
 
     public boolean deleteMenuItem(/*TODO*/){
