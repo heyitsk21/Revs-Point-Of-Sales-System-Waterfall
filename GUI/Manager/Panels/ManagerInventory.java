@@ -19,8 +19,10 @@ public class ManagerInventory extends JPanel {
     JPanel rightPanel = new JPanel();
     JPanel leftPanel = new JPanel();
 
+    managerCmds manCmds;
+
     public ManagerInventory() {
-        managerCmds manCmds = new managerCmds();
+        this.manCmds = new managerCmds();
         sqlObjects.Inventory inventory = manCmds.getInventory();
         this.ingredientIDs = inventory.ingredientIDs;
         this.names = inventory.names;
@@ -29,6 +31,16 @@ public class ManagerInventory extends JPanel {
         setLayout(new GridBagLayout());
         createLeft();
         createRight();
+    }
+
+    private void RefreshGUI(){
+        sqlObjects.Inventory inventory = manCmds.getInventory();
+        this.ingredientIDs = inventory.ingredientIDs;
+        this.names = inventory.names;
+        this.ppu = inventory.ppu;
+        this.count = inventory.count;
+        updateRight();
+        updateLeft();
     }
 
     void createLeft() {
@@ -143,7 +155,7 @@ public class ManagerInventory extends JPanel {
             // Perform actions when the button is clicked
             System.out.println("Ingredient clicked: " + buttonName);
             currIngredientIndex = Integer.parseInt(buttonName);
-            updateRight();
+            RefreshGUI();
         }
     }
 
@@ -161,13 +173,11 @@ public class ManagerInventory extends JPanel {
                 newAmount = Integer.parseInt(userInputField.getText());
             }
             System.out.println("New amount: " + newAmount);
-
+            RefreshGUI();
             // TODO send the IngredientID and new amount to sql and update the database and
             // screen with new amounts
 
-            count[currIngredientIndex] = newAmount;
-            updateRight();
-            updateLeft();
+           
         }
     }
 
