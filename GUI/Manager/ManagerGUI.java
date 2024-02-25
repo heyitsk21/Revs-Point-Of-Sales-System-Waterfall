@@ -29,7 +29,7 @@ public class ManagerGUI extends JFrame {
         cardPanel.add(new ManagerTrends(), "Trends");
         cardPanel.add(new ManagerInventory(), "Inventory");
         cardPanel.add(new ManagerMenuItems(), "Menu Items");
-        //cardPanel.add(new ManagerOrderHistory(), "Order History");
+        cardPanel.add(new ManagerOrderHistory(), "Order History");
 
         System.out.println("Panels made");
 
