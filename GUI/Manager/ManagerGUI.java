@@ -61,18 +61,27 @@ public class ManagerGUI extends JFrame {
         JPanel topPanel = new JPanel();
 
         JLabel dateTimeLabel = new JLabel();
-        java.util.Date date = new java.util.Date();
-        String dateTimeString = "Date/Time: " + date.toString();
-        dateTimeLabel.setText(dateTimeString);
+        dateTimeLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        updateDateTime(dateTimeLabel);
 
 
         JLabel usernameLabel = new JLabel("Username: YOUR_USERNAME");
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 15));
 
         topPanel.add(dateTimeLabel);
         topPanel.add(usernameLabel);
         topPanel.setBorder(new EtchedBorder());
 
         frame.add(topPanel, BorderLayout.NORTH);
+
+        // Use a Timer to update the dateTimeLabel every second
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateDateTime(dateTimeLabel);
+            }
+        });
+        timer.start();
 
         frame.setVisible(true);
     }
@@ -88,5 +97,11 @@ public class ManagerGUI extends JFrame {
             }
         });
         return button;
+    }
+
+    private void updateDateTime(JLabel dateTimeLabel) {
+        java.util.Date date = new java.util.Date();
+        String dateTimeString = "Date/Time: " + date.toString();
+        dateTimeLabel.setText(dateTimeString);
     }
 }
