@@ -37,14 +37,16 @@ public class sqlObjects {
         String[] orderIDs;
         String[] customerNames;
         float[] taxPrices;
+        float[] basePrices;
         String[] orderTimes;
         int[] employeeIDs;
 
-        OrderList(String[] orderIDs, String[] customerNames, float[] taxPrices, String[] orderTimes,
+        OrderList(String[] orderIDs, String[] customerNames, float[] taxPrices, float[] basePrices, String[] orderTimes,
                 int[] employeeIDs) {
             this.orderIDs = orderIDs;
             this.customerNames = customerNames;
             this.taxPrices = taxPrices;
+            this.basePrices = basePrices;
             this.orderTimes = orderTimes;
             this.employeeIDs = employeeIDs;
         }

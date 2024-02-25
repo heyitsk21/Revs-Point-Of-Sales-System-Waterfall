@@ -89,13 +89,48 @@ public class managerCmds {
         return null;
     }
 
-    // public sqlObjects.OrderList getOrders(){
-    // String[] orderIDs = //TODO get all orderIDs
-    // String[] customerNames = //TODO get all customerNames
-    // float[] taxPrices = //TODO get all tax prices
-    // String[] orderTimes = //TODO get all order placement times
-    // int[] employeeIDs = //TODO get all employeeIDs
-    // return sqlObjects.OrderList(orderIDs, customerNames, taxPrices, orderTimes,
-    // employeeIDs);
-    // }
+    public sqlObjects.OrderList getOrders() {
+    try {
+        int size = 0;
+        PreparedStatement prep;
+        ResultSet allOrders;
+
+        //OrderID,CustomerName,TaxPrice,BasePrice,OrderDateTime,EmployeeID
+        String cmd = "SELECT OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID FROM Orders;";
+        prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        allOrders = prep.executeQuery();
+
+        // find the size of all orders
+        allOrders.last();
+        size = allOrders.getRow();
+
+        String[] orderIDs = new String[size];
+        String[] customerNames = new String[size];
+        float[] taxPrices = new float[size];
+        float[] basePrices = new float[size];
+        String[] orderTimes = new String[size];
+        int[] employeeIDs = new int[size];
+
+        allOrders.first();
+        int counter = 0;
+
+        while (allOrders.next()) 
+        {
+            orderIDs[counter] = allOrders.getString("OrderID");
+            customerNames[counter] = allOrders.getString("CustomerName");
+            taxPrices[counter] = allOrders.getFloat("TaxPrice");
+            basePrices[counter] = allOrders.getFloat("BasePrice");
+            orderTimes[counter] = allOrders.getString("OrderDateTime");
+            employeeIDs[counter] = allOrders.getInt("EmployeeID");
+            counter++;
+        }
+
+        sqlObjects.OrderList orderList = new sqlObjects.OrderList(orderIDs, customerNames, taxPrices, basePrices, orderTimes, employeeIDs);
+        return orderList;
+    } catch (SQLException e) {
+        System.err.println(e.getMessage());
+    }
+    return null;
+}
+
 }
