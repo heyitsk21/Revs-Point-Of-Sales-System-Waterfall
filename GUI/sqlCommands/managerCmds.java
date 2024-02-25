@@ -135,8 +135,8 @@ public class managerCmds {
         }
         return null;
     }
-    
-    public boolean updateMenu(int ingredientID, String newName, float newPPU, int deltaCount, String logMessage) {
+
+    public boolean updateIngredient(int ingredientID, String newName, float newPPU, int deltaCount, String logMessage) {
         try {
             if (newName != null && !newName.isEmpty()) {
                 String updateNameCmd = String.format("UPDATE Ingredients SET IngredientName = '%s' WHERE IngredientID = %d;", newName, ingredientID);
