@@ -135,12 +135,46 @@ public class managerCmds {
         }
         return null;
     }
+    
+    public boolean updateMenu(int ingredientID, String newName, float newPPU, int deltaCount, String logMessage) {
+        try {
+            if (newName != null && !newName.isEmpty()) {
+                String updateNameCmd = String.format("UPDATE Ingredients SET IngredientName = '%s' WHERE IngredientID = %d;", newName, ingredientID);
+                db.executeSQL(updateNameCmd);
+            }
 
-    public boolean updateMenu(int ingredientID, int deltaIngredient) {
-        String cmd = String.format("UPDATE Ingredients SET Count = Count + {} WHERE IngredientID = {};",
-                deltaIngredient, ingredientID);
-        db.executeSQL(cmd);
-        return true; // TODO: check if the update command worked?
+            if (newPPU > 0) {
+                String updatePPUCmd = String.format("UPDATE Ingredients SET PPU = %.2f WHERE IngredientID = %d;", newPPU, ingredientID);
+                db.executeSQL(updatePPUCmd);
+            }
+
+            if (deltaCount != 0) {
+                String checkCountCmd = String.format("SELECT Count FROM Ingredients WHERE IngredientID = %d;", ingredientID);
+                ResultSet countResult = db.executeSQL(checkCountCmd);
+                if (countResult.next()) 
+                {
+                    int currentCount = countResult.getInt("Count");
+                    int newCount = currentCount + deltaCount;
+                    if (newCount < 0) 
+                    {
+                        return false;
+                    }
+                }
+
+                String updateCountCmd = String.format("UPDATE Ingredients SET Count = Count + %d WHERE IngredientID = %d;", deltaCount, ingredientID);
+                db.executeSQL(updateCountCmd);
+
+                String insertLogCmd = String.format("INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
+                        ingredientID, deltaCount, logMessage);
+                db.executeSQL(insertLogCmd);
+            }
+
+            return true; // Update successful
+        } catch (SQLException e) {
+            System.err.println("Error updating ingredient: " + e.getMessage());
+            return false;
+        }
     }
+
 
 }
