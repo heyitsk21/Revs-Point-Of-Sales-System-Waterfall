@@ -9,11 +9,12 @@ import java.awt.*;
 
 public class ManagerInventory extends JPanel {
     // Inventory myInventory = managerCmds.getInventory();
-    int numberOfItems = 5; // = myInventory.length();
-    int[] ingredientIDs = { 1, 2, 3, 4, 5 }; // = myInventory.ingredientIDs;
-    String[] names = { "Item 1", "another ing", "cheese", "bread", "knucle sandwich" };
-    int[] count = { 2, 5, 3, 99, 32, 45 };
-    float[] ppu = { 1.234f, 1.234f, 1.234f, 1.234f, 1.234f };
+    int numberOfItems; // = myInventory.length();
+    int[] ingredientIDs; // = myInventory.ingredientIDs;
+    String[] names;
+    int[] count;
+    int [] minamount;
+    float[] ppu;
     int currIngredientIndex = 0;
 
     JPanel rightPanel = new JPanel();
@@ -28,6 +29,8 @@ public class ManagerInventory extends JPanel {
         this.names = inventory.names;
         this.ppu = inventory.ppu;
         this.count = inventory.count;
+        this.minamount = inventory.minamount;
+        this.numberOfItems = ingredientIDs.length;
         setLayout(new GridBagLayout());
         createLeft();
         createRight();
@@ -39,6 +42,7 @@ public class ManagerInventory extends JPanel {
         this.names = inventory.names;
         this.ppu = inventory.ppu;
         this.count = inventory.count;
+        this.numberOfItems = ingredientIDs.length;
         updateRight();
         updateLeft();
     }
@@ -48,7 +52,7 @@ public class ManagerInventory extends JPanel {
         leftPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         for (int i = 0; i < numberOfItems; i++) {
-            JButton button = new JButton(names[i] + ", Count: " + count[i]);
+            JButton button = new JButton(names[i] + ", Count: " + count[i] + ", MinAmount: " + minamount[i]);
             button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
             button.setPreferredSize(new Dimension(300, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -67,7 +71,8 @@ public class ManagerInventory extends JPanel {
     JLabel nameLabel = new JLabel();
     JLabel countLabel = new JLabel();
     JLabel ppuLabel = new JLabel();
-    JLabel headerLabel = new JLabel("SET NEW AMOUNT");
+    JLabel minAmntLabel = new JLabel();
+    JLabel headerLabel = new JLabel("Change of Ingreedyint!!!!!");
     JTextField userInputField = new JTextField(10);
     JButton submitButton = new JButton();
 
@@ -76,24 +81,28 @@ public class ManagerInventory extends JPanel {
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         // Displays the name of the ingredient
-        nameLabel.setText(names[currIngredientIndex]);
+        nameLabel.setText("Name: " + names[currIngredientIndex]);
         nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         nameLabel.setFont(new Font("Arial", Font.PLAIN, 25));
         rightPanel.add(nameLabel);
 
         // Displays the count of the ingredient remaining
 
-        countLabel.setText(String.valueOf(count[currIngredientIndex]));
+        countLabel.setText("Count: " + String.valueOf(count[currIngredientIndex]));
         countLabel.setHorizontalAlignment(SwingConstants.CENTER);
         countLabel.setFont(new Font("Arial", Font.PLAIN, 25));
         rightPanel.add(countLabel);
 
-        // Displays the price per ingredient
+        minAmntLabel.setText("MinAmount: " + String.valueOf(ppu[currIngredientIndex]));
+        minAmntLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        minAmntLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        rightPanel.add(minAmntLabel);
 
-        ppuLabel.setText(String.valueOf(ppu[currIngredientIndex]));
+        ppuLabel.setText("PPU: " + String.valueOf(ppu[currIngredientIndex]));
         ppuLabel.setHorizontalAlignment(SwingConstants.CENTER);
         ppuLabel.setFont(new Font("Arial", Font.PLAIN, 25));
         rightPanel.add(ppuLabel);
+
 
         // Creates a text box where the manager can set the new amount of item remaining
 
@@ -115,17 +124,18 @@ public class ManagerInventory extends JPanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH; // Fill both horizontally and vertically
-        gbc.weightx = 0.25;
+        gbc.weightx = 0.50;
         gbc.weighty = 1.0;
-        gbc.gridx = 1;
+        gbc.gridx = 2;
         gbc.gridy = 0;
         add(rightPanel, gbc);
     }
 
     void updateRight() {
-        nameLabel.setText(names[currIngredientIndex]);
-        countLabel.setText(String.valueOf(count[currIngredientIndex]));
-        ppuLabel.setText(String.valueOf(ppu[currIngredientIndex]));
+        nameLabel.setText("Name: " + names[currIngredientIndex]);
+        countLabel.setText("Count: " + String.valueOf(count[currIngredientIndex]));
+        ppuLabel.setText("PPU: " + String.valueOf(ppu[currIngredientIndex]));
+        minAmntLabel.setText("MinAmount: " + String.valueOf(ppu[currIngredientIndex]));
     }
 
     void updateLeft() {
@@ -187,7 +197,7 @@ public class ManagerInventory extends JPanel {
             @Override
             public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
                     throws BadLocationException {
-                if (string.matches("\\d+")) {
+                if (string.matches("-?\\d*")) {
                     super.insertString(fb, offset, string, attr);
                 }
             }
@@ -195,7 +205,7 @@ public class ManagerInventory extends JPanel {
             @Override
             public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
                     throws BadLocationException {
-                if (text.matches("\\d+")) {
+                if (text.matches("-?\\d*")) {
                     super.replace(fb, offset, length, text, attrs);
                 }
             }
