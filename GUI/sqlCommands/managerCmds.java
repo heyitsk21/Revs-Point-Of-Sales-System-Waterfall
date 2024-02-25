@@ -136,18 +136,11 @@ public class managerCmds {
         return null;
     }
 
-    // public sqlObjects.OrderList updateMenu(int deltaIngredient, int ) {
-    // try {
-    // int size = 0;
-    // PreparedStatement prep;
-
-    // String cmd = "SELECT ;";
-    // prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // allOrders = prep.executeQuery();
-    // } catch {
-
-    // }
-    // }
+    public boolean updateMenu(int ingredientID, int deltaIngredient) {
+        String cmd = String.format("UPDATE Ingredients SET Count = Count + {} WHERE IngredientID = {};",
+                deltaIngredient, ingredientID);
+        db.executeSQL(cmd);
+        return true; // TODO: check if the update command worked?
+    }
 
 }
