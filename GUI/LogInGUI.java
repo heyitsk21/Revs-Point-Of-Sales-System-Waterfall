@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.Font;
 
 public class LogInGUI extends JFrame implements ActionListener {
@@ -60,15 +62,17 @@ public class LogInGUI extends JFrame implements ActionListener {
     // function to authenticate the user and check if they are a manager or employee
     // connects to the database and checks if the username and password are valid
     private boolean authenticate(String username, String password, boolean isManager) {
-        String query = "SELECT employeename, password, ismanager FROM employee WHERE employeename = '" + username
-                + "' AND password = '" + password + "';";
-        ResultSet result = db.executeSQL(query);
+        String query = "SELECT employeename, password, ismanager FROM employee WHERE employeename = ? AND password = ?;";
         try {
+            PreparedStatement prep = db.con.prepareStatement(query);
+            prep.setString(1, username);
+            prep.setString(2, password);
+            ResultSet result = prep.executeQuery();
             if (result.next()) {
                 return isManager == result.getBoolean("ismanager");
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error accessing Database.");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
         return false;
     }
