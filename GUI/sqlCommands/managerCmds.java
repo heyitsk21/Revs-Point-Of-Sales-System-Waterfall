@@ -137,45 +137,56 @@ public class managerCmds {
     }
 
     /*
-    PARAMETERIZATION EXAMPLE TEMPLATE (POSSIBLY):
-    String updateNameCmd = "UPDATE Ingredients SET IngredientName = ? WHERE IngredientID = ?";
-        try (PreparedStatement pstmt = db.con.prepareStatement(updateNameCmd)) {
-            pstmt.setString(1, newName);
-            pstmt.setInt(2, ingredientID);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("Error executing SQL query: " + e.getMessage());
-        }
+     * PARAMETERIZATION EXAMPLE TEMPLATE (POSSIBLY):
+     * String updateNameCmd =
+     * "UPDATE Ingredients SET IngredientName = ? WHERE IngredientID = ?";
+     * try (PreparedStatement pstmt = db.con.prepareStatement(updateNameCmd)) {
+     * pstmt.setString(1, newName);
+     * pstmt.setInt(2, ingredientID);
+     * pstmt.executeUpdate();
+     * } catch (SQLException e) {
+     * System.err.println("Error executing SQL query: " + e.getMessage());
+     * }
      */
 
-    public boolean updateIngredient(int ingredientID, int currentCount, String newName, float newPPU, int deltaCount, String logMessage) {
-            if (newName != null && !newName.isEmpty()) {
-                String updateNameCmd = String.format("UPDATE Ingredients SET IngredientName = '%s' WHERE IngredientID = %d;", newName, ingredientID);
-                db.executeSQL(updateNameCmd);
+    public boolean updateIngredient(int ingredientID, int currentCount, String newName, float newPPU, int deltaCount,
+            String logMessage) {
+        if (newName != null && !newName.isEmpty()) {
+            String updateNameCmd = "UPDATE Ingredients SET IngredientName = ? WHERE IngredientID = ?;";
+            try {
+                PreparedStatement prep = db.con.prepareStatement(updateNameCmd);
+                prep.setString(1, newName);
+                prep.setInt((2), ingredientID);
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
 
-            if (newPPU > 0) {
-                String updatePPUCmd = String.format("UPDATE Ingredients SET PPU = %.2f WHERE IngredientID = %d;", newPPU, ingredientID);
-                db.executeSQL(updatePPUCmd);
-            }
-
-            if (deltaCount != 0) {
-                int newCount = currentCount + deltaCount;
-                if (newCount < 0) 
-                {
-                    return false;
-                }
-
-                String updateCountCmd = String.format("UPDATE Ingredients SET Count = Count + %d WHERE IngredientID = %d;", deltaCount, ingredientID);
-                db.executeSQL(updateCountCmd);
-
-                String insertLogCmd = String.format("INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
-                        ingredientID, deltaCount, logMessage);
-                db.executeSQL(insertLogCmd);
-            }
-
-            return true; // Update successful
+            db.executeSQL(updateNameCmd);
         }
 
+        if (newPPU > 0) {
+            String updatePPUCmd = String.format("UPDATE Ingredients SET PPU = %.2f WHERE IngredientID = %d;", newPPU,
+                    ingredientID);
+            db.executeSQL(updatePPUCmd);
+        }
+
+        if (deltaCount != 0) {
+            int newCount = currentCount + deltaCount;
+            if (newCount < 0) {
+                return false;
+            }
+
+            String updateCountCmd = String.format("UPDATE Ingredients SET Count = Count + %d WHERE IngredientID = %d;",
+                    deltaCount, ingredientID);
+            db.executeSQL(updateCountCmd);
+
+            String insertLogCmd = String.format(
+                    "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
+                    ingredientID, deltaCount, logMessage);
+            db.executeSQL(insertLogCmd);
+        }
+
+        return true; // Update successful
+    }
 
 }
