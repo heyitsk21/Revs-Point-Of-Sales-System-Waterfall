@@ -192,22 +192,27 @@ public class managerCmds {
         return true; // Update successful
     }
 
-    public boolean addIngredient(int greatestID,String ingredientName,int count, float PPU, int minamount){
+    public boolean addIngredient(int newID,String ingredientName,int count, float PPU, int minamount){
         String updateNameCmd = "INSERT INTO Ingredients (IngredientID, Ingredientname, Count, PPU, minamount) VALUES (?,?,?,?,?);";
         try {
             PreparedStatement prep = db.con.prepareStatement(updateNameCmd);
-            prep.setInt(1,greatestID);
+            prep.setInt(1,newID);
             prep.setString(2, ingredientName);
             prep.setInt(3, count);
             prep.setFloat(4, PPU);
             prep.setInt(5, minamount);
             prep.executeUpdate();
-            return true;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             return false;
         }
-      
+
+        String insertLogCmd = String.format(
+            "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
+            newID, count, "YOOO I CREATED A NEW INGREDIENT WITH NAME " + ingredientName);
+        db.executeSQL(insertLogCmd);
+
+        return true;
     }
 
     public boolean deleteIngredient(/*TODO */){

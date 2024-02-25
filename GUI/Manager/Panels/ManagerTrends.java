@@ -15,5 +15,9 @@ public class ManagerTrends extends JPanel {
 
         // Add the placeholder label to the panel
         add(placeholderLabel, BorderLayout.CENTER);
+
+        managerCmds manCmds = new managerCmds();
+        //manCmds.addIngredient(64, "Alaskan Fresh Caught Salmon", 500, 20.0f, 200);
+        //^^^ tested and working ^^^
     }
 }
