@@ -17,11 +17,13 @@ public class sqlObjects {
         }
     }
 
-    public class Menu {
+    public static class Menu {
+        int[] menuItemIDs;
         String[] names;
         float[] price;
 
-        Menu(String[] names, float[] price) {
+        Menu(int[] menuItemIDs, String[] names, float[] price) {
+            this.menuItemIDs = menuItemIDs;
             this.names = names;
             this.price = price;
         }
@@ -31,7 +33,7 @@ public class sqlObjects {
         }
     }
 
-    public class OrderList {
+    public static class OrderList {
         String[] orderIDs;
         String[] customerNames;
         float[] taxPrices;

@@ -53,13 +53,43 @@ public class managerCmds {
         return null;
     }
 
-    // static sqlObjects.Menu getMenu(){
-    // String[] names = ;//TODO get all menu names
-    // float[] prices = ;//TODO get all menu item prices
-    // return sqlObects.Menu(names, prices);
-    // }
+    public sqlObjects.Menu getMenu() {
+        try {
+            int size = 0;
+            PreparedStatement prep;
+            ResultSet allMenuItems;
 
-    // static sqlObjects.OrderList getOrders(){
+            String cmd = "SELECT ItemName, Price FROM MenuItems;";
+            prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            allMenuItems = prep.executeQuery();
+
+            // find the size of allIngredients
+            allMenuItems.last();
+            size = allMenuItems.getRow();
+
+            int[] menuItemIDs = new int[size];
+            String[] names = new String[size];
+            float[] prices = new float[size];
+
+            allMenuItems.first();
+            int counter = 0;
+
+            while (allMenuItems.next()) {
+                menuItemIDs[counter] = allMenuItems.getInt("MenuID");
+                names[counter] = allMenuItems.getString("ItemName");
+                prices[counter] = allMenuItems.getFloat("Price");
+                counter++;
+            }
+
+            sqlObjects.Menu menuItemObj = new sqlObjects.Menu(menuItemIDs, names, prices);
+            return menuItemObj;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return null;
+    }
+
+    // public sqlObjects.OrderList getOrders(){
     // String[] orderIDs = //TODO get all orderIDs
     // String[] customerNames = //TODO get all customerNames
     // float[] taxPrices = //TODO get all tax prices
