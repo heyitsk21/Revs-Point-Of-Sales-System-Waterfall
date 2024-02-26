@@ -279,8 +279,8 @@ public class managerCmds {
         try {
             PreparedStatement prep = db.con.prepareStatement(addMenuItemCmd);
             prep.setInt(1, newID);
-            prep.setString(3, menuItemName);
-            prep.setFloat(4, price);
+            prep.setString(2, menuItemName);
+            prep.setFloat(3, price);
             prep.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -291,9 +291,9 @@ public class managerCmds {
 
 
     public boolean deleteMenuItem(int menuItemID){
-        String deleteCmd = String.format("DELETE menuitemIngredients WHERE MenuID= %d;", menuItemID);
+        String deleteCmd = String.format("DELETE FROM menuitemIngredients WHERE MenuID= %d;", menuItemID);
         db.executeSQL(deleteCmd);
-        deleteCmd = String.format("DELETE menuitems WHERE MenuID= %d;", menuItemID);
+        deleteCmd = String.format("DELETE FROM menuitems WHERE MenuID= %d;", menuItemID);
         db.executeSQL(deleteCmd);
         return true;
     }
@@ -305,7 +305,7 @@ public class managerCmds {
     }
 
     public boolean deleteMenuItemIngredient(int menuItemID, int ingredientID){
-        String deleteCmd = String.format("DELETE menuitemIngredients WHERE MenuID= %d AND ingredientID= %d;", menuItemID, ingredientID);
+        String deleteCmd = String.format("DELETE FROM menuitemIngredients WHERE MenuID= %d AND ingredientID= %d;", menuItemID, ingredientID);
         db.executeSQL(deleteCmd);
         return true;
     }
@@ -341,7 +341,7 @@ public class managerCmds {
     }
 
     public boolean deleteOrder(int orderID){
-        String deleteCmd = String.format("DELETE Orders WHERE OrderID= %d;", orderID);
+        String deleteCmd = String.format("DELETE FROM Orders WHERE OrderID= %d;", orderID);
         db.executeSQL(deleteCmd);
         return true;
     }
