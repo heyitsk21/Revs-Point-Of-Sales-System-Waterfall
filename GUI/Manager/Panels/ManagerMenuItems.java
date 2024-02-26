@@ -15,9 +15,6 @@ public class ManagerMenuItems extends JPanel {
     private JPanel rightPanel, leftPanel, buttonPanel;
 
     managerCmds manCmds;
-    int[] menuItemIDs;
-    String[] names;
-    float[] price;
     int currentItem;
 
     sqlObjects.Menu initialMenu;
@@ -40,6 +37,24 @@ public class ManagerMenuItems extends JPanel {
         createLeftPanel();
         createRightPanel();
         //Disable buttons until a row is selected
+        setButtonState(false);
+    }
+
+    public void RefreshGUI(){
+        setLayout(new GridBagLayout());
+        //PLEASE ADD UPDATE LEFT AND RIGHT PANEL AND REPLACE THIS AWFUL MESS 
+        menuTable = null;
+        tableModel = null;
+        createButton = null; deleteButton = null;  cancelButton = null; submitButton = null;
+        nameLabel = null; priceLabel= null; ingredientsLabel = null;
+        nameTextField = null; priceTextField = null; ingredientsTextField = null;
+        rightPanel = null; leftPanel = null; buttonPanel = null;
+        //PLEASE ADD UPDATE LEFT AND RIGHT PANEL AND REPLACE THIS AWFUL MESS ^^^^^^^
+        initialMenu = manCmds.getMenu();
+        menu = formatMenuItems(initialMenu);
+        createLeftPanel();
+        createRightPanel();
+        //PLEASE ADD UPDATE LEFT AND RIGHT PANEL AND REPLACE THIS AWFUL MESS
         setButtonState(false);
     }
 
@@ -69,7 +84,7 @@ public class ManagerMenuItems extends JPanel {
     private void createLeftPanel() {
         leftPanel = new JPanel(new BorderLayout());
         buttonPanel = new JPanel();
-        String[] columns = {"MenuID", "MenuItemName", "Price"};
+        String[] columns = {"MenuID", "Menu Item Name", "Price"};
 
         
 
@@ -169,8 +184,12 @@ public class ManagerMenuItems extends JPanel {
     private class CreateButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // Placeholder for adding a new item
-            tableModel.addRow(new Object[]{"NewID", "NewItemName", "NewPrice"});
+            //get the biggest ID and add 1 TODO add catagory functionlaity when that is implimeneted in the front end
+            int newID = initialMenu.menuItemIDs[initialMenu.menuItemIDs.length - 1] + 1;
+            System.out.println(newID);
+            RefreshGUI();
+            manCmds.addMenuItem(newID,"NewMenu Item" , 0.0f);
+            RefreshGUI();
         }
     }
 
@@ -178,8 +197,13 @@ public class ManagerMenuItems extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             int selectedRow = menuTable.getSelectedRow();
-            if (selectedRow >= 0) {
-                tableModel.removeRow(selectedRow);
+            System.out.println("Selected Row" + selectedRow);
+            if (selectedRow >= 0) { 
+                RefreshGUI();
+                int toDeleteID = initialMenu.menuItemIDs[selectedRow];
+                System.out.println("Deleting Menu Item " + toDeleteID);
+                manCmds.deleteMenuItem(toDeleteID);
+                RefreshGUI();
             }
         }
     }
