@@ -196,6 +196,7 @@ public class managerCmds {
                 prep.executeUpdate();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
+                return false;
             }
         }
 
@@ -269,7 +270,8 @@ public class managerCmds {
             db.executeSQL(updatePriceCmd);
         }
 
-        return false;
+
+        return true;
     }
 
     public boolean addMenuItem(int newID, String menuItemName, float price){
@@ -287,25 +289,64 @@ public class managerCmds {
         return true;
     }
 
-    public boolean deleteMenuItem(/*TODO*/){
-        return false;
+
+    public boolean deleteMenuItem(int menuItemID){
+        String deleteCmd = String.format("DELETE menuitemIngredients WHERE MenuID= %d;", menuItemID);
+        db.executeSQL(deleteCmd);
+        deleteCmd = String.format("DELETE menuitems WHERE MenuID= %d;", menuItemID);
+        db.executeSQL(deleteCmd);
+        return true;
     }
     
-    public boolean addMenuItemIngredient(int menuItemID){
-        return false;
+    public boolean addMenuItemIngredient(int menuItemID,int ingredientID){
+        String addMenuIngCmd = String.format("INSERT menuitemIngredients (MenuID, IngredientID) values (%d,%d);", menuItemID, ingredientID);
+        db.executeSQL(addMenuIngCmd);
+        return true;
     }
 
-    public boolean deleteMenuItemIngredient(/*TODO*/){
-        return false;
+    public boolean deleteMenuItemIngredient(int menuItemID, int ingredientID){
+        String deleteCmd = String.format("DELETE menuitemIngredients WHERE MenuID= %d AND ingredientID= %d;", menuItemID, ingredientID);
+        db.executeSQL(deleteCmd);
+        return true;
     }
 
-    public boolean updateOrder(/*TODO*/){
-        return false;
+    public boolean updateOrder(int orderID,String customerName,float basePrice,int employeeID){
+        if (customerName != null && !customerName.isEmpty()) {
+            String updateNameCmd = "UPDATE orders SET CustomerName = ? WHERE menuid = ?;";
+            try {
+                PreparedStatement prep = db.con.prepareStatement(updateNameCmd);
+                prep.setString(1, customerName);
+                prep.setInt(2, orderID);
+                prep.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+                return false;
+            }
+        }
+
+        if (basePrice > 0) {
+            String updatePriceCmd = String.format("UPDATE orders SET baseprice = %.2f WHERE menuid = %d;", basePrice, orderID);
+            db.executeSQL(updatePriceCmd);
+            updatePriceCmd = String.format("UPDATE orders SET taxprice = %.2f WHERE menuid = %d;", basePrice * 0.0825f, orderID);
+            db.executeSQL(updatePriceCmd);
+        }
+        
+        if(employeeID > 0){
+            String updateEmpCmd = String.format("UPDATE orders SET employeeID = %d WHERE menuid = %d;", employeeID, orderID);
+            db.executeSQL(updateEmpCmd);           
+        }
+
+        return true;
+
     }
 
-    public boolean deleteOrder(/*TODO*/){
-        return false;
+    public boolean deleteOrder(int orderID){
+        String deleteCmd = String.format("DELETE Orders WHERE OrderID= %d;", orderID);
+        db.executeSQL(deleteCmd);
+        return true;
     }
 
 
 }
+
+
