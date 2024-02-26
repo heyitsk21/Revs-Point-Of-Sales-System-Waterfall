@@ -10,7 +10,7 @@ public class employeeCmds {
 
     Database db;
 
-    public managerCmds() 
+    public employeeCmds() 
     {
         db = new Database();
     }
@@ -174,5 +174,4 @@ public class employeeCmds {
             return false;
         }
     }
-
 }
