@@ -62,7 +62,7 @@ public class managerCmds {
             PreparedStatement prep;
             ResultSet allMenuItems;
 
-            String cmd = "SELECT ItemName, Price FROM MenuItems;";
+            String cmd = "SELECT MenuID, ItemName, Price FROM MenuItems;";
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             allMenuItems = prep.executeQuery();
 
