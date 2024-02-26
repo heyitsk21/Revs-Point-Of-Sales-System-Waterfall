@@ -15,6 +15,13 @@ public class ManagerMenuItems extends JPanel {
     private JPanel rightPanel, leftPanel, buttonPanel;
 
     managerCmds manCmds;
+    int[] menuItemIDs;
+    String[] names;
+    float[] price;
+    int currentItem;
+
+    sqlObjects.Menu initialMenu;
+    Object[][] menu;
 
     //How to use this panel:
     //This panel is for the manager to view and edit the menu items
@@ -26,6 +33,10 @@ public class ManagerMenuItems extends JPanel {
 
     public ManagerMenuItems() {
         setLayout(new GridBagLayout());
+        manCmds = new managerCmds();
+
+        initialMenu = manCmds.getMenu();
+        menu = formatMenuItems(initialMenu);
         createLeftPanel();
         createRightPanel();
         //Disable buttons until a row is selected
@@ -43,36 +54,34 @@ public class ManagerMenuItems extends JPanel {
     //menu contains the values from the menuItems table in the database
     //when this is read from the database, the format doesn't match with what we need to show in the UI
     //helper method formatMenuItems formats the values into a 2D array
-    private Object[][] formatMenuItems(sqlObjects.Menu menu){
-        int size = menu.length();
+    private Object[][] formatMenuItems(sqlObjects.Menu myMenu){
+        int size = myMenu.menuItemIDs.length;
         Object[][] menuItems = new Object[size][3];
         for (int i = 0; i < size; i++){
-            menuItems[i][0] = menu.menuItemIDs[i];
-            menuItems[i][1] = menu.names[i];
-            menuItems[i][2] = menu.price[i];
+            menuItems[i][0] = myMenu.menuItemIDs[i];
+            menuItems[i][1] = myMenu.names[i];
+            menuItems[i][2] = myMenu.price[i];
         }
 
         return menuItems;
     }
 
     private void createLeftPanel() {
-        Object[][] menuItems = {{"1","placeholder","x"},{"x","x","x"}};
-
         leftPanel = new JPanel(new BorderLayout());
         buttonPanel = new JPanel();
         String[] columns = {"MenuID", "MenuItemName", "Price"};
 
-        manCmds = new managerCmds();
-        sqlObjects.Menu menu = manCmds.getMenu();
+        
 
         //if nothing is returned from the database, formatMenuItems will throw an exception so adding a null check
         //if menu is null, we will just show the placeholder values
-        if(menu != null){
-            menuItems = this.formatMenuItems(menu);
-        }
 
-        tableModel = new DefaultTableModel(menuItems, columns);
+        tableModel = new DefaultTableModel(menu, columns);
+        
         menuTable = new JTable(tableModel);
+        menuTable.setRowHeight(50);
+        menuTable.setFont(new Font("Arial", Font.PLAIN, 15));
+
         leftPanel.add(new JScrollPane(menuTable), BorderLayout.CENTER);
 
         createButton = new JButton("Create");
@@ -147,8 +156,8 @@ public class ManagerMenuItems extends JPanel {
 
         if (rowSelected) {
             //Set the text fields with the values from the selected row
-            nameTextField.setText((String) tableModel.getValueAt(selectedRow, 1));
-            priceTextField.setText((String) tableModel.getValueAt(selectedRow, 2));
+            nameTextField.setText(String.valueOf(tableModel.getValueAt(selectedRow, 1)));
+            priceTextField.setText(String.valueOf(tableModel.getValueAt(selectedRow, 2)));
         } else {
             //Clear the text fields if no row is selected
             nameTextField.setText("");

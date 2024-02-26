@@ -62,11 +62,11 @@ public class managerCmds {
             PreparedStatement prep;
             ResultSet allMenuItems;
 
-            String cmd = "SELECT ItemName, Price FROM MenuItems;";
+            String cmd = "SELECT MenuID, ItemName, Price FROM MenuItems;";
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             allMenuItems = prep.executeQuery();
 
-            // find the size of allIngredients
+            // find the size of allMenuItems
             allMenuItems.last();
             size = allMenuItems.getRow();
 
@@ -92,6 +92,43 @@ public class managerCmds {
         return null;
     }
 
+    public sqlObjects.MenuItemIngredients getMenuItemIngredients(int menuItemID){
+        try{
+            int size = 0;
+            PreparedStatement prep;
+            ResultSet allMenuItemIngredients;
+
+            String cmd = String.format("SELECT Ingredients.IngredientID, Ingredients.IngredientName " +
+                "FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID " +
+                "JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID " +
+                "WHERE menuitems.MenuID = {};", menuItemID);
+            prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            allMenuItemIngredients = prep.executeQuery();
+
+            // find the size of allMenuItemIngredients
+            allMenuItemIngredients.last();
+            size = allMenuItemIngredients.getRow();
+
+            int[] ingredientIDs = new int[size];
+            String[] names = new String[size];
+
+            allMenuItemIngredients.first();
+            int counter = 0;
+
+            do {
+                ingredientIDs[counter] = allMenuItemIngredients.getInt("Ingredients.IngredientID"); //TODO: check if this columnLabel works. unsure if this is necessary
+                names[counter] = allMenuItemIngredients.getString("Ingredients.IngredientName");
+                counter++;
+            } while (allMenuItemIngredients.next()) ;
+
+            sqlObjects.MenuItemIngredients menuItemIngredientObj = new sqlObjects.MenuItemIngredients(ingredientIDs, names);
+            return menuItemIngredientObj;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return null;
+    }
+
     public sqlObjects.OrderList getOrders() {
         try {
             int size = 0;
@@ -103,7 +140,7 @@ public class managerCmds {
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             allOrders = prep.executeQuery();
 
-            // find the size of all orders
+            // find the size of allOrders
             allOrders.last();
             size = allOrders.getRow();
 
@@ -149,8 +186,7 @@ public class managerCmds {
      * }
      */
 
-    public boolean updateIngredient(int ingredientID, int currentCount, String newName, float newPPU, int deltaCount,
-            String logMessage) {
+    public boolean updateIngredient(int ingredientID, int currentCount, String newName, float newPPU, int deltaCount, String logMessage) {
         if (newName != null && !newName.isEmpty()) {
             String updateNameCmd = "UPDATE Ingredients SET IngredientName = ? WHERE IngredientID = ?;";
             try {
@@ -164,8 +200,7 @@ public class managerCmds {
         }
 
         if (newPPU > 0) {
-            String updatePPUCmd = String.format("UPDATE Ingredients SET PPU = %.2f WHERE IngredientID = %d;", newPPU,
-                    ingredientID);
+            String updatePPUCmd = String.format("UPDATE Ingredients SET PPU = %.2f WHERE IngredientID = %d;", newPPU, ingredientID);
             db.executeSQL(updatePPUCmd);
         }
 
@@ -175,8 +210,7 @@ public class managerCmds {
                 return false;
             }
 
-            String updateCountCmd = String.format("UPDATE Ingredients SET Count = Count + %d WHERE IngredientID = %d;",
-                    deltaCount, ingredientID);
+            String updateCountCmd = String.format("UPDATE Ingredients SET Count = Count + %d WHERE IngredientID = %d;", deltaCount, ingredientID);
             db.executeSQL(updateCountCmd);
 
             String insertLogCmd = String.format(
@@ -187,5 +221,91 @@ public class managerCmds {
 
         return true; // Update successful
     }
+
+    public boolean addIngredient(int newID,String ingredientName, int count, float PPU, int minamount){
+        String addIngredientCmd = "INSERT INTO Ingredients (IngredientID, Ingredientname, Count, PPU, minamount) VALUES (?,?,?,?,?);";
+        try {
+            PreparedStatement prep = db.con.prepareStatement(addIngredientCmd);
+            prep.setInt(1,newID);
+            prep.setString(2, ingredientName);
+            prep.setInt(3, count);
+            prep.setFloat(4, PPU);
+            prep.setInt(5, minamount);
+            prep.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+
+        String insertLogCmd = String.format( //TODO: parameterize this!
+            "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
+            newID, count, "YOOO I CREATED A NEW INGREDIENT WITH NAME " + ingredientName);
+        db.executeSQL(insertLogCmd);
+
+        return true;
+    }
+
+    public boolean updateMenuItem(int menuItemID, String newName, float newPrice){
+        // boolean shouldUpdateName = (newName != null && !newName.isEmpty());
+        // boolean shouldUpdatePrice = (newPrice > 0);
+        // if(shouldUpdateName && shouldUpdatePrice){
+            
+        // }
+        if (newName != null && !newName.isEmpty()) {
+            String updateNameCmd = "UPDATE menuItems SET itemname = ? WHERE menuid = ?;";
+            try {
+                PreparedStatement prep = db.con.prepareStatement(updateNameCmd);
+                prep.setString(1, newName);
+                prep.setInt(2, menuItemID);
+                prep.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+                return false;
+            }
+        }
+
+        if (newPrice > 0) {
+            String updatePriceCmd = String.format("UPDATE menuitems SET price = %.2f WHERE menuid = %d;", newPrice, menuItemID);
+            db.executeSQL(updatePriceCmd);
+        }
+
+        return false;
+    }
+
+    public boolean addMenuItem(int newID, String menuItemName, float price){
+        String addMenuItemCmd = "INSERT INTO MenuItems (MenuID, ItemName, Price) VALUES (?,?,?);";
+        try {
+            PreparedStatement prep = db.con.prepareStatement(addMenuItemCmd);
+            prep.setInt(1, newID);
+            prep.setString(3, menuItemName);
+            prep.setFloat(4, price);
+            prep.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deleteMenuItem(/*TODO*/){
+        return false;
+    }
+    
+    public boolean addMenuItemIngredient(int menuItemID){
+        return false;
+    }
+
+    public boolean deleteMenuItemIngredient(/*TODO*/){
+        return false;
+    }
+
+    public boolean updateOrder(/*TODO*/){
+        return false;
+    }
+
+    public boolean deleteOrder(/*TODO*/){
+        return false;
+    }
+
 
 }
