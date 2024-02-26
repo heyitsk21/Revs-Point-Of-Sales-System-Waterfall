@@ -22,46 +22,33 @@ public class Employee extends JFrame {
         // Create cardPanel and cardLayout
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
-        //cardPanel.add(new EmployeeSubmitOrderPanel(), "SubmitOrder"); not sure if I'll need this
+        cardPanel.setBorder(new EtchedBorder());
+        cardPanel.add(new ValMeals(), "ValMeals"); 
+        cardPanel.add(new Burgers(), "Burgers"); 
+        cardPanel.add(new Sandwiches(), "Sandwiches"); 
+        cardPanel.add(new Baskets(), "Baskets"); 
+        cardPanel.add(new Sides(), "Sides"); 
+        cardPanel.add(new Drinks(), "Drinks"); 
+        cardPanel.add(new Etc(), "Etc"); 
+        cardPanel.add(new LimitedTime(), "Limited Time"); 
 
-        // Create buttons
-        JButton valMealBtn = createButton("ValMeals");
-        valMealBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-        JButton burgerBtn = createButton("Burgers");
-        burgerBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-        JButton sandwichBtn = createButton("Sandwiches");
-        sandwichBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-        JButton basketBtn = createButton("Baskets");
-        basketBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-        JButton sideBtn = createButton("Sides");
-        sideBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-        JButton drinkBtn = createButton("Drinks");
-        drinkBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-        JButton etcBtn = createButton("Etc");
-        etcBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-        JButton limitedBtn = createButton("Limited Time");
-        limitedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-
-        // Add buttons to a panel at the bottom
+        // Create menu categories panel
         JPanel categoriesPanel = new JPanel();
+        categoriesPanel.setBorder(new EtchedBorder());
         categoriesPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        categoriesPanel.add(valMealBtn);
-        categoriesPanel.add(burgerBtn);
-        categoriesPanel.add(sandwichBtn);
-        categoriesPanel.add(basketBtn);
-        categoriesPanel.add(sideBtn);
-        categoriesPanel.add(drinkBtn);
-        categoriesPanel.add(etcBtn);
-        categoriesPanel.add(limitedBtn);
+
+        // Create menu category buttons, also adds them to the panel
+        JButton valMealBtn = createMenuCatButton("ValMeals", categoriesPanel);
+        JButton burgerBtn = createMenuCatButton("Burgers", categoriesPanel);
+        JButton sandwichBtn = createMenuCatButton("Sandwiches", categoriesPanel);
+        JButton basketBtn = createMenuCatButton("Baskets", categoriesPanel);
+        JButton sideBtn = createMenuCatButton("Sides", categoriesPanel);
+        JButton drinkBtn = createMenuCatButton("Drinks", categoriesPanel);
+        JButton etcBtn = createMenuCatButton("Etc", categoriesPanel);
+        JButton limitedBtn = createMenuCatButton("Limited Time", categoriesPanel);
 
         // Add the categoriesPanel to the bottom of the frame
         frame.add(categoriesPanel, BorderLayout.SOUTH);
-
-        //TODO: make it so that the current selected category page shows up in a panel on the left
-        JPanel itemsPanel = new JPanel();
-        itemsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        frame.add(itemsPanel, BorderLayout.WEST);
-        //then swap out itemsPanel for one of the menuCategory panels? or maybe an itemsPanel isn't needed
 
         // Add panel on the right that shows final order
         JButton deleteBtn = createButton("DELETE");
@@ -70,6 +57,7 @@ public class Employee extends JFrame {
         submitBtn.setFont(new Font("Arial", Font.PLAIN, 25));
 
         JPanel currentOrderPanel = new JPanel();
+        currentOrderPanel.setBorder(new EtchedBorder());
         currentOrderPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         currentOrderPanel.add(deleteBtn);
@@ -98,9 +86,23 @@ public class Employee extends JFrame {
         frame.setVisible(true);
     }
 
+    private JButton createMenuCatButton(String panelName, JPanel panel) {
+        JButton button = new JButton(panelName);
+        button.setPreferredSize(new Dimension(180, 100));
+        button.setFont(new Font("Arial", Font.PLAIN, 25));
+        panel.add(button);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, panelName); // Switch to the specified panel
+            }
+        });
+        return button;
+    }
+
     private JButton createButton(String panelName) {
         JButton button = new JButton(panelName);
-        button.setPreferredSize(new Dimension(300, 50));
+        button.setMinimumSize(new Dimension(150, 100));
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
