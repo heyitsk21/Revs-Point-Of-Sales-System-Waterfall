@@ -186,7 +186,22 @@ public class ManagerMenuItems extends JPanel {
             int newID = initialMenu.menuItemIDs[initialMenu.menuItemIDs.length - 1] + 1;
             System.out.println(newID);
             manCmds.addMenuItem(newID,"NewMenu Item" , 0.0f);
-            tableModel.addRow(new Object[]{"NewID", "NewItemName", "NewPrice"});
+
+            Object[] newMenuItem = {newID, "NewMenu Item", 0.0f};
+            Object[][] updatedMenu = new Object[menu.length + 1][3];
+
+            // Copy existing rows
+            for (int i = 0; i < menu.length; i++) {
+                updatedMenu[i] = menu[i];
+            }
+
+            // Add the new row
+            updatedMenu[menu.length] = newMenuItem;
+
+            // Update the menu reference
+            menu = updatedMenu;
+
+            tableModel.addRow(newMenuItem);
         }
         //TODO sql here
     }
@@ -196,13 +211,28 @@ public class ManagerMenuItems extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int selectedRow = menuTable.getSelectedRow();
             System.out.println("Selected Row" + selectedRow);
-            if (selectedRow >= 0) { 
-                int toDeleteID = initialMenu.menuItemIDs[selectedRow];
+            if (selectedRow >= 0) {
+                int toDeleteID = (int) initialMenu.menuItemIDs[selectedRow];
                 System.out.println("Deleting Menu Item " + toDeleteID);
                 manCmds.deleteMenuItem(toDeleteID);
+    
+                // Remove the row from the Object[][] menu
+                Object[][] updatedMenu = new Object[menu.length - 1][3];
+                int updatedIndex = 0;
+    
+                for (int i = 0; i < menu.length; i++) {
+                    if (i != selectedRow) {
+                        updatedMenu[updatedIndex++] = menu[i];
+                    }
+                }
+    
+                // Update the menu reference
+                menu = updatedMenu;
+    
+                // Remove the row from the table model
                 tableModel.removeRow(selectedRow);
             }
-            //TODO sql here
+            // TODO sql here
         }
     }
 
