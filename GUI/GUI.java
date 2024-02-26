@@ -6,7 +6,9 @@ import java.awt.Font;
 
 public class GUI {
     public static void main(String[] args) {
-        LogInGUI login = new LogInGUI();
-        login.setVisible(true);
+        ManagerGUI manager = new ManagerGUI();
+        manager.setVisible(true);
+        //LogInGUI login = new LogInGUI();
+        //login.setVisible(true);
     }
 }

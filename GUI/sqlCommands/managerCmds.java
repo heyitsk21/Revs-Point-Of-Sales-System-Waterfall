@@ -270,6 +270,7 @@ public class managerCmds {
             db.executeSQL(updatePriceCmd);
         }
 
+
         return true;
     }
 
@@ -287,6 +288,7 @@ public class managerCmds {
         }
         return true;
     }
+
 
     public boolean deleteMenuItem(int menuItemID){
         String deleteCmd = String.format("DELETE menuitemIngredients WHERE MenuID= %d;", menuItemID);
@@ -346,3 +348,5 @@ public class managerCmds {
 
 
 }
+
+

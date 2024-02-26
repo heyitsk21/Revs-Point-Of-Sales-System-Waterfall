@@ -22,13 +22,16 @@ public class ManagerGUI extends JFrame {
         frame.setLayout(new BorderLayout());
 
         // Create cardPanel and cardLayout
-        
+        System.out.println("Panels starting");
+
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         cardPanel.add(new ManagerTrends(), "Trends");
         cardPanel.add(new ManagerInventory(), "Inventory");
         cardPanel.add(new ManagerMenuItems(), "Menu Items");
         cardPanel.add(new ManagerOrderHistory(), "Order History");
+
+        System.out.println("Panels made");
 
         // Create buttons
         JButton trendsBtn = createButton("Trends");
@@ -39,6 +42,8 @@ public class ManagerGUI extends JFrame {
         menuBtn.setFont(new Font("Arial", Font.PLAIN, 25));
         JButton orderBtn = createButton("Order History");
         orderBtn.setFont(new Font("Arial", Font.PLAIN, 25));
+
+        System.out.println("Building bottom panel");
 
         // Add buttons to a panel at the bottom
         JPanel buttonPanel = new JPanel();
@@ -56,17 +61,18 @@ public class ManagerGUI extends JFrame {
         // Center the frame
         frame.setLocationRelativeTo(null);
         
+        System.out.println("Building top panel");
 
         // Adds a panel at the top
         JPanel topPanel = new JPanel();
 
         JLabel dateTimeLabel = new JLabel();
-        java.util.Date date = new java.util.Date();
-        String dateTimeString = "Date/Time: " + date.toString();
-        dateTimeLabel.setText(dateTimeString);
+        dateTimeLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        updateDateTime(dateTimeLabel);
 
 
         JLabel usernameLabel = new JLabel("Username: YOUR_USERNAME");
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 15));
 
         topPanel.add(dateTimeLabel);
         topPanel.add(usernameLabel);
@@ -74,6 +80,16 @@ public class ManagerGUI extends JFrame {
 
         frame.add(topPanel, BorderLayout.NORTH);
 
+        // Use a Timer to update the dateTimeLabel every second
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateDateTime(dateTimeLabel);
+            }
+        });
+        timer.start();
+
+        System.out.println("Making visible");
         frame.setVisible(true);
     }
 
@@ -88,5 +104,11 @@ public class ManagerGUI extends JFrame {
             }
         });
         return button;
+    }
+
+    private void updateDateTime(JLabel dateTimeLabel) {
+        java.util.Date date = new java.util.Date();
+        String dateTimeString = "Date/Time: " + date.toString();
+        dateTimeLabel.setText(dateTimeString);
     }
 }

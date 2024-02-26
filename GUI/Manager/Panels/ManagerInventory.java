@@ -30,7 +30,7 @@ public class ManagerInventory extends JPanel {
         this.ppu = inventory.ppu;
         this.count = inventory.count;
         this.minamount = inventory.minamount;
-        this.numberOfItems = 5;
+        this.numberOfItems = ingredientIDs.length;
         setLayout(new GridBagLayout());
         createLeft();
         createRight();
@@ -42,20 +42,24 @@ public class ManagerInventory extends JPanel {
         this.names = inventory.names;
         this.ppu = inventory.ppu;
         this.count = inventory.count;
-        this.numberOfItems = 5;
+        this.minamount = inventory.minamount;
+        this.numberOfItems = ingredientIDs.length;
         updateRight();
         updateLeft();
     }
 
+    JScrollPane scrollPane;
+    Font buttonFont = new Font("Arial", Font.PLAIN, 17);
+
     void createLeft() {
         leftPanel.setLayout(new GridLayout(numberOfItems, 1)); // Vertical layout
         leftPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        scrollPane = new JScrollPane(leftPanel); // Instantiate scrollPane
 
         for (int i = 0; i < numberOfItems; i++) {
             JButton button = new JButton(names[i] + ", Count: " + count[i]);
-            button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
-            button.setPreferredSize(new Dimension(300, 50));
-            button.setFont(new Font("Arial", Font.PLAIN, 25));
+            button.addActionListener(new ButtonClickListener(String.valueOf(i)));
+            button.setFont(buttonFont);
             leftPanel.add(button);
         }
 
@@ -65,7 +69,7 @@ public class ManagerInventory extends JPanel {
         gbc.weighty = 1.0;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(leftPanel, gbc);
+        add(scrollPane, gbc); // Add scrollPane to the frame
     }
 
     JLabel nameLabel = new JLabel();
@@ -77,7 +81,7 @@ public class ManagerInventory extends JPanel {
     JButton submitButton = new JButton();
 
     void createRight() {
-        rightPanel.setLayout(new GridLayout(6, 1));
+        rightPanel.setLayout(new GridLayout(7, 1));
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         // Displays the name of the ingredient
@@ -93,7 +97,7 @@ public class ManagerInventory extends JPanel {
         countLabel.setFont(new Font("Arial", Font.PLAIN, 25));
         rightPanel.add(countLabel);
 
-        minAmntLabel.setText("MinAmount: " + String.valueOf(ppu[currIngredientIndex]));
+        minAmntLabel.setText("MinAmount: " + String.valueOf(minamount[currIngredientIndex]));
         minAmntLabel.setHorizontalAlignment(SwingConstants.CENTER);
         minAmntLabel.setFont(new Font("Arial", Font.PLAIN, 25));
         rightPanel.add(minAmntLabel);
@@ -124,7 +128,7 @@ public class ManagerInventory extends JPanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH; // Fill both horizontally and vertically
-        gbc.weightx = 0.50;
+        gbc.weightx = 0.25;
         gbc.weighty = 1.0;
         gbc.gridx = 2;
         gbc.gridy = 0;
@@ -135,16 +139,15 @@ public class ManagerInventory extends JPanel {
         nameLabel.setText("Name: " + names[currIngredientIndex]);
         countLabel.setText("Count: " + String.valueOf(count[currIngredientIndex]));
         ppuLabel.setText("PPU: " + String.valueOf(ppu[currIngredientIndex]));
-        minAmntLabel.setText("MinAmount: " + String.valueOf(ppu[currIngredientIndex]));
+        minAmntLabel.setText("MinAmount: " + String.valueOf(minamount[currIngredientIndex]));
     }
 
     void updateLeft() {
         leftPanel.removeAll();
         for (int i = 0; i < numberOfItems; i++) {
             JButton button = new JButton(names[i] + ", Count: " + count[i]);
-            button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
-            button.setPreferredSize(new Dimension(300, 50));
-            button.setFont(new Font("Arial", Font.PLAIN, 25));
+            button.addActionListener(new ButtonClickListener(String.valueOf(i)));
+            button.setFont(buttonFont);
             leftPanel.add(button);
         }
         leftPanel.revalidate();
@@ -152,11 +155,9 @@ public class ManagerInventory extends JPanel {
     }
 
     private class ButtonClickListener implements ActionListener {
-        private ManagerInventory managerInventory;
         private String buttonName;
 
-        public ButtonClickListener(ManagerInventory managerInventory, String buttonName) {
-            this.managerInventory = managerInventory;
+        public ButtonClickListener(String buttonName) {
             this.buttonName = buttonName;
         }
 
@@ -186,10 +187,6 @@ public class ManagerInventory extends JPanel {
             RefreshGUI();
             manCmds.updateIngredient(ingredientIDs[currIngredientIndex], count[currIngredientIndex], "", 0.0f, newAmount, "This change was prossesed by my the mangaer yo.");
             RefreshGUI();
-            // TODO send the IngredientID and new amount to sql and update the database and
-            // screen with new amounts
-
-           
         }
     }
 
