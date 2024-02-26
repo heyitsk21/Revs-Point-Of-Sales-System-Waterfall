@@ -291,8 +291,10 @@ public class managerCmds {
         return false;
     }
     
-    public boolean addMenuItemIngredient(int menuItemID){
-        return false;
+    public boolean addMenuItemIngredient(int menuItemID,int ingredientID){
+        String updatePriceCmd = String.format("INSERT menuitemIngredients (MenuID, IngredientID) values (%d,%d);", menuItemID, ingredientID);
+        db.executeSQL(updatePriceCmd);
+        return true;
     }
 
     public boolean deleteMenuItemIngredient(/*TODO*/){
