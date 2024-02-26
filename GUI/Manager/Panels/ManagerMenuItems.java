@@ -41,24 +41,6 @@ public class ManagerMenuItems extends JPanel {
         setButtonState(false);
     }
 
-    public void RefreshGUI(){
-        setLayout(new GridBagLayout());
-        //PLEASE ADD UPDATE LEFT AND RIGHT PANEL AND REPLACE THIS AWFUL MESS 
-        menuTable = null;
-        tableModel = null;
-        createButton = null; deleteButton = null;  cancelButton = null; submitButton = null;
-        nameLabel = null; priceLabel= null; ingredientsLabel = null;
-        nameTextField = null; priceTextField = null; ingredientsTextField = null;
-        rightPanel = null; leftPanel = null; buttonPanel = null;
-        //PLEASE ADD UPDATE LEFT AND RIGHT PANEL AND REPLACE THIS AWFUL MESS ^^^^^^^
-        initialMenu = manCmds.getMenu();
-        menu = formatMenuItems(initialMenu);
-        createLeftPanel();
-        createRightPanel();
-        //PLEASE ADD UPDATE LEFT AND RIGHT PANEL AND REPLACE THIS AWFUL MESS
-        setButtonState(false);
-    }
-
     //Enable or disable buttons
     private void setButtonState(boolean enabled) {
         createButton.setEnabled(enabled);
@@ -203,9 +185,8 @@ public class ManagerMenuItems extends JPanel {
             //get the biggest ID and add 1 TODO add catagory functionlaity when that is implimeneted in the front end
             int newID = initialMenu.menuItemIDs[initialMenu.menuItemIDs.length - 1] + 1;
             System.out.println(newID);
-            RefreshGUI();
             manCmds.addMenuItem(newID,"NewMenu Item" , 0.0f);
-            RefreshGUI();
+            tableModel.addRow(new Object[]{"NewID", "NewItemName", "NewPrice"});
         }
         //TODO sql here
     }
@@ -216,11 +197,10 @@ public class ManagerMenuItems extends JPanel {
             int selectedRow = menuTable.getSelectedRow();
             System.out.println("Selected Row" + selectedRow);
             if (selectedRow >= 0) { 
-                RefreshGUI();
                 int toDeleteID = initialMenu.menuItemIDs[selectedRow];
                 System.out.println("Deleting Menu Item " + toDeleteID);
                 manCmds.deleteMenuItem(toDeleteID);
-                RefreshGUI();
+                tableModel.removeRow(selectedRow);
             }
             //TODO sql here
         }
