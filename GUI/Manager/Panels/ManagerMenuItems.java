@@ -188,6 +188,7 @@ public class ManagerMenuItems extends JPanel {
             // Placeholder for adding a new item
             tableModel.addRow(new Object[]{"NewID", "NewItemName", "NewPrice"});
         }
+        //TODO sql here
     }
 
     private class DeleteButtonListener implements ActionListener {
@@ -197,6 +198,7 @@ public class ManagerMenuItems extends JPanel {
             if (selectedRow >= 0) {
                 tableModel.removeRow(selectedRow);
             }
+            //TODO sql here
         }
     }
 
@@ -218,6 +220,7 @@ public class ManagerMenuItems extends JPanel {
                 tableModel.setValueAt(nameTextField.getText(), selectedRow, 1);
                 tableModel.setValueAt(priceTextField.getText(), selectedRow, 2);
             }
+            //TODO sql here
         }
     }
     
