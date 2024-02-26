@@ -101,7 +101,7 @@ public class managerCmds {
             String cmd = String.format("SELECT Ingredients.IngredientID, Ingredients.IngredientName " +
                 "FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID " +
                 "JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID " +
-                "WHERE menuitems.MenuID = {};", menuItemID);
+                "WHERE menuitems.MenuID = %d;", menuItemID);
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             allMenuItemIngredients = prep.executeQuery();
 
