@@ -1,9 +1,9 @@
-package MenuCategories;
 import java.sql.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 
 import java.io.*;
 import java.awt.*;
@@ -19,9 +19,10 @@ public class Baskets extends JPanel {
         // Add components for editing orders
         // Example: JLabels, JTextFields, JButtons, etc.
         JLabel label = new JLabel("Baskets");
-        add(label, BorderLayout.CENTER);
+        add(label, BorderLayout.NORTH);
         JPanel menuItems = new JPanel();
-        menuItems.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        menuItems.setLayout(new GridLayout(numberOfItems, 4));
+        menuItems.setBorder(new EtchedBorder());
 
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {

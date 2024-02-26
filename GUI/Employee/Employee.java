@@ -1,14 +1,21 @@
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
 
+import java.sql.*;
+import java.io.*;
+
 
 public class Employee extends JFrame {
     // Switchable layouts
-    private JPanel cardPanel;
-    private CardLayout cardLayout;
+    private JPanel menuPanel;
+    private CardLayout menuCardLayout;
+    private CardLayout orderCardLayout;
+    private JPanel currentOrderPanel;
+    private JPanel innerOrderPanel;
     //TODO: have a global list which keeps track of the menu item IDs that are "to-be-deleted" aka selected
 
     public Employee() {
@@ -21,22 +28,20 @@ public class Employee extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Create cardPanel and cardLayout
-        cardLayout = new CardLayout();
-        cardPanel = new JPanel(cardLayout);
-        cardPanel.setBorder(new EtchedBorder());
-        /*
-        cardPanel.add(new ValMeals(), "ValMeals"); 
-        cardPanel.add(new Burgers(), "Burgers"); 
-        cardPanel.add(new Sandwiches(), "Sandwiches"); 
-        cardPanel.add(new Baskets(), "Baskets"); 
-        cardPanel.add(new Sides(), "Sides"); 
-        cardPanel.add(new Drinks(), "Drinks"); 
-        cardPanel.add(new Etc(), "Etc"); 
-        cardPanel.add(new LimitedTime(), "Limited Time"); 
-        */
-        cardPanel.add(new EmployeeSubmit(), "Employee Submit");
-        cardPanel.add(new EmployeeDelete(), "Employee Delete");
+        // Create menuPanel and menuCardLayout
+        menuCardLayout = new CardLayout();
+        menuPanel = new JPanel(menuCardLayout);
+        menuPanel.setBorder(new EtchedBorder());
+        menuPanel.add(new ValMeals(), "ValMeals"); 
+        menuPanel.add(new Burgers(), "Burgers"); 
+        menuPanel.add(new Sandwiches(), "Sandwiches"); 
+        menuPanel.add(new Baskets(), "Baskets"); 
+        menuPanel.add(new Sides(), "Sides"); 
+        menuPanel.add(new Drinks(), "Drinks"); 
+        menuPanel.add(new Etc(), "Etc"); 
+        menuPanel.add(new LimitedTime(), "Limited Time");
+        menuPanel.add(new EmployeeSubmit(), "Employee Submit");
+        menuPanel.add(new EmployeeDelete(), "Employee Delete");
 
         // MENU CATEGORIES
 
@@ -59,21 +64,26 @@ public class Employee extends JFrame {
         // CURRENT ORDER
 
         // Create the panel to show what the order currently consists of
-        JPanel currentOrderPanel = new JPanel();
+        orderCardLayout = new CardLayout();
+        innerOrderPanel = new JPanel(menuCardLayout);
+        currentOrderPanel = new JPanel();
         currentOrderPanel.setBorder(new EtchedBorder());
         currentOrderPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        innerOrderPanel.setBorder(new EtchedBorder());
+        innerOrderPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         // Create and add the delete and submit buttons to the currentOrderPanel
-        JButton deleteBtn = createDeleteButton("DELETE");
-        JButton submitBtn = createSubmitButton("Submit");
-        currentOrderPanel.add(deleteBtn);
-        currentOrderPanel.add(submitBtn);
+        JButton deleteBtn = createDeleteButton("DELETE", currentOrderPanel);
+        JButton submitBtn = createSubmitButton("Submit", currentOrderPanel);
+        innerOrderPanel.add(new EmployeeDelete(), "DELETE");
+        innerOrderPanel.add(new EmployeeSubmit(), "Submit");
         // Add the currentOrderPanel to the right of the frame
         frame.add(currentOrderPanel, BorderLayout.EAST);
+        currentOrderPanel.add(innerOrderPanel, BorderLayout.NORTH);
 
         // CARD LAYOUT
 
         // Add the card layout to the frame
-        frame.add(cardPanel, BorderLayout.CENTER);
+        frame.add(menuPanel, BorderLayout.CENTER);
         // Set frame size
         frame.setSize(1280, 720);
         // Center the frame
@@ -103,33 +113,35 @@ public class Employee extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, panelName); // Switch to the specified panel
+                menuCardLayout.show(menuPanel, panelName); // Switch to the specified panel
             }
         });
         return button;
     }
 
-    private JButton createSubmitButton(String panelName) {
+    private JButton createSubmitButton(String panelName, JPanel panel) {
         JButton button = new JButton(panelName);
         button.setPreferredSize(new Dimension(150, 70));
         button.setFont(new Font("Arial", Font.PLAIN, 25));
+        panel.add(button);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, panelName); // Switch to the specified panel
+                menuCardLayout.show(currentOrderPanel, panelName); // Switch to the specified panel
             }
         });
         return button;
     }
 
-    private JButton createDeleteButton(String panelName) {
+    private JButton createDeleteButton(String panelName, JPanel panel) {
         JButton button = new JButton(panelName);
         button.setPreferredSize(new Dimension(150, 70));
         button.setFont(new Font("Arial", Font.PLAIN, 25));
+        panel.add(button);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, panelName); // Switch to the specified panel
+                menuCardLayout.show(currentOrderPanel, panelName); // Switch to the specified panel
                 //if the list of selected menu IDs is empty, then display error message
                 //if not then remove the "selected button" from the current order
             }

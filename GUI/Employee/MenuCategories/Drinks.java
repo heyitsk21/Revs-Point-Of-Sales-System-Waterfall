@@ -1,4 +1,3 @@
-package MenuCategories;
 import java.sql.*;
 import java.awt.event.*;
 import javax.swing.*;

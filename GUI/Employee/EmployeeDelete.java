@@ -8,14 +8,12 @@ import java.io.*;
 import java.awt.*;
 
 public class EmployeeDelete extends JPanel {
+    JPanel deleteScreen = new JPanel();
     public EmployeeDelete() {
         setLayout(new BorderLayout());
         JLabel label = new JLabel("Are you sure you want to delete?");
-        add(label, BorderLayout.CENTER);
-        JPanel deleteScreen = new JPanel();
+        add(label, BorderLayout.SOUTH);
         deleteScreen.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-        //TODO: Add a (label?) which asks: "Are you sure you want to delete"
 
         // Create delete and back buttons and add them to the deleteScreen panel
         JButton delete = new JButton("Delete");
