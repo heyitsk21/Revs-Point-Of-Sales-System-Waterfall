@@ -43,7 +43,7 @@ public class ManagerMenuItems extends JPanel {
 
     //Enable or disable buttons
     private void setButtonState(boolean enabled) {
-        createButton.setEnabled(enabled);
+        createButton.setEnabled(true);
         deleteButton.setEnabled(enabled);
         cancelButton.setEnabled(enabled);
         submitButton.setEnabled(enabled);
@@ -247,11 +247,18 @@ public class ManagerMenuItems extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             int selectedRow = menuTable.getSelectedRow();
-            if (selectedRow >= 0) {
-                tableModel.setValueAt(nameTextField.getText(), selectedRow, 1);
-                tableModel.setValueAt(priceTextField.getText(), selectedRow, 2);
-            }
-            //TODO sql here
+            String name = nameTextField.getText();
+            float price = Float.parseFloat(priceTextField.getText());
+
+            //TODO: get the drop down ingredients
+
+            int id = initialMenu.menuItemIDs[selectedRow];
+
+            refreshGUI();
+
+            manCmds.updateMenuItem(id, name, price);
+
+            refreshGUI();
         }
     }
     
