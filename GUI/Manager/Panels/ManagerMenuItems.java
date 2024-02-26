@@ -182,39 +182,58 @@ public class ManagerMenuItems extends JPanel {
     private class CreateButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            //get the biggest ID and add 1 TODO add catagory functionlaity when that is implimeneted in the front end
-            int newID = initialMenu.menuItemIDs[initialMenu.menuItemIDs.length - 1] + 1;
+            //get the biggest ID and add 1 TODO add category functionality when that is implemented in the front end
+            int newID = 700;
+            boolean isTaken;
+    
+            do {
+                isTaken = false;
+                for (Object[] menuItem : menu) {
+                    if (newID == (int) menuItem[0]) {
+                        isTaken = true;
+                        newID++;
+                        break;
+                    }
+                }
+            } while (isTaken);
+    
             System.out.println(newID);
-            manCmds.addMenuItem(newID,"NewMenu Item" , 0.0f);
-
+            manCmds.addMenuItem(newID, "NewMenu Item", 0.0f);
+    
             Object[] newMenuItem = {newID, "NewMenu Item", 0.0f};
             Object[][] updatedMenu = new Object[menu.length + 1][3];
-
+    
             // Copy existing rows
             for (int i = 0; i < menu.length; i++) {
                 updatedMenu[i] = menu[i];
             }
-
+    
             // Add the new row
             updatedMenu[menu.length] = newMenuItem;
-
+    
             // Update the menu reference
             menu = updatedMenu;
-
+    
+            // Update the table model
             tableModel.addRow(newMenuItem);
         }
         //TODO sql here
     }
+    
 
     private class DeleteButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            
             int selectedRow = menuTable.getSelectedRow();
-            System.out.println("Selected Row" + selectedRow);
-            if (selectedRow >= 0) {
+            System.out.println("Selected Row: " + selectedRow);
+            if (selectedRow >= 0 && selectedRow < menu.length) {
                 int toDeleteID = (int) initialMenu.menuItemIDs[selectedRow];
                 System.out.println("Deleting Menu Item " + toDeleteID);
                 manCmds.deleteMenuItem(toDeleteID);
+    
+                // Update the initialMenu object
+                initialMenu = manCmds.getMenu();
     
                 // Remove the row from the Object[][] menu
                 Object[][] updatedMenu = new Object[menu.length - 1][3];
@@ -229,13 +248,17 @@ public class ManagerMenuItems extends JPanel {
                 // Update the menu reference
                 menu = updatedMenu;
     
-                // Remove the row from the table model
-                tableModel.removeRow(selectedRow);
+                // Update the table model
+                tableModel.setRowCount(0); // Clear all rows
+                for (Object[] menuItem : menu) {
+                    tableModel.addRow(menuItem);
+                }
             }
             // TODO sql here
         }
     }
-
+    
+    
     private class CancelButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
