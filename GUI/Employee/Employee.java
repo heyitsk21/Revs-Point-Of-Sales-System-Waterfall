@@ -65,7 +65,7 @@ public class Employee extends JFrame {
 
         // Create the panel to show what the order currently consists of
         orderCardLayout = new CardLayout();
-        innerOrderPanel = new JPanel(menuCardLayout);
+        innerOrderPanel = new JPanel(orderCardLayout);
         currentOrderPanel = new JPanel();
         currentOrderPanel.setBorder(new EtchedBorder());
         currentOrderPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -127,7 +127,7 @@ public class Employee extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                menuCardLayout.show(currentOrderPanel, panelName); // Switch to the specified panel
+                orderCardLayout.show(innerOrderPanel, panelName); // Switch to the specified panel
             }
         });
         return button;
@@ -141,7 +141,7 @@ public class Employee extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                menuCardLayout.show(currentOrderPanel, panelName); // Switch to the specified panel
+                orderCardLayout.show(innerOrderPanel, panelName); // Switch to the specified panel
                 //if the list of selected menu IDs is empty, then display error message
                 //if not then remove the "selected button" from the current order
             }
