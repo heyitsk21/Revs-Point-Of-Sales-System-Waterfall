@@ -42,6 +42,7 @@ public class ManagerInventory extends JPanel {
         this.names = inventory.names;
         this.ppu = inventory.ppu;
         this.count = inventory.count;
+        this.minamount = inventory.minamount;
         this.numberOfItems = ingredientIDs.length;
         updateRight();
         updateLeft();
@@ -96,7 +97,7 @@ public class ManagerInventory extends JPanel {
         countLabel.setFont(new Font("Arial", Font.PLAIN, 25));
         rightPanel.add(countLabel);
 
-        minAmntLabel.setText("MinAmount: " + String.valueOf(ppu[currIngredientIndex]));
+        minAmntLabel.setText("MinAmount: " + String.valueOf(minamount[currIngredientIndex]));
         minAmntLabel.setHorizontalAlignment(SwingConstants.CENTER);
         minAmntLabel.setFont(new Font("Arial", Font.PLAIN, 25));
         rightPanel.add(minAmntLabel);
@@ -138,7 +139,7 @@ public class ManagerInventory extends JPanel {
         nameLabel.setText("Name: " + names[currIngredientIndex]);
         countLabel.setText("Count: " + String.valueOf(count[currIngredientIndex]));
         ppuLabel.setText("PPU: " + String.valueOf(ppu[currIngredientIndex]));
-        minAmntLabel.setText("MinAmount: " + String.valueOf(ppu[currIngredientIndex]));
+        minAmntLabel.setText("MinAmount: " + String.valueOf(minamount[currIngredientIndex]));
     }
 
     void updateLeft() {
@@ -186,10 +187,6 @@ public class ManagerInventory extends JPanel {
             RefreshGUI();
             manCmds.updateIngredient(ingredientIDs[currIngredientIndex], count[currIngredientIndex], "", 0.0f, newAmount, "This change was prossesed by my the mangaer yo.");
             RefreshGUI();
-            // TODO send the IngredientID and new amount to sql and update the database and
-            // screen with new amounts
-
-           
         }
     }
 
