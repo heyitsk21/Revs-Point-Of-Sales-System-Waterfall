@@ -287,26 +287,34 @@ public class managerCmds {
         return true;
     }
 
-    public boolean deleteMenuItem(/*TODO*/){
-        return false;
+    public boolean deleteMenuItem(int menuItemID){
+        String deleteCmd = String.format("DELETE menuitemIngredients WHERE MenuID= %d;", menuItemID);
+        db.executeSQL(deleteCmd);
+        deleteCmd = String.format("DELETE menuitems WHERE MenuID= %d;", menuItemID);
+        db.executeSQL(deleteCmd);
+        return true;
     }
     
     public boolean addMenuItemIngredient(int menuItemID,int ingredientID){
-        String updatePriceCmd = String.format("INSERT menuitemIngredients (MenuID, IngredientID) values (%d,%d);", menuItemID, ingredientID);
-        db.executeSQL(updatePriceCmd);
+        String addMenuIngCmd = String.format("INSERT menuitemIngredients (MenuID, IngredientID) values (%d,%d);", menuItemID, ingredientID);
+        db.executeSQL(addMenuIngCmd);
         return true;
     }
 
-    public boolean deleteMenuItemIngredient(/*TODO*/){
-        return false;
+    public boolean deleteMenuItemIngredient(int menuItemID, int ingredientID){
+        String deleteCmd = String.format("DELETE menuitemIngredients WHERE MenuID= %d AND ingredientID= %d;", menuItemID, ingredientID);
+        db.executeSQL(deleteCmd);
+        return true;
     }
 
     public boolean updateOrder(/*TODO*/){
         return false;
     }
 
-    public boolean deleteOrder(/*TODO*/){
-        return false;
+    public boolean deleteOrder(int orderID){
+        String deleteCmd = String.format("DELETE Orders WHERE OrderID= %d;", orderID);
+        db.executeSQL(deleteCmd);
+        return true;
     }
 
 
