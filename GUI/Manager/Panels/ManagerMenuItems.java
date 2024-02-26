@@ -179,6 +179,17 @@ public class ManagerMenuItems extends JPanel {
         }
     }
 
+    public void refreshGUI(){
+        removeAll();
+        initialMenu = manCmds.getMenu();
+        menu = formatMenuItems(initialMenu);
+        createLeftPanel();
+        createRightPanel();
+        //Disable buttons until a row is selected
+        setButtonState(false);
+        repaint();
+    }
+
     private class CreateButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -199,23 +210,7 @@ public class ManagerMenuItems extends JPanel {
     
             System.out.println(newID);
             manCmds.addMenuItem(newID, "NewMenu Item", 0.0f);
-    
-            Object[] newMenuItem = {newID, "NewMenu Item", 0.0f};
-            Object[][] updatedMenu = new Object[menu.length + 1][3];
-    
-            // Copy existing rows
-            for (int i = 0; i < menu.length; i++) {
-                updatedMenu[i] = menu[i];
-            }
-    
-            // Add the new row
-            updatedMenu[menu.length] = newMenuItem;
-    
-            // Update the menu reference
-            menu = updatedMenu;
-    
-            // Update the table model
-            tableModel.addRow(newMenuItem);
+            refreshGUI();
         }
         //TODO sql here
     }
@@ -231,29 +226,8 @@ public class ManagerMenuItems extends JPanel {
                 int toDeleteID = (int) initialMenu.menuItemIDs[selectedRow];
                 System.out.println("Deleting Menu Item " + toDeleteID);
                 manCmds.deleteMenuItem(toDeleteID);
-    
-                // Update the initialMenu object
-                initialMenu = manCmds.getMenu();
-    
-                // Remove the row from the Object[][] menu
-                Object[][] updatedMenu = new Object[menu.length - 1][3];
-                int updatedIndex = 0;
-    
-                for (int i = 0; i < menu.length; i++) {
-                    if (i != selectedRow) {
-                        updatedMenu[updatedIndex++] = menu[i];
-                    }
-                }
-    
-                // Update the menu reference
-                menu = updatedMenu;
-    
-                // Update the table model
-                tableModel.setRowCount(0); // Clear all rows
-                for (Object[] menuItem : menu) {
-                    tableModel.addRow(menuItem);
-                }
             }
+            refreshGUI();
             // TODO sql here
         }
     }
