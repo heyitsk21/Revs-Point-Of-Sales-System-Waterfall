@@ -10,6 +10,7 @@ public class ManagerGUI extends JFrame {
     // Switchable layouts
     private JPanel cardPanel;
     private CardLayout cardLayout;
+    String currentCardName;
 
     public ManagerGUI() {
         // Calls managerGUI
@@ -65,14 +66,24 @@ public class ManagerGUI extends JFrame {
 
         // Adds a panel at the top
         JPanel topPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 10));
 
         JLabel dateTimeLabel = new JLabel();
         dateTimeLabel.setFont(new Font("Arial", Font.BOLD, 15));
         updateDateTime(dateTimeLabel);
 
-
         JLabel usernameLabel = new JLabel("Username: YOUR_USERNAME");
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 15));
+
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Rebuild the current card in the card panel
+                rebuildCurrentCard(cardPanel);
+            }
+        });
+        topPanel.add(refreshButton);
 
         topPanel.add(dateTimeLabel);
         topPanel.add(usernameLabel);
@@ -101,6 +112,7 @@ public class ManagerGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, panelName); // Switch to the specified panel
+                currentCardName = panelName;
             }
         });
         return button;
@@ -110,5 +122,21 @@ public class ManagerGUI extends JFrame {
         java.util.Date date = new java.util.Date();
         String dateTimeString = "Date/Time: " + date.toString();
         dateTimeLabel.setText(dateTimeString);
+    }
+
+    private void rebuildCurrentCard(Container container) {
+        Component[] components = container.getComponents();
+        for (Component component : components) {
+            container.remove(component);
+        }
+
+        cardPanel.invalidate();
+        cardPanel.add(new ManagerTrends(), "Trends");
+        cardPanel.add(new ManagerInventory(), "Inventory");
+        cardPanel.add(new ManagerMenuItems(), "Menu Items");
+        cardPanel.add(new ManagerOrderHistory(), "Order History");
+        cardPanel.validate();
+        cardPanel.repaint();
+        cardLayout.show(cardPanel, currentCardName);
     }
 }

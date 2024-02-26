@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -40,24 +41,6 @@ public class ManagerMenuItems extends JPanel {
         setButtonState(false);
     }
 
-    public void RefreshGUI(){
-        setLayout(new GridBagLayout());
-        //PLEASE ADD UPDATE LEFT AND RIGHT PANEL AND REPLACE THIS AWFUL MESS 
-        menuTable = null;
-        tableModel = null;
-        createButton = null; deleteButton = null;  cancelButton = null; submitButton = null;
-        nameLabel = null; priceLabel= null; ingredientsLabel = null;
-        nameTextField = null; priceTextField = null; ingredientsTextField = null;
-        rightPanel = null; leftPanel = null; buttonPanel = null;
-        //PLEASE ADD UPDATE LEFT AND RIGHT PANEL AND REPLACE THIS AWFUL MESS ^^^^^^^
-        initialMenu = manCmds.getMenu();
-        menu = formatMenuItems(initialMenu);
-        createLeftPanel();
-        createRightPanel();
-        //PLEASE ADD UPDATE LEFT AND RIGHT PANEL AND REPLACE THIS AWFUL MESS
-        setButtonState(false);
-    }
-
     //Enable or disable buttons
     private void setButtonState(boolean enabled) {
         createButton.setEnabled(enabled);
@@ -91,7 +74,12 @@ public class ManagerMenuItems extends JPanel {
         //if nothing is returned from the database, formatMenuItems will throw an exception so adding a null check
         //if menu is null, we will just show the placeholder values
 
-        tableModel = new DefaultTableModel(menu, columns);
+        tableModel = new DefaultTableModel(menu, columns) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         
         menuTable = new JTable(tableModel);
         menuTable.setRowHeight(50);
@@ -101,6 +89,8 @@ public class ManagerMenuItems extends JPanel {
 
         createButton = new JButton("Create");
         deleteButton = new JButton("Delete");
+        createButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        deleteButton.setFont(new Font("Arial", Font.PLAIN, 20));
         buttonPanel.add(createButton);
         buttonPanel.add(deleteButton);
         leftPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -108,7 +98,7 @@ public class ManagerMenuItems extends JPanel {
         //Make the left panel fill up 75% of the horizontal space
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 0.75;
+        gbc.weightx = 0.5;
         gbc.weighty = 1.0;
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -123,17 +113,25 @@ public class ManagerMenuItems extends JPanel {
 
     private void createRightPanel() {
         rightPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         nameLabel = new JLabel("Name: ");
+        nameLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         priceLabel = new JLabel("Price: ");
+        priceLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         ingredientsLabel = new JLabel("Ingredients: ");
+        ingredientsLabel.setFont(new Font("Arial", Font.PLAIN, 20));
 
         nameTextField = new JTextField();
         priceTextField = new JTextField();
+        nameTextField.setFont(new Font("Arial", Font.PLAIN, 15));
+        priceTextField.setFont(new Font("Arial", Font.PLAIN, 15));
         //TODO: change this into a table of ingredients instead of a text field
         ingredientsTextField = new JTextField();
 
         cancelButton = new JButton("Cancel");
         submitButton = new JButton("Submit");
+        cancelButton.setFont(new Font("Arial", Font.PLAIN, 25));
+        submitButton.setFont(new Font("Arial", Font.PLAIN, 25));
 
         //Add the labels and text fields to the right panel
         rightPanel.add(nameLabel);
@@ -147,7 +145,7 @@ public class ManagerMenuItems extends JPanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 0.25;
+        gbc.weightx = 0.5;
         gbc.weighty = 1.0;
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -187,10 +185,25 @@ public class ManagerMenuItems extends JPanel {
             //get the biggest ID and add 1 TODO add catagory functionlaity when that is implimeneted in the front end
             int newID = initialMenu.menuItemIDs[initialMenu.menuItemIDs.length - 1] + 1;
             System.out.println(newID);
-            RefreshGUI();
             manCmds.addMenuItem(newID,"NewMenu Item" , 0.0f);
-            RefreshGUI();
+
+            Object[] newMenuItem = {newID, "NewMenu Item", 0.0f};
+            Object[][] updatedMenu = new Object[menu.length + 1][3];
+
+            // Copy existing rows
+            for (int i = 0; i < menu.length; i++) {
+                updatedMenu[i] = menu[i];
+            }
+
+            // Add the new row
+            updatedMenu[menu.length] = newMenuItem;
+
+            // Update the menu reference
+            menu = updatedMenu;
+
+            tableModel.addRow(newMenuItem);
         }
+        //TODO sql here
     }
 
     private class DeleteButtonListener implements ActionListener {
@@ -198,13 +211,28 @@ public class ManagerMenuItems extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int selectedRow = menuTable.getSelectedRow();
             System.out.println("Selected Row" + selectedRow);
-            if (selectedRow >= 0) { 
-                RefreshGUI();
-                int toDeleteID = initialMenu.menuItemIDs[selectedRow];
+            if (selectedRow >= 0) {
+                int toDeleteID = (int) initialMenu.menuItemIDs[selectedRow];
                 System.out.println("Deleting Menu Item " + toDeleteID);
                 manCmds.deleteMenuItem(toDeleteID);
-                RefreshGUI();
+    
+                // Remove the row from the Object[][] menu
+                Object[][] updatedMenu = new Object[menu.length - 1][3];
+                int updatedIndex = 0;
+    
+                for (int i = 0; i < menu.length; i++) {
+                    if (i != selectedRow) {
+                        updatedMenu[updatedIndex++] = menu[i];
+                    }
+                }
+    
+                // Update the menu reference
+                menu = updatedMenu;
+    
+                // Remove the row from the table model
+                tableModel.removeRow(selectedRow);
             }
+            // TODO sql here
         }
     }
 
@@ -226,6 +254,7 @@ public class ManagerMenuItems extends JPanel {
                 tableModel.setValueAt(nameTextField.getText(), selectedRow, 1);
                 tableModel.setValueAt(priceTextField.getText(), selectedRow, 2);
             }
+            //TODO sql here
         }
     }
     
