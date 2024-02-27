@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import java.awt.*;
+import java.util.List;
 
 public class employeeCmds {
 
@@ -76,102 +77,127 @@ public class employeeCmds {
         }
     }
 
-    // Method to submit order
-    public boolean submitOrder(int selectedMenuID, String customerName, int employeeID) {
+    public boolean submitOrder(List<Integer> selectedMenuIDs, String customerName, int employeeID) {
+        float totalPrice = 0; // Initialize totalPrice here
         try {
-            // Query every single menu item ingredient count
-            String ingredientQuery = "SELECT Ingredients.IngredientName, Ingredients.Count, Ingredients.IngredientID FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID WHERE menuitems.MenuID = ?";
-            PreparedStatement ingredientPrep = db.con.prepareStatement(ingredientQuery);
-            ingredientPrep.setInt(1, selectedMenuID);
-            ResultSet ingredientResult = ingredientPrep.executeQuery();
+            // STARTS TRANSACTION MODE, REMOVED IN FINALLY LOOP
+            db.con.setAutoCommit(false);
             
-            // Add every single IngredientID to a map<ID,Count> 
-            Map<Integer, Integer> ingredientCountMap = new HashMap<>();
-            while (ingredientResult.next()) 
-            {
-                int ingredientID = ingredientResult.getInt("IngredientID");
-                int count = ingredientResult.getInt("Count");
-                ingredientCountMap.put(ingredientID, count);
-            }
-
-            // If any out of ingredient errors, break and return false
-            for (Map.Entry<Integer, Integer> entry : ingredientCountMap.entrySet()) 
-            {
-                int ingredientID = entry.getKey();
-                int requiredCount = entry.getValue();
-                int availableCount = entry.getValue();
-                if (availableCount < requiredCount) 
-                {
-                    System.out.println("Insufficient ingredients for the order");
-                    return false;
-                }
-            }
-
-            // Manage map of ingredients and update the count
-            for (Map.Entry<Integer, Integer> entry : ingredientCountMap.entrySet()) 
-            {
-                // Update the count of each ingredient
-                int ingredientID = entry.getKey();
-                int requiredCount = entry.getValue();
-                int newCount = requiredCount - entry.getValue();
-                String updateQuery = "UPDATE Ingredients SET Count = ? WHERE IngredientID = ?";
-                PreparedStatement updatePrep = db.con.prepareStatement(updateQuery);
-                updatePrep.setInt(1, newCount);
-                updatePrep.setInt(2, ingredientID);
-                updatePrep.executeUpdate();
-
-                // Generate inventory log entry for each ingredient changed
-                String logMessage = "Order placed: " + selectedMenuID;
-                String logQuery = "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (?, ?, ?, NOW())";
-                PreparedStatement logPrep = db.con.prepareStatement(logQuery);
-                logPrep.setInt(1, ingredientID);
-                logPrep.setInt(2, -requiredCount); // Negative value indicates deduction
-                logPrep.setString(3, logMessage);
-                logPrep.executeUpdate();
-            }
-
-            // Add order to order history (get highest OrderID and add 1)
+            // GET HIGHEST OrderID -- MOVED OUTSIDE OF LOOP
+            int newOrderID = 0;
             String orderIDQuery = "SELECT MAX(OrderID) AS MaxID FROM Orders";
             Statement orderIDStmt = db.con.createStatement();
             ResultSet orderIDResult = orderIDStmt.executeQuery(orderIDQuery);
-            int newOrderID = 0;
-            if (orderIDResult.next()) 
-            {
+            if (orderIDResult.next()) {
                 newOrderID = orderIDResult.getInt("MaxID") + 1;
             }
-
-            // Calculate total price of the order
-            float totalPrice = 0;
-            String totalPriceQuery = "SELECT SUM(Price) AS TotalPrice FROM MenuItems WHERE MenuID = ?";
-            PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
-            totalPricePrep.setInt(1, selectedMenuID);
-            ResultSet totalPriceResult = totalPricePrep.executeQuery();
-            if (totalPriceResult.next()) 
-            {
-                totalPrice = totalPriceResult.getFloat("TotalPrice");
+    
+            // ITERATE OVER MENU ITEMS
+            for (Integer selectedMenuID : selectedMenuIDs) {
+                // QUERY EVERY INGREDIENT FOR MENU ITEM
+                String ingredientQuery = "SELECT Ingredients.IngredientID, Ingredients.MinAmount, SUM(menuitemingredients.Count) AS TotalCount FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID WHERE menuitems.MenuID = ? GROUP BY Ingredients.IngredientID";
+                PreparedStatement ingredientPrep = db.con.prepareStatement(ingredientQuery);
+                ingredientPrep.setInt(1, selectedMenuID);
+                ResultSet ingredientResult = ingredientPrep.executeQuery();
+    
+                // ADD INGREDIENTID TO A MAP
+                Map<Integer, Integer> ingredientCountMap = new HashMap<>();
+                while (ingredientResult.next()) {
+                    int ingredientID = ingredientResult.getInt("IngredientID");
+                    int minAmount = ingredientResult.getInt("MinAmount");
+                    ingredientCountMap.put(ingredientID, minAmount);
+                }
+    
+                // MANAGE MAP AND UPDATE COUNT
+                for (Map.Entry<Integer, Integer> entry : ingredientCountMap.entrySet()) {
+                    int ingredientID = entry.getKey();
+                    int requiredCount = entry.getValue();
+                    
+                    // Fetch the current count from the database
+                    String countQuery = "SELECT Count FROM Ingredients WHERE IngredientID = ?";
+                    PreparedStatement countPrep = db.con.prepareStatement(countQuery);
+                    countPrep.setInt(1, ingredientID);
+                    ResultSet countResult = countPrep.executeQuery();
+                    int availableCount = 0;
+                    if (countResult.next()) {
+                        availableCount = countResult.getInt("Count");
+                    }
+    
+                    // Compare availableCount with requiredCount
+                    if (availableCount < requiredCount) {
+                        System.out.println("Insufficient ingredients for the order");
+                        db.con.rollback(); // Rollback transaction
+                        return false;
+                    }
+    
+                    // Update the count of the ingredient
+                    int newCount = availableCount - 1;
+                    String updateQuery = "UPDATE Ingredients SET Count = ? WHERE IngredientID = ?";
+                    PreparedStatement updatePrep = db.con.prepareStatement(updateQuery);
+                    updatePrep.setInt(1, newCount);
+                    updatePrep.setInt(2, ingredientID);
+                    updatePrep.executeUpdate();
+    
+                    // Generate inventory log entry for each ingredient changed
+                    String logMessage = "Order placed: " + selectedMenuID;
+                    String logQuery = "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (?, ?, ?, NOW())";
+                    PreparedStatement logPrep = db.con.prepareStatement(logQuery);
+                    logPrep.setInt(1, ingredientID);
+                    logPrep.setInt(2, -requiredCount); // Negative value indicates deduction
+                    logPrep.setString(3, logMessage);
+                    logPrep.executeUpdate();
+                }
+    
+                // Calculate total price of the order
+                String totalPriceQuery = "SELECT SUM(Price) AS TotalPrice FROM MenuItems WHERE MenuID = ?";
+                PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
+                totalPricePrep.setInt(1, selectedMenuID);
+                ResultSet totalPriceResult = totalPricePrep.executeQuery();
+                if (totalPriceResult.next()) {
+                    totalPrice += totalPriceResult.getFloat("TotalPrice");
+                }
+    
+                // Insert into OrderMenuItems table
+                String junctionQuery = "INSERT INTO OrderMenuItems (OrderID, MenuID) VALUES (?, ?)";
+                PreparedStatement junctionPrep = db.con.prepareStatement(junctionQuery);
+                junctionPrep.setInt(1, newOrderID);
+                junctionPrep.setInt(2, selectedMenuID);
+                junctionPrep.executeUpdate();
             }
-
-            String junctionQuery = "INSERT INTO OrderMenuItems (OrderID, MenuID) VALUES (?, ?)";
-            PreparedStatement junctionPrep = db.con.prepareStatement(junctionQuery);
-            junctionPrep.setInt(1, newOrderID);
-            junctionPrep.setInt(2, selectedMenuID);
-            junctionPrep.executeUpdate();
-
+    
             // Insert the order into the Orders Table
             String orderQuery = "INSERT INTO Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) VALUES (?, ?, ?, ?, NOW(), ?)";
             PreparedStatement orderPrep = db.con.prepareStatement(orderQuery);
             orderPrep.setInt(1, newOrderID);
-            orderPrep.setString(2, customerName); 
-            orderPrep.setFloat(3, totalPrice * 0.0825f); 
-            orderPrep.setFloat(4, totalPrice); 
+            orderPrep.setString(2, customerName);
+            orderPrep.setFloat(3, totalPrice * 0.0825f);
+            orderPrep.setFloat(4, totalPrice);
             orderPrep.setInt(5, employeeID);
             orderPrep.executeUpdate();
-
+    
+            // Commit the transaction
+            db.con.commit();
+            
             // If successful, return true
             return true;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+            try {
+                // Rollback the transaction in case of exception
+                db.con.rollback();
+            } catch (SQLException ex) {
+                System.err.println(ex.getMessage());
+            }
             return false;
+        } finally {
+            try {
+                // Reset auto-commit mode
+                db.con.setAutoCommit(true);
+            } catch (SQLException ex) {
+                System.err.println(ex.getMessage());
+            }
         }
     }
+    
+    
 }
