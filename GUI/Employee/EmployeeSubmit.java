@@ -1,68 +1,48 @@
-import java.sql.*;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.border.EmptyBorder;
-
-import java.io.*;
-import java.awt.*;
 
 public class EmployeeSubmit extends JPanel {
+    private JTextField nameField;
+    private JButton submitButton;
+    private JButton backButton;
+
     public EmployeeSubmit() {
         setLayout(new BorderLayout());
+
         JLabel label = new JLabel("Enter a name for the order");
-        add(label, BorderLayout.CENTER);
+        add(label, BorderLayout.NORTH);
+
         JPanel submitScreen = new JPanel();
         submitScreen.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-        //TODO: Add a (label?) which asks: "Enter a name for the order"
+        // Add label for name input
+        JLabel nameLabel = new JLabel("Name:");
+        submitScreen.add(nameLabel);
 
-        //TODO: Add a text submission box so employee can type in the name
-        /* code from manager that creates a text box
-        headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
-
-        userInputField.setHorizontalAlignment(SwingConstants.CENTER);
-        userInputField.setFont(new Font("Arial", Font.PLAIN, 25));
-        userInputField.setText("");
-
-        submitButton.setText("Submit");
-        submitButton.setHorizontalAlignment(SwingConstants.CENTER);
-
-        backButton.setText("Back");
-        backButton.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        submitPanel.add(headerLabel);
-        submitPanel.add(userInputField);
-        submitPanel.add(submitButton);
-        submitPanel.add(backButton);
-        
-        GridBagConstraints gbc = new GridBagConstraints(); 
-        gbc.fill = GridBagConstraints.BOTH;  // Fill both horizontally and vertically
-        gbc.weightx = 0.25;
-        gbc.weighty = 1.0;
-        gbc.gridx = 1; 
-        gbc.gridy = 0;
-        add(rightPanel, gbc);
-        */
+        // Add text field for name input
+        nameField = new JTextField(20);
+        submitScreen.add(nameField);
 
         // Create submit and back buttons and add them to the submitScreen panel
-        JButton submit = new JButton("Submit");
-        submitScreen.add(submit);
-        JButton back = new JButton("Back");
-        submitScreen.add(submit);
+        submitButton = new JButton("Submit");
+        submitButton.setPreferredSize(new Dimension(150, 70));
+        submitButton.setFont(new Font("Arial", Font.PLAIN, 25));
+        submitScreen.add(submitButton);
 
-        //add Action Listeners and formatting for submit and back
-        submit.addActionListener(new ButtonClickListener(this, "Submit"));
-        submit.setPreferredSize(new Dimension(300, 50));
-        submit.setFont(new Font("Arial", Font.PLAIN, 25));
+        backButton = new JButton("Back");
+        backButton.setPreferredSize(new Dimension(150, 70));
+        backButton.setFont(new Font("Arial", Font.PLAIN, 25));
+        submitScreen.add(backButton);
 
-        back.addActionListener(new ButtonClickListener(this, "Back"));
-        back.setPreferredSize(new Dimension(300, 50));
-        back.setFont(new Font("Arial", Font.PLAIN, 25));
+        add(submitScreen, BorderLayout.CENTER);
+
+        // Add action listeners
+        submitButton.addActionListener(new ButtonClickListener(this, "Submit"));
+        backButton.addActionListener(new ButtonClickListener(this, "Back"));
     }
 
-    //button click listener so things happen when buttons are clicked
+    // Button click listener for submit and back buttons
     private class ButtonClickListener implements ActionListener {
         private EmployeeSubmit employeeSubmit;
         private String buttonName;
@@ -74,22 +54,22 @@ public class EmployeeSubmit extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            // SUBMIT
-            if (buttonName == "Submit") {
-                System.out.println("Submit clicked");
-                
-
-                if (false /*the text entry box is empty*/) {
-                    //TODO: display error when no name is given
+            if (buttonName.equals("Submit")) {
+                // Check if name field is empty
+                if (nameField.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(employeeSubmit, "Please enter a name for the order.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // TODO: Update the database with the order
+                    System.out.println("Order submitted with name: " + nameField.getText());
+                    // Reset the Employee GUI (navigate back to previous panel)
+                    CardLayout cardLayout = (CardLayout) getParent().getLayout();
+                    cardLayout.show(getParent(), "previousPanel"); // TODO: Replace "previousPanel" with the actual name of the panel to navigate back to
                 }
-                else {
-                    //TODO: update the database with the order and reset the Employee GUI
-                }
-                
-            }
-            else if (buttonName == "Back") {
-                System.out.println("Back clicked");
-                //TODO: go back to screen without changing anything
+            } else if (buttonName.equals("Back")) {
+                    // Handle back action
+                    System.out.println("Back clicked");
+                    // Close the frame
+                    SwingUtilities.getWindowAncestor(EmployeeSubmit.this).dispose();
             }
         }
     }

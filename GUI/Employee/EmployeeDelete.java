@@ -1,57 +1,51 @@
-import java.sql.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.border.EmptyBorder;
-
-import java.io.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class EmployeeDelete extends JPanel {
-    JPanel deleteScreen = new JPanel();
+    private JButton deleteButton;
+    private JButton backButton;
+
     public EmployeeDelete() {
         setLayout(new BorderLayout());
+
         JLabel label = new JLabel("Are you sure you want to delete?");
-        add(label, BorderLayout.SOUTH);
-        deleteScreen.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        add(label, BorderLayout.NORTH);
 
-        // Create delete and back buttons and add them to the deleteScreen panel
-        JButton delete = new JButton("Delete");
-        deleteScreen.add(delete);
-        JButton back = new JButton("Back");
-        deleteScreen.add(back);
+        JPanel deleteScreen = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-        //add Action Listeners and formatting for delete and back
-        delete.addActionListener(new ButtonClickListener(this, "Delete"));
-        delete.setPreferredSize(new Dimension(300, 50));
-        delete.setFont(new Font("Arial", Font.PLAIN, 25));
+        deleteButton = new JButton("Delete");
+        deleteButton.setPreferredSize(new Dimension(150, 70));
+        deleteButton.setFont(new Font("Arial", Font.PLAIN, 25));
+        deleteScreen.add(deleteButton);
 
-        back.addActionListener(new ButtonClickListener(this, "Back"));
-        back.setPreferredSize(new Dimension(300, 50));
-        back.setFont(new Font("Arial", Font.PLAIN, 25));
-    }
+        backButton = new JButton("Back");
+        backButton.setPreferredSize(new Dimension(150, 70));
+        backButton.setFont(new Font("Arial", Font.PLAIN, 25));
+        deleteScreen.add(backButton);
 
-    //button click listener so things happen when buttons are clicked
-    private class ButtonClickListener implements ActionListener {
-        private EmployeeDelete employeeDelete;
-        private String buttonName;
+        add(deleteScreen, BorderLayout.CENTER);
 
-        public ButtonClickListener(EmployeeDelete employeeDelete, String buttonName) {
-            this.employeeDelete = employeeDelete;
-            this.buttonName = buttonName;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // SUBMIT
-            if (buttonName == "Delete") {
-                System.out.println("Submit clicked");
-                //TODO: remove the selected items from the submit order panel
+        // Add action listeners
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Handle delete action
+                System.out.println("Delete clicked");
+                // Remove selected items from the submit order panel
+                // Code to remove menu item with ID menuID from innerOrderPanel
+                // selectedMenuItems.clear(); // Clear selected items
             }
-            else if (buttonName == "Back") {
+        });
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Handle back action
                 System.out.println("Back clicked");
-                //TODO: go back to screen without changing anything
+                // Close the frame
+                SwingUtilities.getWindowAncestor(EmployeeDelete.this).dispose();
             }
-        }
+        });
     }
 }

@@ -1,25 +1,20 @@
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
-
-import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
-
-import java.sql.*;
-import java.io.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Employee extends JFrame {
-    // Switchable layouts
     private JPanel menuPanel;
     private CardLayout cardLayout;
     private JPanel currentOrderPanel;
     private JPanel innerOrderPanel;
-    //TODO: have a global list which keeps track of the menu item IDs that are "to-be-deleted" aka selected
+    private List<Integer> selectedMenuItems; // Global list to keep track of selected menu items
 
     public Employee() {
-        // Calls createAndShowGUI
         createAndShowGUI();
+        selectedMenuItems = new ArrayList<>();
     }
 
     private void createAndShowGUI() {
@@ -31,16 +26,14 @@ public class Employee extends JFrame {
         cardLayout = new CardLayout();
         menuPanel = new JPanel(cardLayout);
         menuPanel.setBorder(new EtchedBorder());
-        menuPanel.add(new ValMeals(), "ValMeals"); 
-        menuPanel.add(new Burgers(), "Burgers"); 
-        menuPanel.add(new Sandwiches(), "Sandwiches"); 
-        menuPanel.add(new Baskets(), "Baskets"); 
-        menuPanel.add(new Sides(), "Sides"); 
-        menuPanel.add(new Drinks(), "Drinks"); 
-        menuPanel.add(new Etc(), "Etc"); 
+        menuPanel.add(new ValMeals(), "ValMeals");
+        menuPanel.add(new Burgers(), "Burgers");
+        menuPanel.add(new Sandwiches(), "Sandwiches");
+        menuPanel.add(new Baskets(), "Baskets");
+        menuPanel.add(new Sides(), "Sides");
+        menuPanel.add(new Drinks(), "Drinks");
+        menuPanel.add(new Etc(), "Etc");
         menuPanel.add(new LimitedTime(), "Limited Time");
-        menuPanel.add(new EmployeeSubmit(), "Employee Submit");
-        menuPanel.add(new EmployeeDelete(), "Employee Delete");
 
         // MENU CATEGORIES
 
@@ -63,7 +56,7 @@ public class Employee extends JFrame {
         // CURRENT ORDER
 
         // Create the panel to show what the order currently consists of
-        innerOrderPanel = new JPanel(cardLayout);
+        innerOrderPanel = new JPanel(null);
         currentOrderPanel = new JPanel();
         currentOrderPanel.setBorder(new EtchedBorder());
         currentOrderPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -76,7 +69,7 @@ public class Employee extends JFrame {
         innerOrderPanel.add(new EmployeeSubmit(), "Submit");
         // Add the currentOrderPanel to the right of the frame
         frame.add(currentOrderPanel, BorderLayout.EAST);
-        currentOrderPanel.add(innerOrderPanel, BorderLayout.NORTH);
+        // WRONG: currentOrderPanel.add(innerOrderPanel, BorderLayout.NORTH);
 
         // CARD LAYOUT
 
@@ -87,7 +80,7 @@ public class Employee extends JFrame {
         // Center the frame
         frame.setLocationRelativeTo(null);
 
-        // DATE TIME USERNAME 
+        // DATE TIME USERNAME
 
         // Adds a panel at the top
         JPanel topPanel = new JPanel();
@@ -125,12 +118,18 @@ public class Employee extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(innerOrderPanel, panelName); // Switch to the specified panel TODO: FIX
+                // Create a new frame for EmployeeSubmit panel
+                JFrame submitFrame = new JFrame("Employee Submit");
+                submitFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                submitFrame.getContentPane().add(new EmployeeSubmit());
+                submitFrame.pack();
+                submitFrame.setLocationRelativeTo(null); // Center the frame
+                submitFrame.setVisible(true);
             }
         });
         return button;
     }
-
+    
     private JButton createDeleteButton(String panelName, JPanel panel) {
         JButton button = new JButton(panelName);
         button.setPreferredSize(new Dimension(150, 70));
@@ -139,11 +138,20 @@ public class Employee extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(innerOrderPanel, panelName); // Switch to the specified panel TODO: FIX
-                //LATER TODO: if the list of selected menu IDs is empty, then display error message
-                //if not then remove the "selected button" from the current order
+                // Create a new frame for EmployeeDelete panel
+                JFrame deleteFrame = new JFrame("Employee Delete");
+                deleteFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                deleteFrame.getContentPane().add(new EmployeeDelete());
+                deleteFrame.pack();
+                deleteFrame.setLocationRelativeTo(null); // Center the frame
+                deleteFrame.setVisible(true);
             }
         });
         return button;
+    }
+    
+
+    public static void main(String[] args) {
+        Employee employee = new Employee();
     }
 }
