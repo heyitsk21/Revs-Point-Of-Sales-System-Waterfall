@@ -8,6 +8,9 @@ import javax.swing.border.EtchedBorder;
 import java.io.*;
 import java.awt.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ValMeals extends JPanel {
     //placeholder menu items, in the future we can go through the menu items list and pick out ones with certain types of IDs
@@ -15,7 +18,11 @@ public class ValMeals extends JPanel {
     int[] menuItemIDs = {1,2,3,4,5};
     String[] names = {"Value Meal 1", "Value Meal 2", "Value Meal 3", "Value Meal 4", "Value Meal 5"};
     double[] prices = {2.00, 3.00, 4.00, 5.50, 6.00};
-    public ValMeals() {
+    List<Integer> selectedMenuIDs;
+
+    public ValMeals(List<Integer> passedSelectedMenuIDs) {
+        selectedMenuIDs = passedSelectedMenuIDs;
+
         setLayout(new BorderLayout());
         // Add components for editing orders
         // Example: JLabels, JTextFields, JButtons, etc.
@@ -53,8 +60,7 @@ public class ValMeals extends JPanel {
             System.out.println("Menu Item clicked: " + buttonName);
             JButton orderedBtn = new JButton(buttonName);
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-            //TODO: add to submit order panel
-            //currentOrderPanel.add(orderedBtn);
+            //TODO: add to selectedMenuIDs
         }
     }
 }

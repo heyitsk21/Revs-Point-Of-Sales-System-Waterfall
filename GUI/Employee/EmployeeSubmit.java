@@ -1,14 +1,23 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.AttributeSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeSubmit extends JPanel {
     private JTextField nameField;
     private JTextField IDField;
     private JButton submitButton;
     private JButton backButton;
+    private List<Integer> selectedMenuIDs;
 
-    public EmployeeSubmit() {
+    public EmployeeSubmit(List<Integer> passedSelectedMenuIDs) {
+        selectedMenuIDs = passedSelectedMenuIDs;
         setLayout(new BorderLayout());
 
         JLabel label = new JLabel("Enter a name for the order");
@@ -29,8 +38,9 @@ public class EmployeeSubmit extends JPanel {
         // Add label for name input
         JLabel IDLabel = new JLabel("Employee ID:");
         submitScreen.add(IDLabel);
-        // Add text field for name input
+        // Add text field for ID input
         IDField = new JTextField(20);
+        limitInputToNumeric(IDField);
         submitScreen.add(IDField);
 
         // Create submit and back buttons and add them to the submitScreen panel
@@ -68,11 +78,19 @@ public class EmployeeSubmit extends JPanel {
                 if (nameField.getText().isEmpty() || IDField.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(employeeSubmit, "Please enter a name and employee ID for the order.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    // TODO: Update the database with the order
-                    System.out.println("Order submitted with name: " + nameField.getText());
-                    // Reset the Employee GUI (navigate back to previous panel)
-                    CardLayout cardLayout = (CardLayout) getParent().getLayout();
-                    cardLayout.show(getParent(), "previousPanel"); // TODO: Replace "previousPanel" with the actual name of the panel to navigate back to
+                    employeeCmds commands = new employeeCmds();
+                    int employeeID = Integer.parseInt(IDField.getText());
+                    boolean success = commands.submitOrder(selectedMenuIDs, nameField.getText(), employeeID);
+                    if(success) {
+                        System.out.println("Order submitted with name: " + nameField.getText());
+                        // Clear out selectedMenuIDs
+                        selectedMenuIDs.clear();
+                        // Close the frame
+                        SwingUtilities.getWindowAncestor(EmployeeSubmit.this).dispose();
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(employeeSubmit, "There was an error processing the order, please contact a manager", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             } else if (buttonName.equals("Back")) {
                     // Handle back action
@@ -81,5 +99,26 @@ public class EmployeeSubmit extends JPanel {
                     SwingUtilities.getWindowAncestor(EmployeeSubmit.this).dispose();
             }
         }
+    }
+
+    private static void limitInputToNumeric(JTextField textField) {
+        AbstractDocument document = (AbstractDocument) textField.getDocument();
+        document.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+                    throws BadLocationException {
+                if (string.matches("-?\\d*")) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                if (text.matches("-?\\d*")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
     }
 }

@@ -10,12 +10,13 @@ public class Employee extends JFrame {
     private CardLayout cardLayout;
     private JPanel currentOrderPanel;
     private JPanel innerOrderPanel;
-    
-    public List<Integer> selectedMenuItems; // Global list to keep track of selected menu items
+
+    public List<Integer> selectedMenuIDs; // Global list to keep track of selected menu items
+    public employeeCmds commands;
 
     public Employee() {
         createAndShowGUI();
-        selectedMenuItems = new ArrayList<>();
+        selectedMenuIDs = new ArrayList<>();
     }
 
     private void createAndShowGUI() {
@@ -27,7 +28,7 @@ public class Employee extends JFrame {
         cardLayout = new CardLayout();
         menuPanel = new JPanel(cardLayout);
         menuPanel.setBorder(new EtchedBorder());
-        menuPanel.add(new ValMeals(), "ValMeals");
+        menuPanel.add(new ValMeals(selectedMenuIDs), "ValMeals");
         menuPanel.add(new Burgers(), "Burgers");
         menuPanel.add(new Sandwiches(), "Sandwiches");
         menuPanel.add(new Baskets(), "Baskets");
@@ -68,7 +69,7 @@ public class Employee extends JFrame {
         JButton deleteBtn = createDeleteButton("DELETE", currentOrderPanel);
         JButton submitBtn = createSubmitButton("Submit", currentOrderPanel);
         innerOrderPanel.add(new EmployeeDelete(), "DELETE");
-        innerOrderPanel.add(new EmployeeSubmit(), "Submit");
+        innerOrderPanel.add(new EmployeeSubmit(selectedMenuIDs), "Submit");
         // Add the currentOrderPanel to the right of the frame
         frame.add(currentOrderPanel, BorderLayout.EAST);
         // WRONG: currentOrderPanel.add(innerOrderPanel, BorderLayout.NORTH);
@@ -123,7 +124,7 @@ public class Employee extends JFrame {
                 // Create a new frame for EmployeeSubmit panel
                 JFrame submitFrame = new JFrame("Employee Submit");
                 submitFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                submitFrame.getContentPane().add(new EmployeeSubmit());
+                submitFrame.getContentPane().add(new EmployeeSubmit(selectedMenuIDs));
                 submitFrame.pack();
                 submitFrame.setLocationRelativeTo(null); // Center the frame
                 submitFrame.setVisible(true);
