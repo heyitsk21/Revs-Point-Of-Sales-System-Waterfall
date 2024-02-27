@@ -94,6 +94,7 @@ public class managerCmds {
 
     public sqlObjects.MenuItemIngredients getMenuItemIngredients(int menuItemID){
         try{
+            System.out.println(menuItemID);
             int size = 0;
             PreparedStatement prep;
             ResultSet allMenuItemIngredients;
@@ -126,7 +127,7 @@ public class managerCmds {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        return null;
+        return new sqlObjects.MenuItemIngredients(new int[0],new String[0]);
     }
 
     public sqlObjects.OrderList getOrders() {
