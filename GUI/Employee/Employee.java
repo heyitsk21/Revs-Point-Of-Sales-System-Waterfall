@@ -10,7 +10,8 @@ public class Employee extends JFrame {
     private CardLayout cardLayout;
     private JPanel currentOrderPanel;
     private JPanel innerOrderPanel;
-    private List<Integer> selectedMenuItems; // Global list to keep track of selected menu items
+    
+    public List<Integer> selectedMenuItems; // Global list to keep track of selected menu items
 
     public Employee() {
         createAndShowGUI();
