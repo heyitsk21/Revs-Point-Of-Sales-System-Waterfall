@@ -113,7 +113,7 @@ public class employeeCmds {
                     int ingredientID = entry.getKey();
                     int requiredCount = entry.getValue();
                     
-                    // Fetch the current count from the database
+                    // GET CURRENT COUNT AGAIN
                     String countQuery = "SELECT Count FROM Ingredients WHERE IngredientID = ?";
                     PreparedStatement countPrep = db.con.prepareStatement(countQuery);
                     countPrep.setInt(1, ingredientID);
@@ -123,14 +123,14 @@ public class employeeCmds {
                         availableCount = countResult.getInt("Count");
                     }
     
-                    // Compare availableCount with requiredCount
+                    // COMPARE IF INGREDIENTS LESS THAN REQUIRED
                     if (availableCount < requiredCount) {
                         System.out.println("Insufficient ingredients for the order");
                         db.con.rollback(); // Rollback transaction
                         return false;
                     }
     
-                    // Update the count of the ingredient
+                    // UPDATE COUNT OF INGREDIENT (ONLY SUBTRACTING 1 FOR NOW)
                     int newCount = availableCount - 1;
                     String updateQuery = "UPDATE Ingredients SET Count = ? WHERE IngredientID = ?";
                     PreparedStatement updatePrep = db.con.prepareStatement(updateQuery);
@@ -138,7 +138,7 @@ public class employeeCmds {
                     updatePrep.setInt(2, ingredientID);
                     updatePrep.executeUpdate();
     
-                    // Generate inventory log entry for each ingredient changed
+                    // GENERATE INVENTORY LOG PER INGREDIENT
                     String logMessage = "Order placed: " + selectedMenuID;
                     String logQuery = "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (?, ?, ?, NOW())";
                     PreparedStatement logPrep = db.con.prepareStatement(logQuery);
@@ -148,7 +148,7 @@ public class employeeCmds {
                     logPrep.executeUpdate();
                 }
     
-                // Calculate total price of the order
+                // CALCULATE TOTAL PRICE
                 String totalPriceQuery = "SELECT SUM(Price) AS TotalPrice FROM MenuItems WHERE MenuID = ?";
                 PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
                 totalPricePrep.setInt(1, selectedMenuID);
@@ -157,7 +157,7 @@ public class employeeCmds {
                     totalPrice += totalPriceResult.getFloat("TotalPrice");
                 }
     
-                // Insert into OrderMenuItems table
+                // INSERT TO OrderMenuItems 
                 String junctionQuery = "INSERT INTO OrderMenuItems (OrderID, MenuID) VALUES (?, ?)";
                 PreparedStatement junctionPrep = db.con.prepareStatement(junctionQuery);
                 junctionPrep.setInt(1, newOrderID);
@@ -165,7 +165,7 @@ public class employeeCmds {
                 junctionPrep.executeUpdate();
             }
     
-            // Insert the order into the Orders Table
+            // INSERT ORDER INTO TABLE
             String orderQuery = "INSERT INTO Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) VALUES (?, ?, ?, ?, NOW(), ?)";
             PreparedStatement orderPrep = db.con.prepareStatement(orderQuery);
             orderPrep.setInt(1, newOrderID);
@@ -175,15 +175,15 @@ public class employeeCmds {
             orderPrep.setInt(5, employeeID);
             orderPrep.executeUpdate();
     
-            // Commit the transaction
+            // COMMIT TRANSACTION
             db.con.commit();
             
-            // If successful, return true
+            // IF SUCCESS, RETURN TRUE
             return true;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             try {
-                // Rollback the transaction in case of exception
+                // ROLLBACK IF EXCEPTION
                 db.con.rollback();
             } catch (SQLException ex) {
                 System.err.println(ex.getMessage());
@@ -191,13 +191,12 @@ public class employeeCmds {
             return false;
         } finally {
             try {
-                // Reset auto-commit mode
+                // RESET AUTO COMMIT -- SQL COMMANDS RUN INDIVIDUALLY AGAIN
                 db.con.setAutoCommit(true);
             } catch (SQLException ex) {
                 System.err.println(ex.getMessage());
             }
         }
     }
-    
     
 }
