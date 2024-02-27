@@ -6,19 +6,26 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ManagerMenuItems extends JPanel {
     private JTable menuTable;
     private DefaultTableModel tableModel;
     private JButton createButton, deleteButton, cancelButton, submitButton;
     private JLabel nameLabel, priceLabel, ingredientsLabel;
-    private JTextField nameTextField, priceTextField, ingredientsTextField;
+    private JTextField nameTextField, priceTextField;
     private JPanel rightPanel, leftPanel, buttonPanel;
 
     managerCmds manCmds;
     int currentItem;
 
     sqlObjects.Menu initialMenu;
+    sqlObjects.Inventory myInventory;
     Object[][] menu;
 
     //How to use this panel:
@@ -32,6 +39,7 @@ public class ManagerMenuItems extends JPanel {
     public ManagerMenuItems() {
         setLayout(new GridBagLayout());
         manCmds = new managerCmds();
+        setLayout(new GridLayout(1, 2));
 
         initialMenu = manCmds.getMenu();
         menu = formatMenuItems(initialMenu);
@@ -98,21 +106,23 @@ public class ManagerMenuItems extends JPanel {
         //Make the left panel fill up 75% of the horizontal space
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 0.5;
+        gbc.weightx = 0.7;
         gbc.weighty = 1.0;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(leftPanel, gbc);
+        add(leftPanel);
 
         //action listeners are defined in classes at the bottom of the file
         ListSelectionModel selectionModel = menuTable.getSelectionModel();
-        selectionModel.addListSelectionListener(e -> valueChanged(e));
+        selectionModel.addListSelectionListener(e -> rowClicked(e));
         createButton.addActionListener(new CreateButtonListener());
         deleteButton.addActionListener(new DeleteButtonListener());
     }
 
+    JLabel checkedItemsLabel;
+
     private void createRightPanel() {
-        rightPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        rightPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         nameLabel = new JLabel("Name: ");
         nameLabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -125,8 +135,8 @@ public class ManagerMenuItems extends JPanel {
         priceTextField = new JTextField();
         nameTextField.setFont(new Font("Arial", Font.PLAIN, 15));
         priceTextField.setFont(new Font("Arial", Font.PLAIN, 15));
-        //TODO: change this into a table of ingredients instead of a text field
-        ingredientsTextField = new JTextField();
+
+        JPanel ingredientDrop = createIngredientBox();
 
         cancelButton = new JButton("Cancel");
         submitButton = new JButton("Submit");
@@ -138,18 +148,18 @@ public class ManagerMenuItems extends JPanel {
         rightPanel.add(nameTextField);
         rightPanel.add(priceLabel);
         rightPanel.add(priceTextField);
-        rightPanel.add(ingredientsLabel);
-        rightPanel.add(ingredientsTextField);
+        rightPanel.add(checkedItemsLabel);
+        rightPanel.add(ingredientDrop);
         rightPanel.add(cancelButton);
         rightPanel.add(submitButton);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 0.5;
+        gbc.weightx = 0.3;
         gbc.weighty = 1.0;
         gbc.gridx = 1;
         gbc.gridy = 0;
-        add(rightPanel, gbc);
+        add(rightPanel);
 
         //adjust the values in the table when the submit button is clicked
         submitButton.addActionListener(new SubmitButtonListener());
@@ -158,8 +168,90 @@ public class ManagerMenuItems extends JPanel {
 
     }
 
-    public void valueChanged(ListSelectionEvent event) {
+    String selectedItem;
+    JComboBox<String> comboBox;
+    List<String> checkedItems;
+    Map<String, Integer> ingredientNametoID = new HashMap<>();
+    Map<Integer, String> ingredientIDtoName = new HashMap<>();
+
+    public JPanel createIngredientBox(){
+        myInventory = manCmds.getInventory();
+        comboBox = new JComboBox<>();
+        checkedItems = new ArrayList<>();
+        
+
+        String[] ingredientNames = myInventory.names;
+        int[] ingredientIDs = myInventory.ingredientIDs;
+        for (int i = 0; i < ingredientIDs.length; ++i){
+            ingredientNametoID.put(ingredientNames[i], ingredientIDs[i]);
+            ingredientIDtoName.put(ingredientIDs[i], ingredientNames[i]);
+        }
+
+        selectedItem = ingredientNames[0];
+        
+        checkedItemsLabel = new JLabel("Checked Items: ");
+        updateCheckedItemsLabel(); // Call the method with the label
+
+        // Populate the JComboBox with items
+        comboBox.setModel(new DefaultComboBoxModel<>(ingredientNames));
+
+        // For when an item is selected in combobox
+        comboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // When an item is selected, check/uncheck it and update the list
+                selectedItem = (String) comboBox.getSelectedItem();
+            }
+        });
+
+        // Create buttons for adding and removing ingredients
+        JButton addButton = new JButton("Add Ingredient");
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!checkedItems.contains(selectedItem)) {
+                    checkedItems.add(selectedItem);
+                    updateCheckedItemsLabel();
+                    //manCmds.addMenuItemIngredient((int)menu[currentItem][0], ingredientNametoID.get(selectedItem));
+                }
+            }
+        });
+
+        JButton removeButton = new JButton("Remove Ingredient");
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (checkedItems.contains(selectedItem)) {
+                    checkedItems.remove(selectedItem);
+                    updateCheckedItemsLabel();
+                    //manCmds.deleteMenuItemIngredient((int)menu[currentItem][0], ingredientNametoID.get(selectedItem));
+                }
+            }
+        });
+
+        // Create a panel and add components to it
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("Select items: "));
+        panel.add(comboBox);
+        panel.add(new JLabel("New Ingredient: "));
+        panel.add(addButton);
+        panel.add(removeButton);
+        return panel;
+    }
+
+    private void updateCheckedItemsLabel() {
+        StringBuilder labelText = new StringBuilder("Checked Items: ");
+        //System.out.println("Selected Item ID: " + ingredientNametoID.get(selectedItem)); 
+        for (String item : checkedItems) {
+            labelText.append(item).append(", ");
+        }
+        // Set the label text directly
+        checkedItemsLabel.setText(labelText.toString());
+    }
+
+    public void rowClicked(ListSelectionEvent event) {
         int selectedRow = menuTable.getSelectedRow();
+        //System.out.println(selectedRow);
         boolean rowSelected = false;
         if(selectedRow >=0){
             rowSelected = true;
@@ -171,11 +263,22 @@ public class ManagerMenuItems extends JPanel {
             //Set the text fields with the values from the selected row
             nameTextField.setText(String.valueOf(tableModel.getValueAt(selectedRow, 1)));
             priceTextField.setText(String.valueOf(tableModel.getValueAt(selectedRow, 2)));
+            sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients((int)tableModel.getValueAt(selectedRow, 0));
+            //sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients(101);
+            if (menuIng != null){
+                checkedItems.clear();
+                for (int i = 0; i < menuIng.length(); ++i){
+                    checkedItems.add(ingredientIDtoName.get(menuIng.ingredientIDs[i]));
+                }
+                updateCheckedItemsLabel();
+            }else{
+                checkedItems.clear();
+                updateCheckedItemsLabel();
+            }
         } else {
             //Clear the text fields if no row is selected
             nameTextField.setText("");
             priceTextField.setText("");
-            ingredientsTextField.setText("");
         }
     }
 
@@ -208,11 +311,10 @@ public class ManagerMenuItems extends JPanel {
                 }
             } while (isTaken);
     
-            System.out.println(newID);
+            //System.out.println(newID);
             manCmds.addMenuItem(newID, "NewMenu Item", 0.0f);
             refreshGUI();
         }
-        //TODO sql here
     }
     
 
@@ -221,7 +323,7 @@ public class ManagerMenuItems extends JPanel {
         public void actionPerformed(ActionEvent e) {
             
             int selectedRow = menuTable.getSelectedRow();
-            System.out.println("Selected Row: " + selectedRow);
+            //System.out.println("Selected Row: " + selectedRow);
             if (selectedRow >= 0 && selectedRow < menu.length) {
                 int toDeleteID = (int) initialMenu.menuItemIDs[selectedRow];
                 System.out.println("Deleting Menu Item " + toDeleteID);
@@ -239,7 +341,6 @@ public class ManagerMenuItems extends JPanel {
             menuTable.clearSelection();
             nameTextField.setText("");
             priceTextField.setText("");
-            ingredientsTextField.setText("");
         }
     }
 
@@ -247,18 +348,25 @@ public class ManagerMenuItems extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             int selectedRow = menuTable.getSelectedRow();
-            String name = nameTextField.getText();
-            float price = Float.parseFloat(priceTextField.getText());
-
-            //TODO: get the drop down ingredients
-
-            int id = initialMenu.menuItemIDs[selectedRow];
-
+            manCmds.updateMenuItem((int)tableModel.getValueAt(selectedRow, 0), nameTextField.getText(), Float.parseFloat(priceTextField.getText()));
+            //System.out.println((int)tableModel.getValueAt(selectedRow, 0));
+            sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients((int)tableModel.getValueAt(selectedRow, 0));
+            int[] tempIngredientIDs = menuIng.ingredientIDs;
+            List<Integer> ingredientIDs = Arrays.stream(tempIngredientIDs)
+                                            .boxed()
+                                            .collect(Collectors.toList());
+            for (String item : checkedItems) {
+                if (!ingredientIDs.contains(ingredientNametoID.get(item))){
+                    manCmds.addMenuItemIngredient((int)tableModel.getValueAt(selectedRow, 0), ingredientNametoID.get(item));
+                }
+            }
+            for (Integer item : ingredientIDs) {
+                if (!checkedItems.contains(ingredientIDtoName.get(item))){
+                    manCmds.deleteMenuItemIngredient((int)tableModel.getValueAt(selectedRow, 0), item);
+                }
+            }
             refreshGUI();
-
-            manCmds.updateMenuItem(id, name, price);
-
-            refreshGUI();
+            //TODO sql here
         }
     }
     

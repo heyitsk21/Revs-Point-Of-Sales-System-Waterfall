@@ -166,7 +166,7 @@ public class ManagerInventory extends JPanel {
             // Perform actions when the button is clicked
             System.out.println("Ingredient clicked: " + buttonName);
             currIngredientIndex = Integer.parseInt(buttonName);
-            RefreshGUI();
+            updateRight();
         }
     }
 

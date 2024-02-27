@@ -94,6 +94,7 @@ public class managerCmds {
 
     public sqlObjects.MenuItemIngredients getMenuItemIngredients(int menuItemID){
         try{
+            System.out.println(menuItemID);
             int size = 0;
             PreparedStatement prep;
             ResultSet allMenuItemIngredients;
@@ -116,8 +117,8 @@ public class managerCmds {
             int counter = 0;
 
             do {
-                ingredientIDs[counter] = allMenuItemIngredients.getInt("Ingredients.IngredientID"); //TODO: check if this columnLabel works. unsure if this is necessary
-                names[counter] = allMenuItemIngredients.getString("Ingredients.IngredientName");
+                ingredientIDs[counter] = allMenuItemIngredients.getInt("IngredientID"); //TODO: check if this columnLabel works. unsure if this is necessary
+                names[counter] = allMenuItemIngredients.getString("IngredientName");
                 counter++;
             } while (allMenuItemIngredients.next()) ;
 
@@ -126,7 +127,7 @@ public class managerCmds {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        return null;
+        return new sqlObjects.MenuItemIngredients(new int[0],new String[0]);
     }
 
     public sqlObjects.OrderList getOrders() {
@@ -299,7 +300,7 @@ public class managerCmds {
     }
     
     public boolean addMenuItemIngredient(int menuItemID,int ingredientID){
-        String addMenuIngCmd = String.format("INSERT menuitemIngredients (MenuID, IngredientID) values (%d,%d);", menuItemID, ingredientID);
+        String addMenuIngCmd = String.format("INSERT INTO menuitemIngredients (MenuID, IngredientID) values (%d,%d);", menuItemID, ingredientID);
         db.executeSQL(addMenuIngCmd);
         return true;
     }
