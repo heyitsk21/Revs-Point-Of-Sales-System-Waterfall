@@ -116,8 +116,8 @@ public class managerCmds {
             int counter = 0;
 
             do {
-                ingredientIDs[counter] = allMenuItemIngredients.getInt("Ingredients.IngredientID"); //TODO: check if this columnLabel works. unsure if this is necessary
-                names[counter] = allMenuItemIngredients.getString("Ingredients.IngredientName");
+                ingredientIDs[counter] = allMenuItemIngredients.getInt("IngredientID"); //TODO: check if this columnLabel works. unsure if this is necessary
+                names[counter] = allMenuItemIngredients.getString("IngredientName");
                 counter++;
             } while (allMenuItemIngredients.next()) ;
 
