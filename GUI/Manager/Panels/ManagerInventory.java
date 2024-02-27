@@ -1,10 +1,9 @@
-import java.sql.*;
+
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.border.EmptyBorder;
 
-import java.io.*;
 import java.awt.*;
 
 public class ManagerInventory extends JPanel {
@@ -76,7 +75,7 @@ public class ManagerInventory extends JPanel {
     JLabel countLabel = new JLabel();
     JLabel ppuLabel = new JLabel();
     JLabel minAmntLabel = new JLabel();
-    JLabel headerLabel = new JLabel("Change of Ingreedyint!!!!!");
+    JLabel headerLabel = new JLabel("Enter ingriedent change:");
     JTextField userInputField = new JTextField(10);
     JButton submitButton = new JButton();
 
@@ -164,7 +163,6 @@ public class ManagerInventory extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Perform actions when the button is clicked
-            System.out.println("Ingredient clicked: " + buttonName);
             currIngredientIndex = Integer.parseInt(buttonName);
             updateRight();
         }
@@ -183,7 +181,6 @@ public class ManagerInventory extends JPanel {
             if (userInputField.getText() != "") {
                 newAmount = Integer.parseInt(userInputField.getText());
             }
-            System.out.println("New amount: " + newAmount);
             RefreshGUI();
             manCmds.updateIngredient(ingredientIDs[currIngredientIndex], count[currIngredientIndex], "", 0.0f, newAmount, "This change was prossesed by my the mangaer yo.");
             RefreshGUI();

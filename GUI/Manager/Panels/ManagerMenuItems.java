@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -241,7 +240,6 @@ public class ManagerMenuItems extends JPanel {
 
     private void updateCheckedItemsLabel() {
         StringBuilder labelText = new StringBuilder("Checked Items: ");
-        //System.out.println("Selected Item ID: " + ingredientNametoID.get(selectedItem)); 
         for (String item : checkedItems) {
             labelText.append(item).append(", ");
         }
@@ -251,7 +249,6 @@ public class ManagerMenuItems extends JPanel {
 
     public void rowClicked(ListSelectionEvent event) {
         int selectedRow = menuTable.getSelectedRow();
-        //System.out.println(selectedRow);
         boolean rowSelected = false;
         if(selectedRow >=0){
             rowSelected = true;
@@ -311,7 +308,6 @@ public class ManagerMenuItems extends JPanel {
                 }
             } while (isTaken);
     
-            //System.out.println(newID);
             manCmds.addMenuItem(newID, "NewMenu Item", 0.0f);
             refreshGUI();
         }
@@ -323,10 +319,8 @@ public class ManagerMenuItems extends JPanel {
         public void actionPerformed(ActionEvent e) {
             
             int selectedRow = menuTable.getSelectedRow();
-            //System.out.println("Selected Row: " + selectedRow);
             if (selectedRow >= 0 && selectedRow < menu.length) {
                 int toDeleteID = (int) initialMenu.menuItemIDs[selectedRow];
-                System.out.println("Deleting Menu Item " + toDeleteID);
                 manCmds.deleteMenuItem(toDeleteID);
             }
             refreshGUI();
@@ -349,7 +343,6 @@ public class ManagerMenuItems extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int selectedRow = menuTable.getSelectedRow();
             manCmds.updateMenuItem((int)tableModel.getValueAt(selectedRow, 0), nameTextField.getText(), Float.parseFloat(priceTextField.getText()));
-            //System.out.println((int)tableModel.getValueAt(selectedRow, 0));
             sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients((int)tableModel.getValueAt(selectedRow, 0));
             int[] tempIngredientIDs = menuIng.ingredientIDs;
             List<Integer> ingredientIDs = Arrays.stream(tempIngredientIDs)

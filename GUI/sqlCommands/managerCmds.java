@@ -1,8 +1,4 @@
 import java.sql.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.io.*;
-import java.awt.*;
 
 public class managerCmds {
     /*
@@ -94,7 +90,7 @@ public class managerCmds {
 
     public sqlObjects.MenuItemIngredients getMenuItemIngredients(int menuItemID){
         try{
-            System.out.println(menuItemID);
+    
             int size = 0;
             PreparedStatement prep;
             ResultSet allMenuItemIngredients;
@@ -125,7 +121,7 @@ public class managerCmds {
             sqlObjects.MenuItemIngredients menuItemIngredientObj = new sqlObjects.MenuItemIngredients(ingredientIDs, names);
             return menuItemIngredientObj;
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            //System.err.println(e.getMessage()); catch the null case and then return
         }
         return new sqlObjects.MenuItemIngredients(new int[0],new String[0]);
     }
