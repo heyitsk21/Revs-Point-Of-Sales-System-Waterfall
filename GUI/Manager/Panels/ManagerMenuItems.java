@@ -349,6 +349,7 @@ public class ManagerMenuItems extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int selectedRow = menuTable.getSelectedRow();
             manCmds.updateMenuItem((int)tableModel.getValueAt(selectedRow, 0), nameTextField.getText(), Float.parseFloat(priceTextField.getText()));
+            //System.out.println((int)tableModel.getValueAt(selectedRow, 0));
             sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients((int)tableModel.getValueAt(selectedRow, 0));
             int[] tempIngredientIDs = menuIng.ingredientIDs;
             List<Integer> ingredientIDs = Arrays.stream(tempIngredientIDs)
