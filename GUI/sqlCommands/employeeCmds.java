@@ -78,7 +78,7 @@ public class employeeCmds {
     }
 
     public boolean submitOrder(List<Integer> selectedMenuIDs, String customerName, int employeeID) {
-        float totalPrice = 0; // Initialize totalPrice here
+        float totalPrice = 0; 
         try {
             // STARTS TRANSACTION MODE, REMOVED IN FINALLY LOOP
             db.con.setAutoCommit(false);
