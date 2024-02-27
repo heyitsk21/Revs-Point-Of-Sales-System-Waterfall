@@ -13,15 +13,15 @@ import java.util.List;
 
 
 public class ValMeals extends JPanel {
-    //placeholder menu items, in the future we can go through the menu items list and pick out ones with certain types of IDs
-    int numberOfItems = 5;
-    int[] menuItemIDs = {1,2,3,4,5};
-    String[] names = {"Value Meal 1", "Value Meal 2", "Value Meal 3", "Value Meal 4", "Value Meal 5"};
-    double[] prices = {2.00, 3.00, 4.00, 5.50, 6.00};
+    int numberOfItems;
+    List<Integer> menuItemIDs = new ArrayList<>();
+    List<Double> prices = new ArrayList<>();
+    List<String> names = new ArrayList<>();
     List<Integer> selectedMenuIDs;
 
     public ValMeals(List<Integer> passedSelectedMenuIDs) {
         selectedMenuIDs = passedSelectedMenuIDs;
+        addMenuItems();
 
         setLayout(new BorderLayout());
         // Add components for editing orders
@@ -35,7 +35,7 @@ public class ValMeals extends JPanel {
 
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {
-            JButton button = new JButton(names[i]);
+            JButton button = new JButton(names.get(i));
             //TODO: add prices as a small label inside the button next to the name of the item
             button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
             button.setPreferredSize(new Dimension(300, 50));
@@ -61,7 +61,33 @@ public class ValMeals extends JPanel {
             JButton orderedBtn = new JButton(buttonName);
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
             //TODO: add to selectedMenuIDs
+            //check at what index of names[] buttonName is at
+            //then use that same index to access the menuItemIDs array
+
         }
+    }
+
+    private void addMenuItems() {
+        //TODO: use sql commands to pull items from database
+        numberOfItems = 5;
+        
+        names.add("Value Meal 1");
+        names.add("Value Meal 2");
+        names.add("Value Meal 3");
+        names.add("Value Meal 4");
+        names.add("Value Meal 5");
+
+        menuItemIDs.add(1);
+        menuItemIDs.add(2);
+        menuItemIDs.add(3);
+        menuItemIDs.add(4);
+        menuItemIDs.add(5);
+
+        prices.add(2.00);
+        prices.add(3.00);
+        prices.add(4.00);
+        prices.add(5.50);
+        prices.add(6.00);
     }
 }
 
