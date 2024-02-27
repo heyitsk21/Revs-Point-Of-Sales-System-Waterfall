@@ -3,6 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 
 import java.io.*;
 import java.awt.*;
@@ -21,7 +22,9 @@ public class ValMeals extends JPanel {
         JLabel label = new JLabel("Value Meals");
         add(label, BorderLayout.NORTH);
         JPanel menuItems = new JPanel();
-        menuItems.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        add(menuItems, BorderLayout.CENTER);
+        menuItems.setLayout(new GridLayout(0, 2));
+        menuItems.setBorder(new EtchedBorder());
 
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {

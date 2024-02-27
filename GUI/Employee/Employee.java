@@ -40,7 +40,8 @@ public class Employee extends JFrame {
         // Create menu categories panel
         JPanel categoriesPanel = new JPanel();
         categoriesPanel.setBorder(new EtchedBorder());
-        categoriesPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        //categoriesPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        categoriesPanel.setLayout(new GridLayout(1, 0));
         // Create menu category buttons, also adds them to the panel
         JButton valMealBtn = createMenuCatButton("ValMeals", categoriesPanel);
         JButton burgerBtn = createMenuCatButton("Burgers", categoriesPanel);

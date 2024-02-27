@@ -22,7 +22,7 @@ public class Baskets extends JPanel {
         add(label, BorderLayout.NORTH);
         JPanel menuItems = new JPanel();
         add(menuItems, BorderLayout.CENTER);
-        menuItems.setLayout(new GridLayout(numberOfItems, 4));
+        menuItems.setLayout(new GridLayout(0, 2));
         menuItems.setBorder(new EtchedBorder());
 
         //add all menu items as buttons in the edit order panel
