@@ -170,6 +170,7 @@ public class ManagerMenuItems extends JPanel {
     JComboBox<String> comboBox;
     List<String> checkedItems;
     Map<String, Integer> ingredientNametoID = new HashMap<>();
+    Map<Integer, String> ingredientIDtoName = new HashMap<>();
 
     public JPanel createIngredientBox(){
         myInventory = manCmds.getInventory();
@@ -181,6 +182,7 @@ public class ManagerMenuItems extends JPanel {
         int[] ingredientIDs = myInventory.ingredientIDs;
         for (int i = 0; i < ingredientIDs.length; ++i){
             ingredientNametoID.put(ingredientNames[i], ingredientIDs[i]);
+            ingredientIDtoName.put(ingredientIDs[i], ingredientNames[i]);
         }
 
         selectedItem = ingredientNames[0];
@@ -247,6 +249,7 @@ public class ManagerMenuItems extends JPanel {
 
     public void rowClicked(ListSelectionEvent event) {
         int selectedRow = menuTable.getSelectedRow();
+        //System.out.println(selectedRow);
         boolean rowSelected = false;
         if(selectedRow >=0){
             rowSelected = true;
@@ -258,6 +261,13 @@ public class ManagerMenuItems extends JPanel {
             //Set the text fields with the values from the selected row
             nameTextField.setText(String.valueOf(tableModel.getValueAt(selectedRow, 1)));
             priceTextField.setText(String.valueOf(tableModel.getValueAt(selectedRow, 2)));
+            //sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients((int)tableModel.getValueAt(selectedRow, 0));
+            sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients(101);
+            checkedItems.clear();
+            for (int i = 0; i < menuIng.length(); ++i){
+                checkedItems.add(ingredientIDtoName.get(menuIng.ingredientIDs[i]));
+            }
+            updateCheckedItemsLabel();
         } else {
             //Clear the text fields if no row is selected
             nameTextField.setText("");
@@ -298,7 +308,6 @@ public class ManagerMenuItems extends JPanel {
             manCmds.addMenuItem(newID, "NewMenu Item", 0.0f);
             refreshGUI();
         }
-        //TODO sql here
     }
     
 
