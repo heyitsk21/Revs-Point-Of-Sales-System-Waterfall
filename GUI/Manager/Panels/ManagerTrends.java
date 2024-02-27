@@ -1,7 +1,5 @@
-import java.sql.*;
-import java.awt.event.*;
+
 import javax.swing.*;
-import java.io.*;
 import java.awt.*;
 
 public class ManagerTrends extends JPanel {
@@ -15,5 +13,9 @@ public class ManagerTrends extends JPanel {
 
         // Add the placeholder label to the panel
         add(placeholderLabel, BorderLayout.CENTER);
+
+        //managerCmds manCmds = new managerCmds();
+        //manCmds.addIngredient(64, "Alaskan Fresh Caught Salmon", 500, 20.0f, 200);
+        //^^^ tested and working ^^^
     }
 }

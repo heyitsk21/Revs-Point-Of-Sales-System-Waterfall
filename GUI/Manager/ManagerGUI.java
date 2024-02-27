@@ -1,15 +1,15 @@
-import java.sql.*;
+
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
-import java.io.*;
 import java.awt.*;
 
 public class ManagerGUI extends JFrame {
     // Switchable layouts
     private JPanel cardPanel;
     private CardLayout cardLayout;
+    String currentCardName;
 
     public ManagerGUI() {
         // Calls managerGUI
@@ -22,13 +22,14 @@ public class ManagerGUI extends JFrame {
         frame.setLayout(new BorderLayout());
 
         // Create cardPanel and cardLayout
-        
+
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         cardPanel.add(new ManagerTrends(), "Trends");
         cardPanel.add(new ManagerInventory(), "Inventory");
         cardPanel.add(new ManagerMenuItems(), "Menu Items");
         cardPanel.add(new ManagerOrderHistory(), "Order History");
+
 
         // Create buttons
         JButton trendsBtn = createButton("Trends");
@@ -39,6 +40,7 @@ public class ManagerGUI extends JFrame {
         menuBtn.setFont(new Font("Arial", Font.PLAIN, 25));
         JButton orderBtn = createButton("Order History");
         orderBtn.setFont(new Font("Arial", Font.PLAIN, 25));
+
 
         // Add buttons to a panel at the bottom
         JPanel buttonPanel = new JPanel();
@@ -59,14 +61,24 @@ public class ManagerGUI extends JFrame {
 
         // Adds a panel at the top
         JPanel topPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 10));
 
         JLabel dateTimeLabel = new JLabel();
-        java.util.Date date = new java.util.Date();
-        String dateTimeString = "Date/Time: " + date.toString();
-        dateTimeLabel.setText(dateTimeString);
-
+        dateTimeLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        updateDateTime(dateTimeLabel);
 
         JLabel usernameLabel = new JLabel("Username: YOUR_USERNAME");
+        usernameLabel.setFont(new Font("Arial", Font.BOLD, 15));
+
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Rebuild the current card in the card panel
+                rebuildCurrentCard(cardPanel);
+            }
+        });
+        topPanel.add(refreshButton);
 
         topPanel.add(dateTimeLabel);
         topPanel.add(usernameLabel);
@@ -74,6 +86,14 @@ public class ManagerGUI extends JFrame {
 
         frame.add(topPanel, BorderLayout.NORTH);
 
+        // Use a Timer to update the dateTimeLabel every second
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateDateTime(dateTimeLabel);
+            }
+        });
+        timer.start();
         frame.setVisible(true);
     }
 
@@ -85,8 +105,31 @@ public class ManagerGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, panelName); // Switch to the specified panel
+                currentCardName = panelName;
             }
         });
         return button;
+    }
+
+    private void updateDateTime(JLabel dateTimeLabel) {
+        java.util.Date date = new java.util.Date();
+        String dateTimeString = "Date/Time: " + date.toString();
+        dateTimeLabel.setText(dateTimeString);
+    }
+
+    private void rebuildCurrentCard(Container container) {
+        Component[] components = container.getComponents();
+        for (Component component : components) {
+            container.remove(component);
+        }
+
+        cardPanel.invalidate();
+        cardPanel.add(new ManagerTrends(), "Trends");
+        cardPanel.add(new ManagerInventory(), "Inventory");
+        cardPanel.add(new ManagerMenuItems(), "Menu Items");
+        cardPanel.add(new ManagerOrderHistory(), "Order History");
+        cardPanel.validate();
+        cardPanel.repaint();
+        cardLayout.show(cardPanel, currentCardName);
     }
 }

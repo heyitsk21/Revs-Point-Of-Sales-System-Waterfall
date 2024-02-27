@@ -5,3 +5,5 @@ EmployeeID,EmployeeName,IsManager,Salary,Password
 4,Joshua Robert,FALSE,10,meowmeow69!
 5,Jessica Jakubik,TRUE,13,bestTable
 6,Anjali Varghese,FALSE,10,cashierpassword#6
+7,admin,TRUE,0,admin
+8,test,FALSE,0,test
