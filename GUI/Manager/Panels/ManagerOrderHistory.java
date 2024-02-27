@@ -1,10 +1,7 @@
-import java.sql.*;
+
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.text.*;
 import javax.swing.border.EmptyBorder;
-
-import java.io.*;
 import java.awt.*;
 
 public class ManagerOrderHistory extends JPanel {
@@ -129,7 +126,6 @@ public class ManagerOrderHistory extends JPanel {
     }
 
     void updateRight() {
-        System.out.println("updateRight() called");
         // Displays the name of the ingredient
         orderIDLabel.setText("ID: " + orderIDs[currOrderIndex]);
         customerNameLabel.setText("Customer: " + customerNames[currOrderIndex]);
@@ -142,7 +138,7 @@ public class ManagerOrderHistory extends JPanel {
     }
 
     void updateLeft() {
-        System.out.println("updateLeft() called");
+        return;
     }
 
     private class ButtonClickListener implements ActionListener {
@@ -155,7 +151,6 @@ public class ManagerOrderHistory extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Perform actions when the button is clicked
-            System.out.println("Ingredient clicked: " + buttonName);
             currOrderIndex = Integer.parseInt(buttonName);
             RefreshGUI();
         }
