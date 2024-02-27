@@ -27,7 +27,7 @@ public class Baskets extends JPanel {
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {
             JButton button = new JButton(names[i]);
-            //TODO: add prices as a small label inside the button next to the name of the item
+            //LATER TODO: add prices as a small label inside the button next to the name of the item
             button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
             button.setPreferredSize(new Dimension(300, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));

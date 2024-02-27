@@ -12,8 +12,7 @@ import java.io.*;
 public class Employee extends JFrame {
     // Switchable layouts
     private JPanel menuPanel;
-    private CardLayout menuCardLayout;
-    private CardLayout orderCardLayout;
+    private CardLayout cardLayout;
     private JPanel currentOrderPanel;
     private JPanel innerOrderPanel;
     //TODO: have a global list which keeps track of the menu item IDs that are "to-be-deleted" aka selected
@@ -28,9 +27,9 @@ public class Employee extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Create menuPanel and menuCardLayout
-        menuCardLayout = new CardLayout();
-        menuPanel = new JPanel(menuCardLayout);
+        // Create menuPanel and cardLayout
+        cardLayout = new CardLayout();
+        menuPanel = new JPanel(cardLayout);
         menuPanel.setBorder(new EtchedBorder());
         menuPanel.add(new ValMeals(), "ValMeals"); 
         menuPanel.add(new Burgers(), "Burgers"); 
@@ -64,8 +63,7 @@ public class Employee extends JFrame {
         // CURRENT ORDER
 
         // Create the panel to show what the order currently consists of
-        orderCardLayout = new CardLayout();
-        innerOrderPanel = new JPanel(orderCardLayout);
+        innerOrderPanel = new JPanel(cardLayout);
         currentOrderPanel = new JPanel();
         currentOrderPanel.setBorder(new EtchedBorder());
         currentOrderPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -113,7 +111,7 @@ public class Employee extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                menuCardLayout.show(menuPanel, panelName); // Switch to the specified panel
+                cardLayout.show(menuPanel, panelName); // Switch to the specified panel
             }
         });
         return button;
@@ -127,7 +125,7 @@ public class Employee extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                orderCardLayout.show(innerOrderPanel, panelName); // Switch to the specified panel
+                cardLayout.show(innerOrderPanel, panelName); // Switch to the specified panel TODO: FIX
             }
         });
         return button;
@@ -141,8 +139,8 @@ public class Employee extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                orderCardLayout.show(innerOrderPanel, panelName); // Switch to the specified panel
-                //if the list of selected menu IDs is empty, then display error message
+                cardLayout.show(innerOrderPanel, panelName); // Switch to the specified panel TODO: FIX
+                //LATER TODO: if the list of selected menu IDs is empty, then display error message
                 //if not then remove the "selected button" from the current order
             }
         });

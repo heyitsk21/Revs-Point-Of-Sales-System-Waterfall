@@ -18,7 +18,7 @@ public class Sides extends JPanel {
         // Add components for editing orders
         // Example: JLabels, JTextFields, JButtons, etc.
         JLabel label = new JLabel("Sides");
-        add(label, BorderLayout.CENTER);
+        add(label, BorderLayout.NORTH);
         JPanel menuItems = new JPanel();
         menuItems.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
