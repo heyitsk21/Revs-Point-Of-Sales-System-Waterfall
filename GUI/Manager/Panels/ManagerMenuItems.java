@@ -51,7 +51,7 @@ public class ManagerMenuItems extends JPanel {
 
     //Enable or disable buttons
     private void setButtonState(boolean enabled) {
-        createButton.setEnabled(enabled);
+        createButton.setEnabled(true);
         deleteButton.setEnabled(enabled);
         cancelButton.setEnabled(enabled);
         submitButton.setEnabled(enabled);
