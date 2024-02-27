@@ -7,9 +7,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ManagerMenuItems extends JPanel {
     private JTable menuTable;
@@ -239,7 +241,7 @@ public class ManagerMenuItems extends JPanel {
 
     private void updateCheckedItemsLabel() {
         StringBuilder labelText = new StringBuilder("Checked Items: ");
-        System.out.println("Selected Item ID: " + ingredientNametoID.get(selectedItem)); 
+        //System.out.println("Selected Item ID: " + ingredientNametoID.get(selectedItem)); 
         for (String item : checkedItems) {
             labelText.append(item).append(", ");
         }
@@ -261,13 +263,18 @@ public class ManagerMenuItems extends JPanel {
             //Set the text fields with the values from the selected row
             nameTextField.setText(String.valueOf(tableModel.getValueAt(selectedRow, 1)));
             priceTextField.setText(String.valueOf(tableModel.getValueAt(selectedRow, 2)));
-            //sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients((int)tableModel.getValueAt(selectedRow, 0));
-            sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients(101);
-            checkedItems.clear();
-            for (int i = 0; i < menuIng.length(); ++i){
-                checkedItems.add(ingredientIDtoName.get(menuIng.ingredientIDs[i]));
+            sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients((int)tableModel.getValueAt(selectedRow, 0));
+            //sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients(101);
+            if (menuIng != null){
+                checkedItems.clear();
+                for (int i = 0; i < menuIng.length(); ++i){
+                    checkedItems.add(ingredientIDtoName.get(menuIng.ingredientIDs[i]));
+                }
+                updateCheckedItemsLabel();
+            }else{
+                checkedItems.clear();
+                updateCheckedItemsLabel();
             }
-            updateCheckedItemsLabel();
         } else {
             //Clear the text fields if no row is selected
             nameTextField.setText("");
@@ -304,7 +311,7 @@ public class ManagerMenuItems extends JPanel {
                 }
             } while (isTaken);
     
-            System.out.println(newID);
+            //System.out.println(newID);
             manCmds.addMenuItem(newID, "NewMenu Item", 0.0f);
             refreshGUI();
         }
@@ -316,7 +323,7 @@ public class ManagerMenuItems extends JPanel {
         public void actionPerformed(ActionEvent e) {
             
             int selectedRow = menuTable.getSelectedRow();
-            System.out.println("Selected Row: " + selectedRow);
+            //System.out.println("Selected Row: " + selectedRow);
             if (selectedRow >= 0 && selectedRow < menu.length) {
                 int toDeleteID = (int) initialMenu.menuItemIDs[selectedRow];
                 System.out.println("Deleting Menu Item " + toDeleteID);
@@ -341,10 +348,23 @@ public class ManagerMenuItems extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             int selectedRow = menuTable.getSelectedRow();
-            if (selectedRow >= 0) {
-                tableModel.setValueAt(nameTextField.getText(), selectedRow, 1);
-                tableModel.setValueAt(priceTextField.getText(), selectedRow, 2);
+            manCmds.updateMenuItem((int)tableModel.getValueAt(selectedRow, 0), nameTextField.getText(), Float.parseFloat(priceTextField.getText()));
+            sqlObjects.MenuItemIngredients menuIng = manCmds.getMenuItemIngredients((int)tableModel.getValueAt(selectedRow, 0));
+            int[] tempIngredientIDs = menuIng.ingredientIDs;
+            List<Integer> ingredientIDs = Arrays.stream(tempIngredientIDs)
+                                            .boxed()
+                                            .collect(Collectors.toList());
+            for (String item : checkedItems) {
+                if (!ingredientIDs.contains(ingredientNametoID.get(item))){
+                    manCmds.addMenuItemIngredient((int)tableModel.getValueAt(selectedRow, 0), ingredientNametoID.get(item));
+                }
             }
+            for (Integer item : ingredientIDs) {
+                if (!checkedItems.contains(ingredientIDtoName.get(item))){
+                    manCmds.deleteMenuItemIngredient((int)tableModel.getValueAt(selectedRow, 0), item);
+                }
+            }
+            refreshGUI();
             //TODO sql here
         }
     }
