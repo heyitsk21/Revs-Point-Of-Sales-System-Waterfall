@@ -4,6 +4,7 @@ import javax.swing.*;
 
 public class EmployeeSubmit extends JPanel {
     private JTextField nameField;
+    private JTextField IDField;
     private JButton submitButton;
     private JButton backButton;
 
@@ -16,13 +17,21 @@ public class EmployeeSubmit extends JPanel {
         JPanel submitScreen = new JPanel();
         submitScreen.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
+        // NAME INPUT
         // Add label for name input
         JLabel nameLabel = new JLabel("Name:");
         submitScreen.add(nameLabel);
-
         // Add text field for name input
         nameField = new JTextField(20);
         submitScreen.add(nameField);
+
+        // ID input
+        // Add label for name input
+        JLabel IDLabel = new JLabel("Employee ID:");
+        submitScreen.add(IDLabel);
+        // Add text field for name input
+        IDField = new JTextField(20);
+        submitScreen.add(IDField);
 
         // Create submit and back buttons and add them to the submitScreen panel
         submitButton = new JButton("Submit");
@@ -56,8 +65,8 @@ public class EmployeeSubmit extends JPanel {
         public void actionPerformed(ActionEvent e) {
             if (buttonName.equals("Submit")) {
                 // Check if name field is empty
-                if (nameField.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(employeeSubmit, "Please enter a name for the order.", "Error", JOptionPane.ERROR_MESSAGE);
+                if (nameField.getText().isEmpty() || IDField.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(employeeSubmit, "Please enter a name and employee ID for the order.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
                     // TODO: Update the database with the order
                     System.out.println("Order submitted with name: " + nameField.getText());

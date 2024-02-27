@@ -21,6 +21,7 @@ public class Baskets extends JPanel {
         JLabel label = new JLabel("Baskets");
         add(label, BorderLayout.NORTH);
         JPanel menuItems = new JPanel();
+        add(menuItems, BorderLayout.CENTER);
         menuItems.setLayout(new GridLayout(numberOfItems, 4));
         menuItems.setBorder(new EtchedBorder());
 
@@ -28,8 +29,8 @@ public class Baskets extends JPanel {
         for (int i = 0; i < numberOfItems; i++) {
             JButton button = new JButton(names[i]);
             //LATER TODO: add prices as a small label inside the button next to the name of the item
-            button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
-            button.setPreferredSize(new Dimension(300, 50));
+            button.addActionListener(new ButtonClickListener(this, names[i]));
+            button.setPreferredSize(new Dimension(200, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));
             menuItems.add(button);
         }
