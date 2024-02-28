@@ -38,7 +38,7 @@ public class Employee extends JFrame {
         menuPanel.setBorder(new EtchedBorder());
         menuPanel.add(new ValMeals(), "ValMeals");
         menuPanel.add(new Burgers(), "Burgers");
-        menuPanel.add(new Sandwiches(selectedMenuIDs, innerOrderPanel, toBeDeleted), "Sandwiches");
+        menuPanel.add(new Sandwiches(), "Sandwiches");
         menuPanel.add(new DrinksAndFries(selectedMenuIDs, innerOrderPanel, toBeDeleted), "DrinksAndFries");
         menuPanel.add(new Salads(selectedMenuIDs, innerOrderPanel, toBeDeleted), "Salads");
         menuPanel.add(new IceCream(selectedMenuIDs, innerOrderPanel, toBeDeleted), "IceCream");

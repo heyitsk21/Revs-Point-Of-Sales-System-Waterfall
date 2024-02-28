@@ -69,6 +69,9 @@ public class ValMeals extends JPanel {
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
             // Add to selectedMenuIDs
             int index = stringIndexOf(buttonName, names);
+            System.out.println(names);
+            System.out.println("The index of " + buttonName + " in names is " + index);
+            int ID = menuItemIDs[index];
             Employee.selectedMenuIDs.add(intIndexOf(index, menuItemIDs));
 
             // Create a button & add it to current order panel to represent the item selected
@@ -81,6 +84,16 @@ public class ValMeals extends JPanel {
             public void actionPerformed(ActionEvent e) {
                     button.setBackground(Color.RED);
                     Employee.toBeDeleted.add(intIndexOf(index, menuItemIDs));
+                    if(button.getBackground() != Color.RED) {
+                        button.setBackground(Color.RED);
+                        //add the ID to the to-be deleted list
+                        Employee.toBeDeleted.add(intIndexOf(index, menuItemIDs));
+                    }
+                    else {
+                        button.setBackground(Color.LIGHT_GRAY);
+                        //remove the ID from the to-be deleted list
+                        Employee.toBeDeleted.remove(Employee.toBeDeleted.indexOf(ID));
+                    }
                 }
             });
         }

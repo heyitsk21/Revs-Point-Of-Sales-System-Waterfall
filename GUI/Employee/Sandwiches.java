@@ -18,13 +18,14 @@ public class Sandwiches extends JPanel {
     String[] names;
     float[] prices;
 
-    private List<Integer> selectedMenuIDs = new ArrayList<>();
-    private JPanel orderPanel = new JPanel();
-    private List<Integer> toBeDeleted = new ArrayList<>();
+    //private List<Integer> selectedMenuIDs = new ArrayList<>();
+    //private JPanel orderPanel = new JPanel();
+    //private List<Integer> toBeDeleted = new ArrayList<>();
 
     employeeCmds employeeCmds;
 
-    public Sandwiches(List<Integer> passedSelectedMenuIDs, JPanel passedOrderPanel, List<Integer> passedToBeDeleted) {
+    public Sandwiches() {
+        /* 
         if (passedSelectedMenuIDs != null) {
             selectedMenuIDs = passedSelectedMenuIDs;
         }
@@ -34,6 +35,7 @@ public class Sandwiches extends JPanel {
         if (passedToBeDeleted != null) {
             toBeDeleted = passedToBeDeleted;
         }
+        */
         addMenuItems();
 
         setLayout(new BorderLayout());
@@ -78,19 +80,22 @@ public class Sandwiches extends JPanel {
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
             // Add to selectedMenuIDs
             int index = stringIndexOf(buttonName, names);
-            selectedMenuIDs.add(intIndexOf(index, menuItemIDs));
+            System.out.println(names);
+            System.out.println("The index of " + buttonName + " in names is " + index);
+            int ID = menuItemIDs[index];
+            Employee.selectedMenuIDs.add(intIndexOf(index, menuItemIDs));
 
             // Create a button & add it to current order panel to represent the item selected
             JButton button = new JButton(buttonName);
             button.setPreferredSize(new Dimension(100, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 20));
-            orderPanel.add(button);
+            Employee.innerOrderPanel.add(button);
             button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                     button.setBackground(Color.RED);
                     //TODO: add the ID to the to-be deleted list
-                    toBeDeleted.add(intIndexOf(index, menuItemIDs));
+                    Employee.toBeDeleted.add(intIndexOf(index, menuItemIDs));
                 }
             });
         }

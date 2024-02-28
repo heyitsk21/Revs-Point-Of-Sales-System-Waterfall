@@ -14,9 +14,9 @@ import java.util.List;
 
 public class Burgers extends JPanel {
     int numberOfItems;
-    int[] menuItemIDs; 
-    String[] names;
-    float[] prices;
+    List<Integer> menuItemIDs; 
+    List<String> names;
+    List<Float> prices;
 
     //private List<Integer> selectedMenuIDs = new ArrayList<>();
     //private JPanel orderPanel = new JPanel();
@@ -69,6 +69,8 @@ public class Burgers extends JPanel {
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
             // Add to selectedMenuIDs
             int index = stringIndexOf(buttonName, names);
+            System.out.println(names);
+            System.out.println("The index of " + buttonName + " in names is " + index);
             int ID = menuItemIDs[index];
             Employee.selectedMenuIDs.add(ID);
 
@@ -98,10 +100,14 @@ public class Burgers extends JPanel {
     private void addMenuItems() {
         this.employeeCmds = new employeeCmds();
         sqlObjects.Menu menu = employeeCmds.getMenu();
-        this.menuItemIDs = menu.menuItemIDs;
-        this.names = menu.names;
-        this.prices = menu.prices;
-        this.numberOfItems = menuItemIDs.length;
+        for (int i = 0; i < menu.menuItemIDs.length; i++) {
+            if((menu.menuItemIDs[i] >= 100) && (menu.menuItemIDs[i] < 199)) {
+                this.menuItemIDs.add(menu.menuItemIDs[i]);
+                this.names.add(menu.names[i]);
+                this.prices.add(menu.prices[i]);
+                this.numberOfItems++;
+            }
+        }
     }
 
     private int stringIndexOf(String target, String[] array){

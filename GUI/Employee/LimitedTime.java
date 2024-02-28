@@ -78,6 +78,8 @@ public class LimitedTime extends JPanel {
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
             // Add to selectedMenuIDs
             int index = stringIndexOf(buttonName, names);
+            System.out.println(names);
+            System.out.println("The index of " + buttonName + " in names is " + index);
             selectedMenuIDs.add(intIndexOf(index, menuItemIDs));
 
             // Create a button & add it to current order panel to represent the item selected

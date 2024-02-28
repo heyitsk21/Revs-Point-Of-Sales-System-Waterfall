@@ -80,6 +80,7 @@ public class EmployeeSubmit extends JPanel {
                 } else {
                     employeeCmds commands = new employeeCmds();
                     int employeeID = Integer.parseInt(IDField.getText());
+                    System.out.println(employeeID);
                     boolean success = commands.submitOrder(Employee.selectedMenuIDs, nameField.getText(), employeeID);
                     if(success) {
                         System.out.println("Order submitted with name: " + nameField.getText());
