@@ -13,14 +13,10 @@ import java.util.List;
 
 
 public class ValMeals extends JPanel {
-    int numberOfItems;
-    int[] menuItemIDs; 
-    String[] names;
-    float[] prices;
-
-    //private List<Integer> selectedMenuIDs = new ArrayList<>();
-    //private JPanel orderPanel = new JPanel();
-    //private List<Integer> toBeDeleted = new ArrayList<>();
+    int numberOfItems = 0;
+    List<Integer> menuItemIDs; 
+    List<String> names;
+    List<Float> prices;
 
     employeeCmds employeeCmds;
 
@@ -39,15 +35,13 @@ public class ValMeals extends JPanel {
 
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {
-            if((menuItemIDs[i] >= 600) && (menuItemIDs[i] <= 699)) {
-                String name = names[i];
-                JButton button = new JButton(name);
-                //LATER TODO: add prices as a small label inside the button next to the name of the item
-                button.addActionListener(new ButtonClickListener(this, name));
-                button.setPreferredSize(new Dimension(300, 50));
-                button.setFont(new Font("Arial", Font.PLAIN, 25));
-                menuItems.add(button);
-            }
+            String name = names.get(i);
+            JButton button = new JButton(name);
+            //LATER TODO: add prices as a small label inside the button next to the name of the item
+            button.addActionListener(new ButtonClickListener(this, name));
+            button.setPreferredSize(new Dimension(300, 50));
+            button.setFont(new Font("Arial", Font.PLAIN, 25));
+            menuItems.add(button);
         }
     }
 
@@ -68,11 +62,11 @@ public class ValMeals extends JPanel {
             JButton orderedBtn = new JButton(buttonName);
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
             // Add to selectedMenuIDs
-            int index = stringIndexOf(buttonName, names);
+            int index = names.indexOf(buttonName);
             System.out.println(names);
             System.out.println("The index of " + buttonName + " in names is " + index);
-            int ID = menuItemIDs[index];
-            Employee.selectedMenuIDs.add(intIndexOf(index, menuItemIDs));
+            int ID = menuItemIDs.get(index);
+            Employee.selectedMenuIDs.add(ID);
 
             // Create a button & add it to current order panel to represent the item selected
             JButton button = new JButton(buttonName);
@@ -82,12 +76,10 @@ public class ValMeals extends JPanel {
             button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    button.setBackground(Color.RED);
-                    Employee.toBeDeleted.add(intIndexOf(index, menuItemIDs));
                     if(button.getBackground() != Color.RED) {
                         button.setBackground(Color.RED);
                         //add the ID to the to-be deleted list
-                        Employee.toBeDeleted.add(intIndexOf(index, menuItemIDs));
+                        Employee.toBeDeleted.add(ID);
                     }
                     else {
                         button.setBackground(Color.LIGHT_GRAY);
@@ -99,36 +91,21 @@ public class ValMeals extends JPanel {
         }
     }
 
-    private void addMenuItems() {
+    private void addMenuItems() {//600
+        this.menuItemIDs = new ArrayList<>();
+        this.names = new ArrayList<>();
+        this.prices = new ArrayList<>();
+
         this.employeeCmds = new employeeCmds();
         sqlObjects.Menu menu = employeeCmds.getMenu();
-        this.menuItemIDs = menu.menuItemIDs;
-        this.names = menu.names;
-        this.prices = menu.prices;
-        this.numberOfItems = menuItemIDs.length;
-    }
-
-    private int stringIndexOf(String target, String[] array){
-        int index = -1;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == target) {
-                index = i; // Update index when target is found
-                break;     // Exit the loop once the target is found
+        for (int i = 0; i < menu.menuItemIDs.length; i++) {
+            if((menu.menuItemIDs[i] >= 600) && (menu.menuItemIDs[i] < 699)) {
+                this.menuItemIDs.add(menu.menuItemIDs[i]);
+                this.names.add(menu.names[i]);
+                this.prices.add(menu.prices[i]);
+                this.numberOfItems++;
             }
         }
-
-        return index;
-    }
-
-    private int intIndexOf(int target, int[] array){
-        int index = -1;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == target) {
-                index = i; // Update index when target is found
-                break;     // Exit the loop once the target is found
-            }
-        }
-        return index;
     }
 }
 

@@ -39,10 +39,10 @@ public class Employee extends JFrame {
         menuPanel.add(new ValMeals(), "ValMeals");
         menuPanel.add(new Burgers(), "Burgers");
         menuPanel.add(new Sandwiches(), "Sandwiches");
-        menuPanel.add(new DrinksAndFries(selectedMenuIDs, innerOrderPanel, toBeDeleted), "DrinksAndFries");
-        menuPanel.add(new Salads(selectedMenuIDs, innerOrderPanel, toBeDeleted), "Salads");
-        menuPanel.add(new IceCream(selectedMenuIDs, innerOrderPanel, toBeDeleted), "IceCream");
-        menuPanel.add(new LimitedTime(selectedMenuIDs, innerOrderPanel, toBeDeleted), "LimitedTime");
+        menuPanel.add(new DrinksAndFries(), "DrinksAndFries");
+        menuPanel.add(new Salads(), "Salads");
+        menuPanel.add(new IceCream(), "IceCream");
+        menuPanel.add(new LimitedTime(), "LimitedTime");
 
         // MENU CATEGORIES
 

@@ -13,27 +13,14 @@ import java.util.List;
 
 
 public class Salads extends JPanel {
-    int numberOfItems;
-    int[] menuItemIDs; 
-    String[] names;
-    float[] prices;
-
-    private List<Integer> selectedMenuIDs = new ArrayList<>();
-    private JPanel orderPanel = new JPanel();
-    private List<Integer> toBeDeleted = new ArrayList<>();
+    int numberOfItems = 0;
+    List<Integer> menuItemIDs; 
+    List<String> names;
+    List<Float> prices;
 
     employeeCmds employeeCmds;
 
-    public Salads(List<Integer> passedSelectedMenuIDs, JPanel passedOrderPanel, List<Integer> passedToBeDeleted) {
-        if (passedSelectedMenuIDs != null) {
-            selectedMenuIDs = passedSelectedMenuIDs;
-        }
-        if (passedOrderPanel != null) {
-            orderPanel = passedOrderPanel;
-        }
-        if (passedToBeDeleted != null) {
-            toBeDeleted = passedToBeDeleted;
-        }
+    public Salads() {
         addMenuItems();
 
         setLayout(new BorderLayout());
@@ -48,15 +35,13 @@ public class Salads extends JPanel {
 
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {
-            if((menuItemIDs[i] >= 300) && (menuItemIDs[i] <= 399)) {
-                String name = names[i];
-                JButton button = new JButton(name);
-                //LATER TODO: add prices as a small label inside the button next to the name of the item
-                button.addActionListener(new ButtonClickListener(this, name));
-                button.setPreferredSize(new Dimension(300, 50));
-                button.setFont(new Font("Arial", Font.PLAIN, 25));
-                menuItems.add(button);
-            }
+            String name = names.get(i);
+            JButton button = new JButton(name);
+            //LATER TODO: add prices as a small label inside the button next to the name of the item
+            button.addActionListener(new ButtonClickListener(this, name));
+            button.setPreferredSize(new Dimension(300, 50));
+            button.setFont(new Font("Arial", Font.PLAIN, 25));
+            menuItems.add(button);
         }
     }
 
@@ -77,57 +62,50 @@ public class Salads extends JPanel {
             JButton orderedBtn = new JButton(buttonName);
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
             // Add to selectedMenuIDs
-            int index = stringIndexOf(buttonName, names);
+            int index = names.indexOf(buttonName);
             System.out.println(names);
             System.out.println("The index of " + buttonName + " in names is " + index);
-            selectedMenuIDs.add(intIndexOf(index, menuItemIDs));
+            int ID = menuItemIDs.get(index);
+            Employee.selectedMenuIDs.add(ID);
 
             // Create a button & add it to current order panel to represent the item selected
             JButton button = new JButton(buttonName);
             button.setPreferredSize(new Dimension(100, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 20));
-            orderPanel.add(button);
+            Employee.innerOrderPanel.add(button);
             button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    button.setBackground(Color.RED);
-                    //TODO: add the ID to the to-be deleted list
-                    toBeDeleted.add(intIndexOf(index, menuItemIDs));
+                    if(button.getBackground() != Color.RED) {
+                        button.setBackground(Color.RED);
+                        //add the ID to the to-be deleted list
+                        Employee.toBeDeleted.add(ID);
+                    }
+                    else {
+                        button.setBackground(Color.LIGHT_GRAY);
+                        //remove the ID from the to-be deleted list
+                        Employee.toBeDeleted.remove(Employee.toBeDeleted.indexOf(ID));
+                    }
                 }
             });
         }
     }
 
-    private void addMenuItems() {
+    private void addMenuItems() {//300
+        this.menuItemIDs = new ArrayList<>();
+        this.names = new ArrayList<>();
+        this.prices = new ArrayList<>();
+
         this.employeeCmds = new employeeCmds();
         sqlObjects.Menu menu = employeeCmds.getMenu();
-        this.menuItemIDs = menu.menuItemIDs;
-        this.names = menu.names;
-        this.prices = menu.prices;
-        this.numberOfItems = menuItemIDs.length;
-    }
-
-    private int stringIndexOf(String target, String[] array){
-        int index = -1;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == target) {
-                index = i; // Update index when target is found
-                break;     // Exit the loop once the target is found
+        for (int i = 0; i < menu.menuItemIDs.length; i++) {
+            if((menu.menuItemIDs[i] >= 300) && (menu.menuItemIDs[i] < 399)) {
+                this.menuItemIDs.add(menu.menuItemIDs[i]);
+                this.names.add(menu.names[i]);
+                this.prices.add(menu.prices[i]);
+                this.numberOfItems++;
             }
         }
-
-        return index;
-    }
-
-    private int intIndexOf(int target, int[] array){
-        int index = -1;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == target) {
-                index = i; // Update index when target is found
-                break;     // Exit the loop once the target is found
-            }
-        }
-        return index;
     }
 }
 

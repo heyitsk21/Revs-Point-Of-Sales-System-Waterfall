@@ -168,6 +168,16 @@ public class employeeCmds {
                     float price = totalPriceResult.getFloat("Price");
                     totalPrice += price;
                 }
+
+                // INSERT ORDER INTO TABLE
+                String orderQuery = "INSERT INTO Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) VALUES (?, ?, ?, ?, NOW(), ?)";
+                PreparedStatement orderPrep = db.con.prepareStatement(orderQuery);
+                orderPrep.setInt(1, newOrderID);
+                orderPrep.setString(2, customerName);
+                orderPrep.setFloat(3, totalPrice * 0.0825f);
+                orderPrep.setFloat(4, totalPrice);
+                orderPrep.setInt(5, employeeID);
+                orderPrep.executeUpdate();
     
                 // INSERT TO OrderMenuItems 
                 String junctionQuery = "INSERT INTO OrderMenuItems (OrderID, MenuID) VALUES (?, ?)";
@@ -176,16 +186,6 @@ public class employeeCmds {
                 junctionPrep.setInt(2, selectedMenuID);
                 junctionPrep.executeUpdate();
             }
-    
-            // INSERT ORDER INTO TABLE
-            String orderQuery = "INSERT INTO Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) VALUES (?, ?, ?, ?, NOW(), ?)";
-            PreparedStatement orderPrep = db.con.prepareStatement(orderQuery);
-            orderPrep.setInt(1, newOrderID);
-            orderPrep.setString(2, customerName);
-            orderPrep.setFloat(3, totalPrice * 0.0825f);
-            orderPrep.setFloat(4, totalPrice);
-            orderPrep.setInt(5, employeeID);
-            orderPrep.executeUpdate();
     
             // COMMIT TRANSACTION
             db.con.commit();

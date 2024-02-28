@@ -77,7 +77,8 @@ public class EmployeeSubmit extends JPanel {
                 // Check if name field is empty
                 if (nameField.getText().isEmpty() || IDField.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(employeeSubmit, "Please enter a name and employee ID for the order.", "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
+                } 
+                else {
                     employeeCmds commands = new employeeCmds();
                     int employeeID = Integer.parseInt(IDField.getText());
                     System.out.println(employeeID);
