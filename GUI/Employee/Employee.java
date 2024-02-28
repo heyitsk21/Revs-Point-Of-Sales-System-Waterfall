@@ -34,13 +34,12 @@ public class Employee extends JFrame {
         menuPanel = new JPanel(cardLayout);
         menuPanel.setBorder(new EtchedBorder());
         menuPanel.add(new ValMeals(selectedMenuIDs, innerOrderPanel, toBeDeleted), "ValMeals");
-        menuPanel.add(new Burgers(), "Burgers");
-        menuPanel.add(new Sandwiches(), "Sandwiches");
-        menuPanel.add(new Baskets(selectedMenuIDs), "Baskets");
-        menuPanel.add(new Sides(), "Sides");
-        menuPanel.add(new Drinks(), "Drinks");
-        menuPanel.add(new Etc(), "Etc");
-        menuPanel.add(new LimitedTime(), "Limited Time");
+        menuPanel.add(new Burgers(selectedMenuIDs, innerOrderPanel, toBeDeleted), "Burgers");
+        menuPanel.add(new Sandwiches(selectedMenuIDs, innerOrderPanel, toBeDeleted), "Sandwiches");
+        menuPanel.add(new DrinksAndFries(selectedMenuIDs, innerOrderPanel, toBeDeleted), "DrinksAndFries");
+        menuPanel.add(new Salads(selectedMenuIDs, innerOrderPanel, toBeDeleted), "Salads");
+        menuPanel.add(new IceCream(selectedMenuIDs, innerOrderPanel, toBeDeleted), "IceCream");
+        menuPanel.add(new LimitedTime(selectedMenuIDs, innerOrderPanel, toBeDeleted), "LimitedTime");
 
         // MENU CATEGORIES
 
@@ -54,11 +53,10 @@ public class Employee extends JFrame {
         JButton valMealBtn = createMenuCatButton("ValMeals", categoriesPanel);
         JButton burgerBtn = createMenuCatButton("Burgers", categoriesPanel);
         JButton sandwichBtn = createMenuCatButton("Sandwiches", categoriesPanel);
-        JButton basketBtn = createMenuCatButton("Baskets", categoriesPanel);
-        JButton sideBtn = createMenuCatButton("Sides", categoriesPanel);
-        JButton drinkBtn = createMenuCatButton("Drinks", categoriesPanel);
-        JButton etcBtn = createMenuCatButton("Etc", categoriesPanel);
-        JButton limitedBtn = createMenuCatButton("Limited Time", categoriesPanel);
+        JButton basketBtn = createMenuCatButton("DrinksAndFries", categoriesPanel);
+        JButton sideBtn = createMenuCatButton("Salads", categoriesPanel);
+        JButton drinkBtn = createMenuCatButton("IceCream", categoriesPanel);
+        JButton limitedBtn = createMenuCatButton("LimitedTime", categoriesPanel);
         // Add the categoriesPanel to the bottom of the frame
         frame.add(categoriesPanel, BorderLayout.SOUTH);
 

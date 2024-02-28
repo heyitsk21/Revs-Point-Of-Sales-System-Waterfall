@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ValMeals extends JPanel {
+public class Salads extends JPanel {
     int numberOfItems;
     int[] menuItemIDs; 
     String[] names;
@@ -24,7 +24,7 @@ public class ValMeals extends JPanel {
 
     employeeCmds employeeCmds;
 
-    public ValMeals(List<Integer> passedSelectedMenuIDs, JPanel passedOrderPanel, List<Integer> passedToBeDeleted) {
+    public Salads(List<Integer> passedSelectedMenuIDs, JPanel passedOrderPanel, List<Integer> passedToBeDeleted) {
         if (passedSelectedMenuIDs != null) {
             selectedMenuIDs = passedSelectedMenuIDs;
         }
@@ -39,7 +39,7 @@ public class ValMeals extends JPanel {
         setLayout(new BorderLayout());
         // Add components for editing orders
         // Example: JLabels, JTextFields, JButtons, etc.
-        JLabel label = new JLabel("Value Meals");
+        JLabel label = new JLabel("Salads");
         add(label, BorderLayout.NORTH);
         JPanel menuItems = new JPanel();
         add(menuItems, BorderLayout.CENTER);
@@ -48,7 +48,7 @@ public class ValMeals extends JPanel {
 
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {
-            if((menuItemIDs[i] >= 600) && (menuItemIDs[i] <= 699)) {
+            if((menuItemIDs[i] >= 300) && (menuItemIDs[i] <= 399)) {
                 String name = names[i];
                 JButton button = new JButton(name);
                 //LATER TODO: add prices as a small label inside the button next to the name of the item
@@ -62,11 +62,11 @@ public class ValMeals extends JPanel {
 
     //button click listener so things happen when buttons are clicked
     private class ButtonClickListener implements ActionListener {
-        private ValMeals valMeals;
+        private Salads salads;
         private String buttonName;
 
-        public ButtonClickListener(ValMeals valMeals, String buttonName) {
-            this.valMeals = valMeals;
+        public ButtonClickListener(Salads salads, String buttonName) {
+            this.salads = salads;
             this.buttonName = buttonName;
         }
 

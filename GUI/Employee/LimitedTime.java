@@ -8,13 +8,34 @@ import javax.swing.border.EtchedBorder;
 import java.io.*;
 import java.awt.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class LimitedTime extends JPanel {
-    //placeholder menu items, in the future we can go through the menu items list and pick out ones with certain types of IDs
-    int numberOfItems = 5;
-    int[] menuItemIDs = {1,2,3,4,5};
-    String[] names = {"Limited Time 1", "Limited Time 2", "Limited Time 3", "Limited Time 4", "Limited Time 5"};
-    double[] prices = {2.00, 3.00, 4.00, 5.50, 6.00};
-    public LimitedTime() {
+    int numberOfItems;
+    int[] menuItemIDs; 
+    String[] names;
+    float[] prices;
+
+    private List<Integer> selectedMenuIDs = new ArrayList<>();
+    private JPanel orderPanel = new JPanel();
+    private List<Integer> toBeDeleted = new ArrayList<>();
+
+    employeeCmds employeeCmds;
+
+    public LimitedTime(List<Integer> passedSelectedMenuIDs, JPanel passedOrderPanel, List<Integer> passedToBeDeleted) {
+        if (passedSelectedMenuIDs != null) {
+            selectedMenuIDs = passedSelectedMenuIDs;
+        }
+        if (passedOrderPanel != null) {
+            orderPanel = passedOrderPanel;
+        }
+        if (passedToBeDeleted != null) {
+            toBeDeleted = passedToBeDeleted;
+        }
+        addMenuItems();
+
         setLayout(new BorderLayout());
         // Add components for editing orders
         // Example: JLabels, JTextFields, JButtons, etc.
@@ -27,12 +48,15 @@ public class LimitedTime extends JPanel {
 
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {
-            JButton button = new JButton(names[i]);
-            //TODO: add prices as a small label inside the button next to the name of the item
-            button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
-            button.setPreferredSize(new Dimension(300, 50));
-            button.setFont(new Font("Arial", Font.PLAIN, 25));
-            menuItems.add(button);
+            if((menuItemIDs[i] >= 700) && (menuItemIDs[i] <= 799)) {
+                String name = names[i];
+                JButton button = new JButton(name);
+                //LATER TODO: add prices as a small label inside the button next to the name of the item
+                button.addActionListener(new ButtonClickListener(this, name));
+                button.setPreferredSize(new Dimension(300, 50));
+                button.setFont(new Font("Arial", Font.PLAIN, 25));
+                menuItems.add(button);
+            }
         }
     }
 
@@ -52,9 +76,56 @@ public class LimitedTime extends JPanel {
             System.out.println("Menu Item clicked: " + buttonName);
             JButton orderedBtn = new JButton(buttonName);
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-            //TODO: add to submit order panel
-            //currentOrderPanel.add(orderedBtn);
+            // Add to selectedMenuIDs
+            int index = stringIndexOf(buttonName, names);
+            selectedMenuIDs.add(intIndexOf(index, menuItemIDs));
+
+            // Create a button & add it to current order panel to represent the item selected
+            JButton button = new JButton(buttonName);
+            button.setPreferredSize(new Dimension(100, 50));
+            button.setFont(new Font("Arial", Font.PLAIN, 20));
+            orderPanel.add(button);
+            button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    button.setBackground(Color.RED);
+                    //TODO: add the ID to the to-be deleted list
+                    toBeDeleted.add(intIndexOf(index, menuItemIDs));
+                }
+            });
         }
+    }
+
+    private void addMenuItems() {
+        this.employeeCmds = new employeeCmds();
+        sqlObjects.Menu menu = employeeCmds.getMenu();
+        this.menuItemIDs = menu.menuItemIDs;
+        this.names = menu.names;
+        this.prices = menu.prices;
+        this.numberOfItems = menuItemIDs.length;
+    }
+
+    private int stringIndexOf(String target, String[] array){
+        int index = -1;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == target) {
+                index = i; // Update index when target is found
+                break;     // Exit the loop once the target is found
+            }
+        }
+
+        return index;
+    }
+
+    private int intIndexOf(int target, int[] array){
+        int index = -1;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == target) {
+                index = i; // Update index when target is found
+                break;     // Exit the loop once the target is found
+            }
+        }
+        return index;
     }
 }
 
