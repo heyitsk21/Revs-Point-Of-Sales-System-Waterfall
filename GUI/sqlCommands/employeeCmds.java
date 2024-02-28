@@ -95,7 +95,7 @@ public class employeeCmds {
             // ITERATE OVER MENU ITEMS
             for (Integer selectedMenuID : selectedMenuIDs) {
                 // QUERY EVERY INGREDIENT FOR MENU ITEM
-                String ingredientQuery = "SELECT Ingredients.IngredientID, Ingredients.MinAmount, SUM(menuitemingredients.Count) AS TotalCount FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID WHERE menuitems.MenuID = ? GROUP BY Ingredients.IngredientID";
+                String ingredientQuery = "SELECT Ingredients.IngredientID, Ingredients.MinAmount, ingredients.Count AS TotalCount FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID WHERE menuitems.MenuID = ? GROUP BY Ingredients.IngredientID";
                 PreparedStatement ingredientPrep = db.con.prepareStatement(ingredientQuery);
                 ingredientPrep.setInt(1, selectedMenuID);
                 ResultSet ingredientResult = ingredientPrep.executeQuery();
@@ -125,7 +125,7 @@ public class employeeCmds {
     
                     // COMPARE IF INGREDIENTS LESS THAN REQUIRED
                     if (availableCount < requiredCount) {
-                        System.out.println("Insufficient ingredients for the order");
+                        System.out.println("Insufficient ingredients for the order with ingredientID: " + ingredientID + " and menuID: " + selectedMenuID);
                         db.con.rollback(); // Rollback transaction
                         return false;
                     }
@@ -147,14 +147,26 @@ public class employeeCmds {
                     logPrep.setString(3, logMessage);
                     logPrep.executeUpdate();
                 }
-    
-                // CALCULATE TOTAL PRICE
+
+                /*
+                CALCULATE TOTAL PRICE
                 String totalPriceQuery = "SELECT SUM(Price) AS TotalPrice FROM MenuItems WHERE MenuID = ?";
                 PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
                 totalPricePrep.setInt(1, selectedMenuID);
                 ResultSet totalPriceResult = totalPricePrep.executeQuery();
                 if (totalPriceResult.next()) {
                     totalPrice += totalPriceResult.getFloat("TotalPrice");
+                }
+                */
+    
+                // CALCULATE TOTAL PRICE
+                String totalPriceQuery = "SELECT Price FROM MenuItems WHERE MenuID = ?";
+                PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
+                totalPricePrep.setInt(1, selectedMenuID);
+                ResultSet totalPriceResult = totalPricePrep.executeQuery();
+                if (totalPriceResult.next()) {
+                    float price = totalPriceResult.getFloat("Price");
+                    totalPrice += price;
                 }
     
                 // INSERT TO OrderMenuItems 
