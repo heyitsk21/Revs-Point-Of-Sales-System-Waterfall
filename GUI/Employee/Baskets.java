@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
@@ -8,13 +9,22 @@ import javax.swing.border.EtchedBorder;
 import java.io.*;
 import java.awt.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Baskets extends JPanel {
-    //placeholder menu items, in the future we can go through the menu items list and pick out ones with certain types of IDs
-    int numberOfItems = 5;
-    int[] menuItemIDs = {1,2,3,4,5};
-    String[] names = {"Basket 1", "Basket 2", "Basket 3", "Basket 4", "Basket 5"};
-    double[] prices = {2.00, 3.00, 4.00, 5.50, 6.00};
-    public Baskets() {
+    int numberOfItems;
+    private List<Integer> menuItemIDs = new ArrayList<>();
+    private List<Double> prices = new ArrayList<>();
+    private List<String> names = new ArrayList<>();
+    private List<Integer> selectedMenuIDs = new ArrayList<>();
+
+    public Baskets(List<Integer> passedSelectedMenuIDs) {
+        if (passedSelectedMenuIDs != null) {
+            selectedMenuIDs = passedSelectedMenuIDs;
+        }
+        addMenuItems();
+
         setLayout(new BorderLayout());
         // Add components for editing orders
         // Example: JLabels, JTextFields, JButtons, etc.
@@ -27,9 +37,10 @@ public class Baskets extends JPanel {
 
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {
-            JButton button = new JButton(names[i]);
+            String name = names.get(i);
+            JButton button = new JButton(name);
             //LATER TODO: add prices as a small label inside the button next to the name of the item
-            button.addActionListener(new ButtonClickListener(this, names[i]));
+            button.addActionListener(new ButtonClickListener(this, names.get(i)));
             button.setPreferredSize(new Dimension(200, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));
             menuItems.add(button);
@@ -52,9 +63,33 @@ public class Baskets extends JPanel {
             System.out.println("Menu Item clicked: " + buttonName);
             JButton orderedBtn = new JButton(buttonName);
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-            //TODO: add to submit order panel
-            //currentOrderPanel.add(orderedBtn);
+            // Add to selectedMenuIDs
+            int index = names.indexOf(buttonName);
+            selectedMenuIDs.add(menuItemIDs.get(index));
         }
+    }
+
+    private void addMenuItems() {
+        //TODO: use sql commands to pull items from database
+        numberOfItems = 5;
+
+        names.add("Value Meal 1");
+        names.add("Value Meal 2");
+        names.add("Value Meal 3");
+        names.add("Value Meal 4");
+        names.add("Value Meal 5");
+
+        menuItemIDs.add(1);
+        menuItemIDs.add(2);
+        menuItemIDs.add(3);
+        menuItemIDs.add(4);
+        menuItemIDs.add(5);
+
+        prices.add(2.00);
+        prices.add(3.00);
+        prices.add(4.00);
+        prices.add(5.50);
+        prices.add(6.00);
     }
 }
 

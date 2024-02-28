@@ -14,13 +14,26 @@ import java.util.List;
 
 public class ValMeals extends JPanel {
     int numberOfItems;
-    List<Integer> menuItemIDs = new ArrayList<>();
-    List<Double> prices = new ArrayList<>();
-    List<String> names = new ArrayList<>();
-    List<Integer> selectedMenuIDs;
+    int[] menuItemIDs; 
+    String[] names;
+    float[] prices;
 
-    public ValMeals(List<Integer> passedSelectedMenuIDs) {
-        selectedMenuIDs = passedSelectedMenuIDs;
+    private List<Integer> selectedMenuIDs = new ArrayList<>();
+    private JPanel orderPanel = new JPanel();
+    private List<Integer> toBeDeleted = new ArrayList<>();
+
+    employeeCmds employeeCmds;
+
+    public ValMeals(List<Integer> passedSelectedMenuIDs, JPanel passedOrderPanel, List<Integer> passedToBeDeleted) {
+        if (passedSelectedMenuIDs != null) {
+            selectedMenuIDs = passedSelectedMenuIDs;
+        }
+        if (passedOrderPanel != null) {
+            orderPanel = passedOrderPanel;
+        }
+        if (passedToBeDeleted != null) {
+            toBeDeleted = passedToBeDeleted;
+        }
         addMenuItems();
 
         setLayout(new BorderLayout());
@@ -35,12 +48,15 @@ public class ValMeals extends JPanel {
 
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {
-            JButton button = new JButton(names.get(i));
-            //TODO: add prices as a small label inside the button next to the name of the item
-            button.addActionListener(new ButtonClickListener(this, String.valueOf(i)));
-            button.setPreferredSize(new Dimension(300, 50));
-            button.setFont(new Font("Arial", Font.PLAIN, 25));
-            menuItems.add(button);
+            if((menuItemIDs[i] >= 600) && (menuItemIDs[i] <= 699)) {
+                String name = names[i];
+                JButton button = new JButton(name);
+                //TODO: add prices as a small label inside the button next to the name of the item
+                button.addActionListener(new ButtonClickListener(this, name));
+                button.setPreferredSize(new Dimension(300, 50));
+                button.setFont(new Font("Arial", Font.PLAIN, 25));
+                menuItems.add(button);
+            }
         }
     }
 
@@ -60,34 +76,56 @@ public class ValMeals extends JPanel {
             System.out.println("Menu Item clicked: " + buttonName);
             JButton orderedBtn = new JButton(buttonName);
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-            //TODO: add to selectedMenuIDs
-            //check at what index of names[] buttonName is at
-            //then use that same index to access the menuItemIDs array
+            // Add to selectedMenuIDs
+            int index = stringIndexOf(buttonName, names);
+            selectedMenuIDs.add(intIndexOf(index, menuItemIDs));
 
+            // Create a button & add it to current order panel to represent the item selected
+            JButton button = new JButton(buttonName);
+            button.setPreferredSize(new Dimension(100, 50));
+            button.setFont(new Font("Arial", Font.PLAIN, 20));
+            orderPanel.add(button);
+            button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    button.setBackground(Color.RED);
+                    //TODO: add the ID to the to-be deleted list
+                    toBeDeleted.add(intIndexOf(index, menuItemIDs));
+                }
+            });
         }
     }
 
     private void addMenuItems() {
-        //TODO: use sql commands to pull items from database
-        numberOfItems = 5;
-        
-        names.add("Value Meal 1");
-        names.add("Value Meal 2");
-        names.add("Value Meal 3");
-        names.add("Value Meal 4");
-        names.add("Value Meal 5");
+        this.employeeCmds = new employeeCmds();
+        sqlObjects.Menu menu = employeeCmds.getMenu();
+        this.menuItemIDs = menu.menuItemIDs;
+        this.names = menu.names;
+        this.prices = menu.prices;
+        this.numberOfItems = menuItemIDs.length;
+    }
 
-        menuItemIDs.add(1);
-        menuItemIDs.add(2);
-        menuItemIDs.add(3);
-        menuItemIDs.add(4);
-        menuItemIDs.add(5);
+    private int stringIndexOf(String target, String[] array){
+        int index = -1;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == target) {
+                index = i; // Update index when target is found
+                break;     // Exit the loop once the target is found
+            }
+        }
 
-        prices.add(2.00);
-        prices.add(3.00);
-        prices.add(4.00);
-        prices.add(5.50);
-        prices.add(6.00);
+        return index;
+    }
+
+    private int intIndexOf(int target, int[] array){
+        int index = -1;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == target) {
+                index = i; // Update index when target is found
+                break;     // Exit the loop once the target is found
+            }
+        }
+        return index;
     }
 }
 

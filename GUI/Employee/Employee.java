@@ -8,15 +8,16 @@ import java.util.List;
 public class Employee extends JFrame {
     private JPanel menuPanel;
     private CardLayout cardLayout;
-    private JPanel currentOrderPanel;
     private JPanel innerOrderPanel;
-
-    public List<Integer> selectedMenuIDs; // Global list to keep track of selected menu items
-    public employeeCmds commands;
+    private JPanel orderPanel;
+    private JPanel submitAndDeletePanel;
+    private List<Integer> toBeDeleted;
+    private List<Integer> selectedMenuIDs; // list to keep track of selected menu items
 
     public Employee() {
         createAndShowGUI();
         selectedMenuIDs = new ArrayList<>();
+        toBeDeleted = new ArrayList<>();
     }
 
     private void createAndShowGUI() {
@@ -24,14 +25,18 @@ public class Employee extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
+        orderPanel = new JPanel();
+        innerOrderPanel = new JPanel();
+        submitAndDeletePanel = new JPanel();
+
         // Create menuPanel and cardLayout
         cardLayout = new CardLayout();
         menuPanel = new JPanel(cardLayout);
         menuPanel.setBorder(new EtchedBorder());
-        menuPanel.add(new ValMeals(selectedMenuIDs), "ValMeals");
+        menuPanel.add(new ValMeals(selectedMenuIDs, innerOrderPanel, toBeDeleted), "ValMeals");
         menuPanel.add(new Burgers(), "Burgers");
         menuPanel.add(new Sandwiches(), "Sandwiches");
-        menuPanel.add(new Baskets(), "Baskets");
+        menuPanel.add(new Baskets(selectedMenuIDs), "Baskets");
         menuPanel.add(new Sides(), "Sides");
         menuPanel.add(new Drinks(), "Drinks");
         menuPanel.add(new Etc(), "Etc");
@@ -44,6 +49,7 @@ public class Employee extends JFrame {
         categoriesPanel.setBorder(new EtchedBorder());
         //categoriesPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         categoriesPanel.setLayout(new GridLayout(1, 0));
+        submitAndDeletePanel.setMaximumSize(new Dimension(100, 80));
         // Create menu category buttons, also adds them to the panel
         JButton valMealBtn = createMenuCatButton("ValMeals", categoriesPanel);
         JButton burgerBtn = createMenuCatButton("Burgers", categoriesPanel);
@@ -59,20 +65,20 @@ public class Employee extends JFrame {
         // CURRENT ORDER
 
         // Create the panel to show what the order currently consists of
-        innerOrderPanel = new JPanel(null);
-        currentOrderPanel = new JPanel();
-        currentOrderPanel.setBorder(new EtchedBorder());
-        currentOrderPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        orderPanel.setBorder(new EtchedBorder());
+        orderPanel.setLayout(new GridLayout(0, 1));
         innerOrderPanel.setBorder(new EtchedBorder());
-        innerOrderPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        // Create and add the delete and submit buttons to the currentOrderPanel
-        JButton deleteBtn = createDeleteButton("DELETE", currentOrderPanel);
-        JButton submitBtn = createSubmitButton("Submit", currentOrderPanel);
-        innerOrderPanel.add(new EmployeeDelete(), "DELETE");
-        innerOrderPanel.add(new EmployeeSubmit(selectedMenuIDs), "Submit");
-        // Add the currentOrderPanel to the right of the frame
-        frame.add(currentOrderPanel, BorderLayout.EAST);
-        // WRONG: currentOrderPanel.add(innerOrderPanel, BorderLayout.NORTH);
+        innerOrderPanel.setLayout(new GridLayout(0, 1));
+        submitAndDeletePanel.setBorder(new EtchedBorder());
+        submitAndDeletePanel.setLayout(new GridLayout(0, 2));
+        // Create and add the delete and submit buttons to the orderPanel
+        JButton deleteBtn = createDeleteButton("DELETE", submitAndDeletePanel);
+        JButton submitBtn = createSubmitButton("Submit", submitAndDeletePanel);
+        // Add the orderPanel to the right of the frame
+        frame.add(orderPanel, BorderLayout.EAST);
+        // Add innerOrderPanel to orderPanel
+        orderPanel.add(innerOrderPanel, BorderLayout.NORTH);
+        orderPanel.add(submitAndDeletePanel, BorderLayout.SOUTH);
 
         // CARD LAYOUT
 
