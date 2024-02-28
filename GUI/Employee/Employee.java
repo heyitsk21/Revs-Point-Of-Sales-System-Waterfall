@@ -6,13 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Employee extends JFrame {
+    public static List<Integer> selectedMenuIDs;
+    public static List<Integer> toBeDeleted;
+    public static JPanel innerOrderPanel;
+
     private JPanel menuPanel;
     private CardLayout cardLayout;
-    private JPanel innerOrderPanel;
     private JPanel orderPanel;
     private JPanel submitAndDeletePanel;
-    private List<Integer> toBeDeleted;
-    private List<Integer> selectedMenuIDs; // list to keep track of selected menu items
+    //private List<Integer> toBeDeleted;
+    //private List<Integer> selectedMenuIDs; // list to keep track of selected menu items
 
     public Employee() {
         createAndShowGUI();
@@ -33,8 +36,8 @@ public class Employee extends JFrame {
         cardLayout = new CardLayout();
         menuPanel = new JPanel(cardLayout);
         menuPanel.setBorder(new EtchedBorder());
-        menuPanel.add(new ValMeals(selectedMenuIDs, innerOrderPanel, toBeDeleted), "ValMeals");
-        menuPanel.add(new Burgers(selectedMenuIDs, innerOrderPanel, toBeDeleted), "Burgers");
+        menuPanel.add(new ValMeals(), "ValMeals");
+        menuPanel.add(new Burgers(), "Burgers");
         menuPanel.add(new Sandwiches(selectedMenuIDs, innerOrderPanel, toBeDeleted), "Sandwiches");
         menuPanel.add(new DrinksAndFries(selectedMenuIDs, innerOrderPanel, toBeDeleted), "DrinksAndFries");
         menuPanel.add(new Salads(selectedMenuIDs, innerOrderPanel, toBeDeleted), "Salads");
@@ -128,7 +131,7 @@ public class Employee extends JFrame {
                 // Create a new frame for EmployeeSubmit panel
                 JFrame submitFrame = new JFrame("Employee Submit");
                 submitFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                submitFrame.getContentPane().add(new EmployeeSubmit(selectedMenuIDs));
+                submitFrame.getContentPane().add(new EmployeeSubmit());
                 submitFrame.pack();
                 submitFrame.setLocationRelativeTo(null); // Center the frame
                 submitFrame.setVisible(true);

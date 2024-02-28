@@ -14,10 +14,10 @@ public class EmployeeSubmit extends JPanel {
     private JTextField IDField;
     private JButton submitButton;
     private JButton backButton;
-    private List<Integer> selectedMenuIDs;
+    //private List<Integer> selectedMenuIDs;
 
-    public EmployeeSubmit(List<Integer> passedSelectedMenuIDs) {
-        selectedMenuIDs = passedSelectedMenuIDs;
+    public EmployeeSubmit() {
+        //selectedMenuIDs = passedSelectedMenuIDs;
         setLayout(new BorderLayout());
 
         JLabel label = new JLabel("Enter a name for the order");
@@ -80,17 +80,19 @@ public class EmployeeSubmit extends JPanel {
                 } else {
                     employeeCmds commands = new employeeCmds();
                     int employeeID = Integer.parseInt(IDField.getText());
-                    boolean success = commands.submitOrder(selectedMenuIDs, nameField.getText(), employeeID);
+                    boolean success = commands.submitOrder(Employee.selectedMenuIDs, nameField.getText(), employeeID);
                     if(success) {
                         System.out.println("Order submitted with name: " + nameField.getText());
                         // Clear out selectedMenuIDs
-                        selectedMenuIDs.clear();
+                        Employee.selectedMenuIDs.clear();
                         // Close the frame
                         SwingUtilities.getWindowAncestor(EmployeeSubmit.this).dispose();
                     }
                     else {
                         JOptionPane.showMessageDialog(employeeSubmit, "There was an error processing the order, please contact a manager", "Error", JOptionPane.ERROR_MESSAGE);
                     }
+                    //removes buttons and repaints
+                    Employee.innerOrderPanel.removeAll();
                 }
             } else if (buttonName.equals("Back")) {
                     // Handle back action

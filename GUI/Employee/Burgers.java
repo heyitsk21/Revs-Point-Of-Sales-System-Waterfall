@@ -18,22 +18,13 @@ public class Burgers extends JPanel {
     String[] names;
     float[] prices;
 
-    private List<Integer> selectedMenuIDs = new ArrayList<>();
-    private JPanel orderPanel = new JPanel();
-    private List<Integer> toBeDeleted = new ArrayList<>();
+    //private List<Integer> selectedMenuIDs = new ArrayList<>();
+    //private JPanel orderPanel = new JPanel();
+    //private List<Integer> toBeDeleted = new ArrayList<>();
 
     employeeCmds employeeCmds;
 
-    public Burgers(List<Integer> passedSelectedMenuIDs, JPanel passedOrderPanel, List<Integer> passedToBeDeleted) {
-        if (passedSelectedMenuIDs != null) {
-            selectedMenuIDs = passedSelectedMenuIDs;
-        }
-        if (passedOrderPanel != null) {
-            orderPanel = passedOrderPanel;
-        }
-        if (passedToBeDeleted != null) {
-            toBeDeleted = passedToBeDeleted;
-        }
+    public Burgers() {
         addMenuItems();
 
         setLayout(new BorderLayout());
@@ -78,19 +69,27 @@ public class Burgers extends JPanel {
             orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
             // Add to selectedMenuIDs
             int index = stringIndexOf(buttonName, names);
-            selectedMenuIDs.add(intIndexOf(index, menuItemIDs));
+            int ID = menuItemIDs[index];
+            Employee.selectedMenuIDs.add(ID);
 
             // Create a button & add it to current order panel to represent the item selected
             JButton button = new JButton(buttonName);
             button.setPreferredSize(new Dimension(100, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 20));
-            orderPanel.add(button);
+            Employee.innerOrderPanel.add(button);
             button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    button.setBackground(Color.RED);
-                    //TODO: add the ID to the to-be deleted list
-                    toBeDeleted.add(intIndexOf(index, menuItemIDs));
+                    if(button.getBackground() != Color.RED) {
+                        button.setBackground(Color.RED);
+                        //add the ID to the to-be deleted list
+                        Employee.toBeDeleted.add(intIndexOf(index, menuItemIDs));
+                    }
+                    else {
+                        button.setBackground(Color.LIGHT_GRAY);
+                        //remove the ID from the to-be deleted list
+                        Employee.toBeDeleted.remove(Employee.toBeDeleted.indexOf(ID));
+                    }
                 }
             });
         }
