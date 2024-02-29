@@ -73,6 +73,7 @@ public class Burgers extends JPanel {
             button.setPreferredSize(new Dimension(100, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 20));
             Employee.innerOrderPanel.add(button);
+            Employee.innerOrderPanel.repaint();
             button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
