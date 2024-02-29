@@ -147,17 +147,6 @@ public class employeeCmds {
                     logPrep.setString(3, logMessage);
                     logPrep.executeUpdate();
                 }
-
-                /*
-                CALCULATE TOTAL PRICE
-                String totalPriceQuery = "SELECT SUM(Price) AS TotalPrice FROM MenuItems WHERE MenuID = ?";
-                PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
-                totalPricePrep.setInt(1, selectedMenuID);
-                ResultSet totalPriceResult = totalPricePrep.executeQuery();
-                if (totalPriceResult.next()) {
-                    totalPrice += totalPriceResult.getFloat("TotalPrice");
-                }
-                */
     
                 // CALCULATE TOTAL PRICE
                 String totalPriceQuery = "SELECT Price FROM MenuItems WHERE MenuID = ?";
@@ -169,8 +158,6 @@ public class employeeCmds {
                     totalPrice += price;
                 }
             }
-
-
             
             // INSERT ORDER INTO TABLE
             String orderQuery = "INSERT INTO Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) VALUES (?, ?, ?, ?, NOW(), ?)";
