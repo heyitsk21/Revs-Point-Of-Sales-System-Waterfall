@@ -38,7 +38,6 @@ public class Burgers extends JPanel {
             String name = names.get(i);
             String nameAndPrice = name + ": $" + prices.get(i);
             JButton button = new JButton(nameAndPrice);
-            //LATER TODO: add prices as a small label inside the button next to the name of the item
             button.addActionListener(new ButtonClickListener(this, name));
             button.setPreferredSize(new Dimension(300, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -68,9 +67,6 @@ public class Burgers extends JPanel {
             // Add to selectedMenuIDs
             int ID = menuItemIDs.get(index);
             Employee.selectedMenuIDs.add(ID);
-
-            //change total price
-            Employee.currentPrice += price;
 
             // Create a button & add it to current order panel to represent the item selected
             JButton button = new JButton(nameAndPrice);

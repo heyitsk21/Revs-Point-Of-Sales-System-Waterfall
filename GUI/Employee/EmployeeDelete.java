@@ -9,8 +9,6 @@ public class EmployeeDelete extends JPanel {
     private JButton deleteButton;
     private JButton backButton;
 
-    //private List<Integer> selectedMenuIDs;
-
     public EmployeeDelete() {
         setLayout(new BorderLayout());
 
@@ -50,7 +48,7 @@ public class EmployeeDelete extends JPanel {
                 }
                 Employee.toBeDeleted.clear();
                 System.out.println(Employee.selectedMenuIDs);
-                Employee.innerOrderPanel.repaint();
+                Employee.update();
             }
         });
 

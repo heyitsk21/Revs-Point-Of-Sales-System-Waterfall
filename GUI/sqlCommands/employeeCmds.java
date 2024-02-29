@@ -211,19 +211,23 @@ public class employeeCmds {
 
     public float getOrderPrice(List<Integer> selectedMenuIDs) {
         float totalPrice = 0;
-        db.con.setAutoCommit(false);
-        for (Integer selectedMenuID : selectedMenuIDs) {
-            // CALCULATE TOTAL PRICE
-            String totalPriceQuery = "SELECT Price FROM MenuItems WHERE MenuID = ?";
-            PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
-            totalPricePrep.setInt(1, selectedMenuID);
-            ResultSet totalPriceResult = totalPricePrep.executeQuery();
-            if (totalPriceResult.next()) {
-                float price = totalPriceResult.getFloat("Price");
-                totalPrice += price;
-            } 
+        try {
+            for (Integer selectedMenuID : selectedMenuIDs) {
+                // CALCULATE TOTAL PRICE
+                String totalPriceQuery = "SELECT Price FROM MenuItems WHERE MenuID = ?";
+                PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
+                totalPricePrep.setInt(1, selectedMenuID);
+                ResultSet totalPriceResult = totalPricePrep.executeQuery();
+                if (totalPriceResult.next()) {
+                    float price = totalPriceResult.getFloat("Price");
+                    totalPrice += price;
+                } 
+            }
+            return totalPrice;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return 0.0f;
         }
-        return totalPrice;
     }
     
     /* 

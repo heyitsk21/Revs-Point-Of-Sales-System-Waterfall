@@ -38,7 +38,6 @@ public class DrinksAndFries extends JPanel {
             String name = names.get(i);
             String nameAndPrice = name + ": $" + prices.get(i);
             JButton button = new JButton(nameAndPrice);
-            //LATER TODO: add prices as a small label inside the button next to the name of the item
             button.addActionListener(new ButtonClickListener(this, name));
             button.setPreferredSize(new Dimension(300, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -74,6 +73,7 @@ public class DrinksAndFries extends JPanel {
             button.setPreferredSize(new Dimension(100, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 20));
             Employee.innerOrderPanel.add(button);
+            Employee.update();
             button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

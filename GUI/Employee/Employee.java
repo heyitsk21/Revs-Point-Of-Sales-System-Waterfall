@@ -10,6 +10,7 @@ public class Employee extends JFrame {
     public static List<Integer> toBeDeleted;
     public static JPanel innerOrderPanel;
     public static JPanel pricePanel;
+    public static Float currentPrice;
 
     private JPanel menuPanel;
     private CardLayout cardLayout;
@@ -178,9 +179,11 @@ public class Employee extends JFrame {
 
     public static void update() {
         //change total price
-        Employee.pricePanel.removeAll();
-        JLabel totalPrice = new JLabel("Total Price: $" + newPrice);
-        Employee.pricePanel.add(totalPrice);
+        employeeCmds emp = new employeeCmds();
+        pricePanel.removeAll();
+        currentPrice = emp.getOrderPrice(selectedMenuIDs);
+        JLabel totalPrice = new JLabel("Total Price: $" + currentPrice);
+        pricePanel.add(totalPrice);
         innerOrderPanel.repaint();
         pricePanel.repaint();
     }

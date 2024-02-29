@@ -36,8 +36,8 @@ public class IceCream extends JPanel {
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {
             String name = names.get(i);
-            JButton button = new JButton(name);
-            //LATER TODO: add prices as a small label inside the button next to the name of the item
+            String nameAndPrice = name + ": $" + prices.get(i);
+            JButton button = new JButton(nameAndPrice);
             button.addActionListener(new ButtonClickListener(this, name));
             button.setPreferredSize(new Dimension(300, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -59,20 +59,21 @@ public class IceCream extends JPanel {
         public void actionPerformed(ActionEvent e) {
             // Perform actions when the button is clicked
             System.out.println("Menu Item clicked: " + buttonName);
-            JButton orderedBtn = new JButton(buttonName);
-            orderedBtn.setFont(new Font("Arial", Font.PLAIN, 25));
-            // Add to selectedMenuIDs
             int index = names.indexOf(buttonName);
             System.out.println(names);
             System.out.println("The index of " + buttonName + " in names is " + index);
+            float price = prices.get(index);
+            String nameAndPrice = buttonName + " : $" + price;
+            // Add to selectedMenuIDs
             int ID = menuItemIDs.get(index);
             Employee.selectedMenuIDs.add(ID);
 
             // Create a button & add it to current order panel to represent the item selected
-            JButton button = new JButton(buttonName);
+            JButton button = new JButton(nameAndPrice);
             button.setPreferredSize(new Dimension(100, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 20));
             Employee.innerOrderPanel.add(button);
+            Employee.update();
             button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

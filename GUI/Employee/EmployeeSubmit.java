@@ -96,7 +96,7 @@ public class EmployeeSubmit extends JPanel {
                     //removes buttons and repaints
                     Employee.innerOrderPanel.removeAll();
                     // reset price
-                    Employee.currentPrice = 0.0f;
+                    Employee.update();
                 }
             } else if (buttonName.equals("Back")) {
                     // Handle back action
