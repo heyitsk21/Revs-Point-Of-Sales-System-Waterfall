@@ -65,7 +65,7 @@ public class ManagerMenuItems extends JPanel {
         for (int i = 0; i < size; i++){
             menuItems[i][0] = myMenu.menuItemIDs[i];
             menuItems[i][1] = myMenu.names[i];
-            menuItems[i][2] = myMenu.price[i];
+            menuItems[i][2] = myMenu.prices[i];
         }
 
         return menuItems;

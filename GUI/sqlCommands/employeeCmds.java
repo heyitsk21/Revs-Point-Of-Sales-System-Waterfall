@@ -76,7 +76,7 @@ public class employeeCmds {
             return null;
         }
     }
-
+// OLD SUBMIT ORDER
     public boolean submitOrder(List<Integer> selectedMenuIDs, String customerName, int employeeID) {
         float totalPrice = 0; 
         try {
@@ -85,7 +85,7 @@ public class employeeCmds {
             
             // GET HIGHEST OrderID -- MOVED OUTSIDE OF LOOP
             int newOrderID = 0;
-            String orderIDQuery = "SELECT MAX(OrderID) AS MaxID FROM Orders";
+            String orderIDQuery = "SELECT OrderID AS MaxID FROM Orders ORDER BY OrderID DESC Limit 1";
             Statement orderIDStmt = db.con.createStatement();
             ResultSet orderIDResult = orderIDStmt.executeQuery(orderIDQuery);
             if (orderIDResult.next()) {
@@ -95,7 +95,7 @@ public class employeeCmds {
             // ITERATE OVER MENU ITEMS
             for (Integer selectedMenuID : selectedMenuIDs) {
                 // QUERY EVERY INGREDIENT FOR MENU ITEM
-                String ingredientQuery = "SELECT Ingredients.IngredientID, Ingredients.MinAmount, SUM(menuitemingredients.Count) AS TotalCount FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID WHERE menuitems.MenuID = ? GROUP BY Ingredients.IngredientID";
+                String ingredientQuery = "SELECT Ingredients.IngredientID, Ingredients.MinAmount, ingredients.Count AS TotalCount FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID WHERE menuitems.MenuID = ? GROUP BY Ingredients.IngredientID";
                 PreparedStatement ingredientPrep = db.con.prepareStatement(ingredientQuery);
                 ingredientPrep.setInt(1, selectedMenuID);
                 ResultSet ingredientResult = ingredientPrep.executeQuery();
@@ -125,7 +125,7 @@ public class employeeCmds {
     
                     // COMPARE IF INGREDIENTS LESS THAN REQUIRED
                     if (availableCount < requiredCount) {
-                        System.out.println("Insufficient ingredients for the order");
+                        System.out.println("Insufficient ingredients for the order with ingredientID: " + ingredientID + " and menuID: " + selectedMenuID);
                         db.con.rollback(); // Rollback transaction
                         return false;
                     }
@@ -147,8 +147,9 @@ public class employeeCmds {
                     logPrep.setString(3, logMessage);
                     logPrep.executeUpdate();
                 }
-    
-                // CALCULATE TOTAL PRICE
+
+                /*
+                CALCULATE TOTAL PRICE
                 String totalPriceQuery = "SELECT SUM(Price) AS TotalPrice FROM MenuItems WHERE MenuID = ?";
                 PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
                 totalPricePrep.setInt(1, selectedMenuID);
@@ -156,15 +157,21 @@ public class employeeCmds {
                 if (totalPriceResult.next()) {
                     totalPrice += totalPriceResult.getFloat("TotalPrice");
                 }
+                */
     
-                // INSERT TO OrderMenuItems 
-                String junctionQuery = "INSERT INTO OrderMenuItems (OrderID, MenuID) VALUES (?, ?)";
-                PreparedStatement junctionPrep = db.con.prepareStatement(junctionQuery);
-                junctionPrep.setInt(1, newOrderID);
-                junctionPrep.setInt(2, selectedMenuID);
-                junctionPrep.executeUpdate();
+                // CALCULATE TOTAL PRICE
+                String totalPriceQuery = "SELECT Price FROM MenuItems WHERE MenuID = ?";
+                PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
+                totalPricePrep.setInt(1, selectedMenuID);
+                ResultSet totalPriceResult = totalPricePrep.executeQuery();
+                if (totalPriceResult.next()) {
+                    float price = totalPriceResult.getFloat("Price");
+                    totalPrice += price;
+                }
             }
-    
+
+
+            
             // INSERT ORDER INTO TABLE
             String orderQuery = "INSERT INTO Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) VALUES (?, ?, ?, ?, NOW(), ?)";
             PreparedStatement orderPrep = db.con.prepareStatement(orderQuery);
@@ -174,6 +181,9 @@ public class employeeCmds {
             orderPrep.setFloat(4, totalPrice);
             orderPrep.setInt(5, employeeID);
             orderPrep.executeUpdate();
+            
+            // RESET TOTAL PRICE
+            totalPrice = 0;
     
             // COMMIT TRANSACTION
             db.con.commit();
@@ -198,5 +208,87 @@ public class employeeCmds {
             }
         }
     }
+
+    public float getOrderPrice(List<Integer> selectedMenuIDs) {
+        float totalPrice = 0;
+        try {
+            for (Integer selectedMenuID : selectedMenuIDs) {
+                // CALCULATE TOTAL PRICE
+                String totalPriceQuery = "SELECT Price FROM MenuItems WHERE MenuID = ?";
+                PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
+                totalPricePrep.setInt(1, selectedMenuID);
+                ResultSet totalPriceResult = totalPricePrep.executeQuery();
+                if (totalPriceResult.next()) {
+                    float price = totalPriceResult.getFloat("Price");
+                    totalPrice += price;
+                } 
+            }
+            return totalPrice;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return 0.0f;
+        }
+    }
     
+    /* 
+
+    //NEW SUBMIT ORDER
+    public boolean submitOrder(List<Integer> selectedMenuIDs, String customerName, int employeeID) {
+        float totalPrice = 0;
+        try {
+            // STARTS TRANSACTION MODE, REMOVED IN FINALLY LOOP
+            db.con.setAutoCommit(false);
+    
+            // INSERT ORDER INTO TABLE
+            String orderQuery = "INSERT INTO Orders (CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) VALUES (?, ?, ?, NOW(), ?)";
+            PreparedStatement orderPrep = db.con.prepareStatement(orderQuery, Statement.RETURN_GENERATED_KEYS);
+            orderPrep.setString(1, customerName);
+            orderPrep.setFloat(2, totalPrice * 0.0825f);
+            orderPrep.setFloat(3, totalPrice);
+            orderPrep.setInt(4, employeeID);
+            orderPrep.executeUpdate();
+    
+            // Get the auto-generated OrderID
+            ResultSet generatedKeys = orderPrep.getGeneratedKeys();
+            int newOrderID = -1;
+            if (generatedKeys.next()) {
+                newOrderID = generatedKeys.getInt(1);
+            } else {
+                throw new SQLException("Failed to get auto-generated OrderID.");
+            }
+    
+            // INSERT TO OrderMenuItems
+            for (Integer selectedMenuID : selectedMenuIDs) {
+                String junctionQuery = "INSERT INTO OrderMenuItems (OrderID, MenuID) VALUES (?, ?)";
+                PreparedStatement junctionPrep = db.con.prepareStatement(junctionQuery);
+                junctionPrep.setInt(1, newOrderID);
+                junctionPrep.setInt(2, selectedMenuID);
+                junctionPrep.executeUpdate();
+            }
+    
+            // COMMIT TRANSACTION
+            db.con.commit();
+    
+            // IF SUCCESS, RETURN TRUE
+            return true;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            try {
+                // ROLLBACK IF EXCEPTION
+                db.con.rollback();
+            } catch (SQLException ex) {
+                System.err.println(ex.getMessage());
+            }
+            return false;
+        } finally {
+            try {
+                // RESET AUTO COMMIT -- SQL COMMANDS RUN INDIVIDUALLY AGAIN
+                db.con.setAutoCommit(true);
+            } catch (SQLException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+
+    }
+    */
 }

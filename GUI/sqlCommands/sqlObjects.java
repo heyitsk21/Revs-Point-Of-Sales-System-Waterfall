@@ -22,12 +22,12 @@ public class sqlObjects {
     public static class Menu {
         int[] menuItemIDs;
         String[] names;
-        float[] price;
+        float[] prices;
 
-        Menu(int[] menuItemIDs, String[] names, float[] price) {
+        Menu(int[] menuItemIDs, String[] names, float[] prices) {
             this.menuItemIDs = menuItemIDs;
             this.names = names;
-            this.price = price;
+            this.prices = prices;
         }
 
         int length() {
