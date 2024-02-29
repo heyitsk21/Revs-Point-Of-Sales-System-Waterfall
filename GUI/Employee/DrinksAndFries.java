@@ -14,9 +14,9 @@ import java.util.List;
 
 public class DrinksAndFries extends JPanel {
     int numberOfItems = 0;
-    List<Integer> menuItemIDs; 
-    List<String> names;
-    List<Float> prices;
+    int[] menuItemIDs; 
+    String[] names;
+    float[] prices;
 
     employeeCmds employeeCmds;
 

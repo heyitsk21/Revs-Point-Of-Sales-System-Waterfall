@@ -16,13 +16,13 @@ public class employeeCmds {
         db = new Database();
     }
 
-    public sqlObjects.Menu getMenu() {
+    public sqlObjects.Menu getMenu(int lowerBound, int upperBound) {
         try {
             int size = 0;
             PreparedStatement prep;
             ResultSet allMenuItems;
 
-            String cmd = "SELECT MenuID, ItemName, Price FROM MenuItems;";
+            String cmd = String.format("SELECT MenuID, ItemName, Price FROM MenuItems WHERE MenuID BETWEEN %d AND %d;",lowerBound,upperBound);
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             allMenuItems = prep.executeQuery();
 
@@ -51,7 +51,7 @@ public class employeeCmds {
         }
         return null;
     }
-
+    /* 
     public ResultSet addMenuItemToOrder(int menuItemID) {
         try {
             // Execute query to select menu item details
@@ -76,6 +76,7 @@ public class employeeCmds {
             return null;
         }
     }
+    */
 // OLD SUBMIT ORDER
     public boolean submitOrder(List<Integer> selectedMenuIDs, String customerName, int employeeID) {
         float totalPrice = 0; 
