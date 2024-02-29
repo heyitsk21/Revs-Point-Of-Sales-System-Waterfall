@@ -182,7 +182,8 @@ public class Employee extends JFrame {
         employeeCmds emp = new employeeCmds();
         pricePanel.removeAll();
         currentPrice = emp.getOrderPrice(selectedMenuIDs);
-        JLabel totalPrice = new JLabel("Total Price: $" + currentPrice);
+        String truncatedPrice = String.format("%.2f", currentPrice);
+        JLabel totalPrice = new JLabel("Total Price: $" + truncatedPrice);
         pricePanel.add(totalPrice);
         innerOrderPanel.repaint();
         pricePanel.repaint();
