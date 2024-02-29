@@ -95,6 +95,8 @@ public class EmployeeSubmit extends JPanel {
                     SwingUtilities.getWindowAncestor(EmployeeSubmit.this).dispose();
                     //removes buttons and repaints
                     Employee.innerOrderPanel.removeAll();
+                    // reset price
+                    Employee.currentPrice = 0.0f;
                 }
             } else if (buttonName.equals("Back")) {
                     // Handle back action
