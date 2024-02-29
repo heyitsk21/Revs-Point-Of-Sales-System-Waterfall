@@ -169,7 +169,6 @@ public class employeeCmds {
             orderPrep.setInt(5, employeeID);
             orderPrep.executeUpdate();
 
-            /* INSERT TO OrderMenuItems
             for (Integer selectedMenuID : selectedMenuIDs) 
             {
                 String junctionQuery = "INSERT INTO OrderMenuItems (OrderID, MenuID) VALUES (?, ?)";
@@ -178,7 +177,6 @@ public class employeeCmds {
                 junctionPrep.setInt(2, selectedMenuID);
                 junctionPrep.executeUpdate();
             }
-            */
             
             // RESET TOTAL PRICE
             totalPrice = 0;
