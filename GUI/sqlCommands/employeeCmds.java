@@ -192,7 +192,6 @@ public class employeeCmds {
                 junctionPrep.executeUpdate();
             }
             */
-        
             
             // RESET TOTAL PRICE
             totalPrice = 0;
