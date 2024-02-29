@@ -85,14 +85,14 @@ public class EmployeeSubmit extends JPanel {
                     boolean success = commands.submitOrder(Employee.selectedMenuIDs, nameField.getText(), employeeID);
                     if(success) {
                         System.out.println("Order submitted with name: " + nameField.getText());
-                        // Clear out selectedMenuIDs
-                        Employee.selectedMenuIDs.clear();
-                        // Close the frame
-                        SwingUtilities.getWindowAncestor(EmployeeSubmit.this).dispose();
                     }
                     else {
                         JOptionPane.showMessageDialog(employeeSubmit, "There was an error processing the order, please contact a manager", "Error", JOptionPane.ERROR_MESSAGE);
                     }
+                    // Clear out selectedMenuIDs
+                    Employee.selectedMenuIDs.clear();
+                    // Close the frame
+                    SwingUtilities.getWindowAncestor(EmployeeSubmit.this).dispose();
                     //removes buttons and repaints
                     Employee.innerOrderPanel.removeAll();
                 }
