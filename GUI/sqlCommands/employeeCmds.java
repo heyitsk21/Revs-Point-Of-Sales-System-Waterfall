@@ -169,6 +169,9 @@ public class employeeCmds {
                     totalPrice += price;
                 }
             }
+
+
+            
             // INSERT ORDER INTO TABLE
             String orderQuery = "INSERT INTO Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) VALUES (?, ?, ?, ?, NOW(), ?)";
             PreparedStatement orderPrep = db.con.prepareStatement(orderQuery);
@@ -178,13 +181,8 @@ public class employeeCmds {
             orderPrep.setFloat(4, totalPrice);
             orderPrep.setInt(5, employeeID);
             orderPrep.executeUpdate();
-
-            // INSERT TO OrderMenuItems 
-            String junctionQuery = "INSERT INTO OrderMenuItems (OrderID, MenuID) VALUES (?, ?)";
-            PreparedStatement junctionPrep = db.con.prepareStatement(junctionQuery);
-            junctionPrep.setInt(1, newOrderID);
-            junctionPrep.setInt(2, selectedMenuID);
-            junctionPrep.executeUpdate();
+            
+            // RESET TOTAL PRICE
             totalPrice = 0;
     
             // COMMIT TRANSACTION
