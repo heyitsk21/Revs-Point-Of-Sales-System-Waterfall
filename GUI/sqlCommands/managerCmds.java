@@ -382,6 +382,40 @@ public class managerCmds {
 
 
     }
+
+    public sqlObjects.ProductUsageChart ProductUsageChart(java.sql.Date lowerBound, java.sql.Date upperBound){
+        try {
+            int size = 0;
+            PreparedStatement prep;
+            ResultSet rs;
+
+            String cmd = "SELECT IngredientID, SUM(AmountChanged) FROM InventoryLog  WHERE AmountChanged < 0 AND DATE(LogDateTime) BETWEEN '" +lowerBound.toString()+"' AND '"+ upperBound.toString() + "' GROUP BY IngredientID";
+            prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = prep.executeQuery();
+
+
+            rs.last();
+            size = rs.getRow();
+
+            int[] ingredientIDs = new int[size];
+            float[] amountUsed = new float[size];
+
+            rs.first();
+            int counter = 0;
+
+            do {
+                ingredientIDs[counter] = rs.getInt("IngredientID");
+                amountUsed[counter] = rs.getInt("sum");
+                counter++;
+            }while (rs.next());
+            sqlObjects.ProductUsageChart chartObj = new sqlObjects.ProductUsageChart(ingredientIDs, amountUsed);
+            return chartObj;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return null;
+
+    }
 }
 
 

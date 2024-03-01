@@ -72,5 +72,20 @@ public class sqlObjects {
         }
     }
 
+    public static class ProductUsageChart{
+        int[] ingredientIDs;
+        float[] amountUsed;
+
+        ProductUsageChart(int[] ingredientIDs, float[] amountUsed) {
+            this.ingredientIDs = ingredientIDs;
+            this.amountUsed = amountUsed;
+        }
+
+        int length() {
+            return ingredientIDs.length;
+        }
+
+    }
+
 }
 
