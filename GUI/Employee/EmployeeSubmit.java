@@ -82,7 +82,10 @@ public class EmployeeSubmit extends JPanel {
                     employeeCmds commands = new employeeCmds();
                     int employeeID = Integer.parseInt(IDField.getText());
                     System.out.println(employeeID);
+                    long startTime = System.nanoTime();
                     boolean success = commands.submitOrder(Employee.selectedMenuIDs, nameField.getText(), employeeID);
+                    long endTime = System.nanoTime();
+                    System.out.println("Order submitting took: " + (endTime - startTime));
                     if(success) {
                         System.out.println("Order submitted with name: " + nameField.getText());
                     }

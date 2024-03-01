@@ -1,11 +1,6 @@
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.awt.event.*;
-import javax.swing.*;
-import java.io.*;
-import java.awt.*;
 import java.util.List;
+import java.util.HashMap;
 
 public class employeeCmds {
 
@@ -82,6 +77,7 @@ public class employeeCmds {
         float totalPrice = 0; 
         try {
             // STARTS TRANSACTION MODE, REMOVED IN FINALLY LOOP
+            
             db.con.setAutoCommit(false);
             
             // GET HIGHEST OrderID -- MOVED OUTSIDE OF LOOP
@@ -92,40 +88,41 @@ public class employeeCmds {
             if (orderIDResult.next()) {
                 newOrderID = orderIDResult.getInt("MaxID") + 1;
             }
-    
+
+            // CALCULATE TOTAL PRICE
+            String list = selectedMenuIDs.toString();
+            
+            StringBuffer strbuf = new StringBuffer(list);
+            strbuf.setCharAt(0,'(');
+            strbuf.setCharAt(strbuf.length() - 1,')');
+            //STRING CONCAT OK SINCE THIS HAS TO COME FROM ARRAY LIST TYPE
+            String totalPriceQuery = "SELECT SUM(Price) FROM MenuItems WHERE MenuID IN " + strbuf.toString();
+            PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
+            ResultSet totalPriceResult = totalPricePrep.executeQuery();
+            if (totalPriceResult.next()) {
+                float price = totalPriceResult.getFloat("sum");
+                totalPrice += price;
+            }
+
+            HashMap<Integer,Integer> ingredientToCountInOrder = new HashMap<>();
             // ITERATE OVER MENU ITEMS
             for (Integer selectedMenuID : selectedMenuIDs) {
                 // QUERY EVERY INGREDIENT FOR MENU ITEM
-                String ingredientQuery = "SELECT Ingredients.IngredientID, Ingredients.MinAmount, ingredients.Count AS TotalCount FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID WHERE menuitems.MenuID = ? GROUP BY Ingredients.IngredientID";
+                String ingredientQuery = "SELECT Ingredients.IngredientID, Ingredients.MinAmount, ingredients.Count FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID WHERE menuitems.MenuID = ? GROUP BY Ingredients.IngredientID";
                 PreparedStatement ingredientPrep = db.con.prepareStatement(ingredientQuery);
                 ingredientPrep.setInt(1, selectedMenuID);
                 ResultSet ingredientResult = ingredientPrep.executeQuery();
     
-                // ADD INGREDIENTID TO A MAP
-                Map<Integer, Integer> ingredientCountMap = new HashMap<>();
+    
+                // LOOP THROUGH EACH INGREIDENT
                 while (ingredientResult.next()) {
                     int ingredientID = ingredientResult.getInt("IngredientID");
-                    int minAmount = ingredientResult.getInt("MinAmount");
-                    ingredientCountMap.put(ingredientID, minAmount);
-                }
-    
-                // MANAGE MAP AND UPDATE COUNT
-                for (Map.Entry<Integer, Integer> entry : ingredientCountMap.entrySet()) {
-                    int ingredientID = entry.getKey();
-                    int requiredCount = entry.getValue();
-                    
-                    // GET CURRENT COUNT AGAIN
-                    String countQuery = "SELECT Count FROM Ingredients WHERE IngredientID = ?";
-                    PreparedStatement countPrep = db.con.prepareStatement(countQuery);
-                    countPrep.setInt(1, ingredientID);
-                    ResultSet countResult = countPrep.executeQuery();
-                    int availableCount = 0;
-                    if (countResult.next()) {
-                        availableCount = countResult.getInt("Count");
-                    }
+                    int requiredCount = ingredientResult.getInt("MinAmount");
+                    int availableCount = ingredientResult.getInt("Count");
     
                     // COMPARE IF INGREDIENTS LESS THAN REQUIRED
-                    if (availableCount < requiredCount) {
+                    Integer currCount = ingredientToCountInOrder.getOrDefault(ingredientID,0);
+                    if (availableCount - currCount < requiredCount) {
                         System.out.println("Insufficient ingredients for the order with ingredientID: " + ingredientID + " and menuID: " + selectedMenuID);
                         db.con.rollback(); // Rollback transaction
                         return false;
@@ -147,19 +144,12 @@ public class employeeCmds {
                     logPrep.setInt(2, -requiredCount); // Negative value indicates deduction
                     logPrep.setString(3, logMessage);
                     logPrep.executeUpdate();
+
+                    //increment by one in hashmap
+                    ingredientToCountInOrder.put(ingredientID,ingredientToCountInOrder.getOrDefault(ingredientID,0) + 1);
                 }
     
-                // CALCULATE TOTAL PRICE
-                String totalPriceQuery = "SELECT Price FROM MenuItems WHERE MenuID = ?";
-                PreparedStatement totalPricePrep = db.con.prepareStatement(totalPriceQuery);
-                totalPricePrep.setInt(1, selectedMenuID);
-                ResultSet totalPriceResult = totalPricePrep.executeQuery();
-                if (totalPriceResult.next()) {
-                    float price = totalPriceResult.getFloat("Price");
-                    totalPrice += price;
-                }
             }
-            
             // INSERT ORDER INTO TABLE
             String orderQuery = "INSERT INTO Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) VALUES (?, ?, ?, ?, NOW(), ?)";
             PreparedStatement orderPrep = db.con.prepareStatement(orderQuery);
@@ -179,9 +169,6 @@ public class employeeCmds {
                 junctionPrep.executeUpdate();
             }
             
-            // RESET TOTAL PRICE
-            totalPrice = 0;
-    
             // COMMIT TRANSACTION
             db.con.commit();
             
