@@ -94,9 +94,6 @@ public class Burgers extends JPanel {
         this.menuItemIDs = menu.menuItemIDs;
         this.names = menu.names;
         this.prices = menu.prices;
-        for(String i : names){
-            System.out.println(i);
-        }
     }
 }
 
