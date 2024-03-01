@@ -89,7 +89,6 @@ public class Burgers extends JPanel {
     }
 
     private void addMenuItems() {
-
         sqlObjects.Menu menu = Employee.empCmds.getMenu(100,199);
         this.menuItemIDs = menu.menuItemIDs;
         this.names = menu.names;
