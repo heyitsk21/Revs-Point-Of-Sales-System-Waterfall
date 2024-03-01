@@ -8,7 +8,6 @@ import java.awt.*;
 
 
 public class Burgers extends JPanel {
-    int numberOfItems = 0;
     int[] menuItemIDs; 
     String[] names;
     float[] prices;
@@ -27,11 +26,11 @@ public class Burgers extends JPanel {
         menuItems.setBorder(new EtchedBorder());
 
         //add all menu items as buttons in the edit order panel
-        for (int i = 0; i < numberOfItems; i++) {
-            Integer id = menuItemIDs[i];
-            String nameAndPrice = names[i] + ": $" + prices[i];
+        for (int i = 0; i < menuItemIDs.length; i++) {
+            String name = names[i];
+            String nameAndPrice = name + ": $" + prices[i];
             JButton button = new JButton(nameAndPrice);
-            button.addActionListener(new ButtonClickListener(this, id.toString()));
+            button.addActionListener(new ButtonClickListener(name));
             button.setPreferredSize(new Dimension(300, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 25));
             menuItems.add(button);
@@ -40,11 +39,11 @@ public class Burgers extends JPanel {
 
     //button click listener so things happen when buttons are clicked
     private class ButtonClickListener implements ActionListener {
-        private Burgers burgers;
+
         private String buttonName;
 
-        public ButtonClickListener(Burgers burgers, String buttonName) {
-            this.burgers = burgers;
+        public ButtonClickListener(String buttonName) {
+
             this.buttonName = buttonName;
         }
 
@@ -53,8 +52,8 @@ public class Burgers extends JPanel {
             // Perform actions when the button is clicked
 
             int index = 0;
-            for(index = 0; index < menuItemIDs.length; ++index){
-                if(String.valueOf(menuItemIDs[index]) == buttonName){
+            for(index = 0; index < names.length; ++index){
+                if(String.valueOf(names[index]) == buttonName){
                     break;
                 }
             }
@@ -95,6 +94,9 @@ public class Burgers extends JPanel {
         this.menuItemIDs = menu.menuItemIDs;
         this.names = menu.names;
         this.prices = menu.prices;
+        for(String i : names){
+            System.out.println(i);
+        }
     }
 }
 

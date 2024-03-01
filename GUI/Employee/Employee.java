@@ -23,11 +23,12 @@ public class Employee extends JFrame {
 
 
     public Employee() {
+        empCmds = new employeeCmds();
         createAndShowGUI();
         selectedMenuIDs = new ArrayList<>();
         toBeDeleted = new ArrayList<>();
         currentPrice = 0.0f;
-        empCmds = new employeeCmds();
+
     }
 
     private void createAndShowGUI() {
