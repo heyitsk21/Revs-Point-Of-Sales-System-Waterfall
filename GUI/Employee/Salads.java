@@ -1,22 +1,12 @@
-import java.sql.*;
 import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-
-import java.io.*;
+import javax.swing.*;import javax.swing.border.EtchedBorder;
 import java.awt.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class Salads extends JPanel {
     int numberOfItems = 0;
-    List<Integer> menuItemIDs; 
-    List<String> names;
-    List<Float> prices;
+    int[] menuItemIDs; 
+    String[] names;
+    float[] prices;
 
     employeeCmds employeeCmds;
 
@@ -35,8 +25,8 @@ public class Salads extends JPanel {
 
         //add all menu items as buttons in the edit order panel
         for (int i = 0; i < numberOfItems; i++) {
-            String name = names.get(i);
-            String nameAndPrice = name + ": $" + prices.get(i);
+            String name = names[i];
+            String nameAndPrice = name + ": $" + prices[i];
             JButton button = new JButton(nameAndPrice);
             button.addActionListener(new ButtonClickListener(this, name));
             button.setPreferredSize(new Dimension(300, 50));
@@ -58,14 +48,18 @@ public class Salads extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Perform actions when the button is clicked
-            System.out.println("Menu Item clicked: " + buttonName);
-            int index = names.indexOf(buttonName);
-            System.out.println(names);
-            System.out.println("The index of " + buttonName + " in names is " + index);
-            float price = prices.get(index);
+
+            int index = 0;
+            for(index = 0; index < menuItemIDs.length; ++index){
+                if(String.valueOf(menuItemIDs[index]) == buttonName){
+                    break;
+                }
+            }
+
+            float price = prices[index];
             String nameAndPrice = buttonName + " : $" + price;
             // Add to selectedMenuIDs
-            int ID = menuItemIDs.get(index);
+            int ID = menuItemIDs[index];
             Employee.selectedMenuIDs.add(ID);
 
             // Create a button & add it to current order panel to represent the item selected
@@ -93,20 +87,12 @@ public class Salads extends JPanel {
     }
 
     private void addMenuItems() {//300
-        this.menuItemIDs = new ArrayList<>();
-        this.names = new ArrayList<>();
-        this.prices = new ArrayList<>();
 
         this.employeeCmds = new employeeCmds();
-        sqlObjects.Menu menu = employeeCmds.getMenu();
-        for (int i = 0; i < menu.menuItemIDs.length; i++) {
-            if((menu.menuItemIDs[i] >= 300) && (menu.menuItemIDs[i] < 399)) {
-                this.menuItemIDs.add(menu.menuItemIDs[i]);
-                this.names.add(menu.names[i]);
-                this.prices.add(menu.prices[i]);
-                this.numberOfItems++;
-            }
-        }
+        sqlObjects.Menu menu = employeeCmds.getMenu(300,399);
+        this.menuItemIDs = menu.menuItemIDs;
+        this.names = menu.names;
+        this.prices = menu.prices;
     }
 }
 
