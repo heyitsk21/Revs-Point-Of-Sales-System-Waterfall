@@ -11,14 +11,21 @@ public class Burgers extends JPanel {
     int[] menuItemIDs; 
     String[] names;
     float[] prices;
+    String menuSectionName;
+    int lowerBound;
+    int upperBound;
 
-    public Burgers() {
+    public Burgers(String menuSectionName, int lowerBound, int upperBound) {
+        this.menuSectionName = menuSectionName;
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+        
         addMenuItems();
 
         setLayout(new BorderLayout());
         // Add components for editing orders
         // Example: JLabels, JTextFields, JButtons, etc.
-        JLabel label = new JLabel("Burgers");
+        JLabel label = new JLabel(menuSectionName);
         add(label, BorderLayout.NORTH);
         JPanel menuItems = new JPanel();
         add(menuItems, BorderLayout.CENTER);
@@ -89,7 +96,7 @@ public class Burgers extends JPanel {
     }
 
     private void addMenuItems() {
-        sqlObjects.Menu menu = Employee.empCmds.getMenu(100,199);
+        sqlObjects.Menu menu = Employee.empCmds.getMenu(lowerBound,upperBound);
         this.menuItemIDs = menu.menuItemIDs;
         this.names = menu.names;
         this.prices = menu.prices;

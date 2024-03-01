@@ -45,13 +45,13 @@ public class Employee extends JFrame {
         cardLayout = new CardLayout();
         menuPanel = new JPanel(cardLayout);
         menuPanel.setBorder(new EtchedBorder());
-        menuPanel.add(new ValMeals(), "ValMeals");
-        menuPanel.add(new Burgers(), "Burgers");
-        menuPanel.add(new Sandwiches(), "Sandwiches");
-        menuPanel.add(new DrinksAndFries(), "DrinksAndFries");
-        menuPanel.add(new Salads(), "Salads");
-        menuPanel.add(new IceCream(), "IceCream");
-        menuPanel.add(new LimitedTime(), "LimitedTime");
+        menuPanel.add(new Burgers("ValMeals", 600, 699), "ValMeals");
+        menuPanel.add(new Burgers("Burgers", 100, 199), "Burgers");
+        menuPanel.add(new Burgers("Sandwiches", 200, 299), "Sandwiches");
+        menuPanel.add(new Burgers("DrinksAndFries", 500, 599), "DrinksAndFries");
+        menuPanel.add(new Burgers("Salads", 300, 399), "Salads");
+        menuPanel.add(new Burgers("IceCream", 400, 499), "IceCream");
+        menuPanel.add(new Burgers("LimitedTime", 700, 799), "LimitedTime");
 
         // MENU CATEGORIES
 
