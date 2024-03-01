@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 
 public class employeeCmds {
@@ -113,7 +114,6 @@ public class employeeCmds {
                 ingredientPrep.setInt(1, selectedMenuID);
                 ResultSet ingredientResult = ingredientPrep.executeQuery();
     
-    
                 // LOOP THROUGH EACH INGREIDENT
                 while (ingredientResult.next()) {
                     int ingredientID = ingredientResult.getInt("IngredientID");
@@ -128,28 +128,33 @@ public class employeeCmds {
                         return false;
                     }
     
-                    // UPDATE COUNT OF INGREDIENT (ONLY SUBTRACTING 1 FOR NOW)
-                    int newCount = availableCount - 1;
-                    String updateQuery = "UPDATE Ingredients SET Count = ? WHERE IngredientID = ?";
-                    PreparedStatement updatePrep = db.con.prepareStatement(updateQuery);
-                    updatePrep.setInt(1, newCount);
-                    updatePrep.setInt(2, ingredientID);
-                    updatePrep.executeUpdate();
-    
-                    // GENERATE INVENTORY LOG PER INGREDIENT
-                    String logMessage = "Order placed: " + selectedMenuID;
-                    String logQuery = "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (?, ?, ?, NOW())";
-                    PreparedStatement logPrep = db.con.prepareStatement(logQuery);
-                    logPrep.setInt(1, ingredientID);
-                    logPrep.setInt(2, -requiredCount); // Negative value indicates deduction
-                    logPrep.setString(3, logMessage);
-                    logPrep.executeUpdate();
-
                     //increment by one in hashmap
                     ingredientToCountInOrder.put(ingredientID,ingredientToCountInOrder.getOrDefault(ingredientID,0) + 1);
                 }
     
             }
+
+            for (Map.Entry<Integer, Integer> set :ingredientToCountInOrder.entrySet()){
+                Integer ingredientID = set.getKey();
+                Integer count = set.getValue();
+
+                String updateQuery = "UPDATE Ingredients SET Count = Count - ? WHERE IngredientID = ?";
+                PreparedStatement updatePrep = db.con.prepareStatement(updateQuery);
+                updatePrep.setInt(1, count);
+                updatePrep.setInt(2, ingredientID);
+                updatePrep.executeUpdate();
+
+                String logMessage = "Order placed: " + newOrderID;
+                String logQuery = "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (?, ?, ?, NOW())";
+                PreparedStatement logPrep = db.con.prepareStatement(logQuery);
+                logPrep.setInt(1, ingredientID);
+                logPrep.setInt(2, -count); // Negative value indicates deduction
+                logPrep.setString(3, logMessage);
+                logPrep.executeUpdate();
+            }
+
+
+
             // INSERT ORDER INTO TABLE
             String orderQuery = "INSERT INTO Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) VALUES (?, ?, ?, ?, NOW(), ?)";
             PreparedStatement orderPrep = db.con.prepareStatement(orderQuery);
