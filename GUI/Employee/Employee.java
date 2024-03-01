@@ -45,13 +45,13 @@ public class Employee extends JFrame {
         cardLayout = new CardLayout();
         menuPanel = new JPanel(cardLayout);
         menuPanel.setBorder(new EtchedBorder());
-        menuPanel.add(new Burgers("ValMeals", 600, 699), "ValMeals");
-        menuPanel.add(new Burgers("Burgers", 100, 199), "Burgers");
-        menuPanel.add(new Burgers("Sandwiches", 200, 299), "Sandwiches");
-        menuPanel.add(new Burgers("DrinksAndFries", 500, 599), "DrinksAndFries");
-        menuPanel.add(new Burgers("Salads", 300, 399), "Salads");
-        menuPanel.add(new Burgers("IceCream", 400, 499), "IceCream");
-        menuPanel.add(new Burgers("LimitedTime", 700, 799), "LimitedTime");
+        menuPanel.add(new MenuSection("ValMeals", 600, 699), "ValMeals");
+        menuPanel.add(new MenuSection("Burgers", 100, 199), "Burgers");
+        menuPanel.add(new MenuSection("Sandwiches", 200, 299), "Sandwiches");
+        menuPanel.add(new MenuSection("DrinksAndFries", 500, 599), "DrinksAndFries");
+        menuPanel.add(new MenuSection("Salads", 300, 399), "Salads");
+        menuPanel.add(new MenuSection("IceCream", 400, 499), "IceCream");
+        menuPanel.add(new MenuSection("LimitedTime", 700, 799), "LimitedTime");
 
         // MENU CATEGORIES
 
@@ -62,13 +62,13 @@ public class Employee extends JFrame {
         categoriesPanel.setLayout(new GridLayout(1, 0));
         submitAndDeletePanel.setMaximumSize(new Dimension(100, 80));
         // Create menu category buttons, also adds them to the panel
-        JButton valMealBtn = createMenuCatButton("ValMeals", categoriesPanel);
-        JButton burgerBtn = createMenuCatButton("Burgers", categoriesPanel);
-        JButton sandwichBtn = createMenuCatButton("Sandwiches", categoriesPanel);
-        JButton basketBtn = createMenuCatButton("DrinksAndFries", categoriesPanel);
-        JButton sideBtn = createMenuCatButton("Salads", categoriesPanel);
-        JButton drinkBtn = createMenuCatButton("IceCream", categoriesPanel);
-        JButton limitedBtn = createMenuCatButton("LimitedTime", categoriesPanel);
+        createMenuCatButton("ValMeals", categoriesPanel);
+        createMenuCatButton("Burgers", categoriesPanel);
+        createMenuCatButton("Sandwiches", categoriesPanel);
+        createMenuCatButton("DrinksAndFries", categoriesPanel);
+        createMenuCatButton("Salads", categoriesPanel);
+        createMenuCatButton("IceCream", categoriesPanel);
+        createMenuCatButton("LimitedTime", categoriesPanel);
         // Add the categoriesPanel to the bottom of the frame
         frame.add(categoriesPanel, BorderLayout.SOUTH);
 
@@ -83,8 +83,8 @@ public class Employee extends JFrame {
         submitAndDeletePanel.setBorder(new EtchedBorder());
         submitAndDeletePanel.setLayout(new GridLayout(0, 2));
         // Create and add the delete and submit buttons to the orderPanel
-        JButton deleteBtn = createDeleteButton("DELETE", submitAndDeletePanel);
-        JButton submitBtn = createSubmitButton("Submit", submitAndDeletePanel);
+        createDeleteButton("DELETE", submitAndDeletePanel);
+        createSubmitButton("Submit", submitAndDeletePanel);
         // Add the orderPanel to the right of the frame
         frame.add(orderPanel, BorderLayout.EAST);
         // Add innerOrderPanel, submitAndDelete, and pricePanel to orderPanel
@@ -193,8 +193,4 @@ public class Employee extends JFrame {
         pricePanel.repaint();
     }
     
-
-    public static void main(String[] args) {
-        Employee employee = new Employee();
-    }
 }

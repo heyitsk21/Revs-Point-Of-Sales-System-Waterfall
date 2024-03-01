@@ -6,9 +6,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.AttributeSet;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class EmployeeSubmit extends JPanel {
     private JTextField nameField;
     private JTextField IDField;
@@ -79,19 +76,15 @@ public class EmployeeSubmit extends JPanel {
                     JOptionPane.showMessageDialog(employeeSubmit, "Please enter a name and employee ID for the order.", "Error", JOptionPane.ERROR_MESSAGE);
                 } 
                 else {
-                    employeeCmds commands = new employeeCmds();
                     int employeeID = Integer.parseInt(IDField.getText());
-                    System.out.println(employeeID);
                     long startTime = System.nanoTime();
-                    boolean success = commands.submitOrder(Employee.selectedMenuIDs, nameField.getText(), employeeID);
+                    boolean success = Employee.empCmds.submitOrder(Employee.selectedMenuIDs, nameField.getText(), employeeID);
                     long endTime = System.nanoTime();
                     System.out.println("Order submitting took: " + (endTime - startTime));
-                    if(success) {
-                        System.out.println("Order submitted with name: " + nameField.getText());
-                    }
-                    else {
+                    if(!success) {
                         JOptionPane.showMessageDialog(employeeSubmit, "There was an error processing the order, please contact a manager", "Error", JOptionPane.ERROR_MESSAGE);
                     }
+        
                     // Clear out selectedMenuIDs
                     Employee.selectedMenuIDs.clear();
                     // Close the frame
@@ -103,7 +96,7 @@ public class EmployeeSubmit extends JPanel {
                 }
             } else if (buttonName.equals("Back")) {
                     // Handle back action
-                    System.out.println("Back clicked");
+        
                     // Close the frame
                     SwingUtilities.getWindowAncestor(EmployeeSubmit.this).dispose();
             }
