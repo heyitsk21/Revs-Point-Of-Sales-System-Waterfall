@@ -286,7 +286,6 @@ public class managerCmds {
         return true;
     }
 
-
     public boolean deleteMenuItem(int menuItemID){
         String deleteCmd = String.format("DELETE FROM menuitemIngredients WHERE MenuID= %d;", menuItemID);
         db.executeSQL(deleteCmd);
@@ -343,6 +342,46 @@ public class managerCmds {
         return true;
     }
 
+    public sqlObjects.Inventory RestockReport(){
+        try {
+            int size = 0;
+            PreparedStatement prep;
+            ResultSet allIngredients;
+
+            String cmd = "SELECT * FROM Ingredients WHERE COUNT < MINAMOUNT ORDER BY IngredientID;";
+            prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            allIngredients = prep.executeQuery();
+
+            allIngredients.last();
+            size = allIngredients.getRow();
+
+            int[] ingredientIDs = new int[size];
+            String[] ingredientNames = new String[size];
+            float[] ppu = new float[size];
+            int[] count = new int[size];
+            int[] minamount = new int[size];
+
+            allIngredients.first();
+            int counter = 0;
+
+            do {
+                ingredientIDs[counter] = allIngredients.getInt("IngredientID");
+                ingredientNames[counter] = allIngredients.getString("IngredientName");
+                ppu[counter] = allIngredients.getFloat("ppu");
+                count[counter] = allIngredients.getInt("count");
+                minamount[counter] = allIngredients.getInt("minamount");
+                counter++;
+            }while (allIngredients.next()) ;
+            sqlObjects.Inventory inventoryObj = new sqlObjects.Inventory(ingredientIDs, ingredientNames, ppu, count,
+                    minamount);
+            return inventoryObj;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return null;
+
+
+    }
 }
 
 
