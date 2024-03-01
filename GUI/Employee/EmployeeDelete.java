@@ -2,8 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class EmployeeDelete extends JPanel {
     private JButton deleteButton;
@@ -34,7 +32,7 @@ public class EmployeeDelete extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Handle delete action
-                System.out.println("Delete clicked");
+     
                 // Clear selected items
                 for (int i = 0; i < Employee.toBeDeleted.size(); i++) {
                     //find the index of the element from toBeDeleted in selectedMenuIDs
@@ -42,12 +40,12 @@ public class EmployeeDelete extends JPanel {
                     int index = Employee.selectedMenuIDs.indexOf(Employee.toBeDeleted.get(i));
                     if (index != -1) {
                         Employee.innerOrderPanel.remove(index);
-                        System.out.println("Deleting: " + Employee.toBeDeleted.get(i));
+            
                         Employee.selectedMenuIDs.remove(index);
                     }
                 }
                 Employee.toBeDeleted.clear();
-                System.out.println(Employee.selectedMenuIDs);
+
                 Employee.update();
             }
         });
@@ -56,7 +54,6 @@ public class EmployeeDelete extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Handle back action
-                System.out.println("Back clicked");
                 // Close the frame
                 SwingUtilities.getWindowAncestor(EmployeeDelete.this).dispose();
             }
