@@ -11,6 +11,7 @@ public class Employee extends JFrame {
     public static JPanel innerOrderPanel;
     public static JPanel pricePanel;
     public static Float currentPrice;
+    public static employeeCmds empCmds;
 
     private JPanel menuPanel;
     private CardLayout cardLayout;
@@ -19,11 +20,14 @@ public class Employee extends JFrame {
     //private List<Integer> toBeDeleted;
     //private List<Integer> selectedMenuIDs; // list to keep track of selected menu items
 
+
+
     public Employee() {
         createAndShowGUI();
         selectedMenuIDs = new ArrayList<>();
         toBeDeleted = new ArrayList<>();
         currentPrice = 0.0f;
+        empCmds = new employeeCmds();
     }
 
     private void createAndShowGUI() {
@@ -179,9 +183,8 @@ public class Employee extends JFrame {
 
     public static void update() {
         //change total price
-        employeeCmds emp = new employeeCmds();
         pricePanel.removeAll();
-        currentPrice = emp.getOrderPrice(selectedMenuIDs);
+        currentPrice = empCmds.getOrderPrice(selectedMenuIDs);
         String truncatedPrice = String.format("%.2f", currentPrice);
         JLabel totalPrice = new JLabel("Total Price: $" + truncatedPrice);
         pricePanel.add(totalPrice);

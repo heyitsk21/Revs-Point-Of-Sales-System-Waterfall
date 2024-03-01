@@ -13,8 +13,6 @@ public class Burgers extends JPanel {
     String[] names;
     float[] prices;
 
-    employeeCmds employeeCmds;
-
     public Burgers() {
         addMenuItems();
 
@@ -93,8 +91,7 @@ public class Burgers extends JPanel {
 
     private void addMenuItems() {
 
-        this.employeeCmds = new employeeCmds();
-        sqlObjects.Menu menu = employeeCmds.getMenu(100,199);
+        sqlObjects.Menu menu = Employee.empCmds.getMenu(100,199);
         this.menuItemIDs = menu.menuItemIDs;
         this.names = menu.names;
         this.prices = menu.prices;
