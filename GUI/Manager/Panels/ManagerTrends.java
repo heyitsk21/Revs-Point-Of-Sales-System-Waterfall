@@ -1,21 +1,56 @@
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ManagerTrends extends JPanel {
+    private JTextField startDateField;
+    private JTextField endDateField;
+
     public ManagerTrends() {
-        JLabel placeholderLabel = new JLabel("This is Manager Trends");
-        placeholderLabel.setHorizontalAlignment(JLabel.CENTER);
-        placeholderLabel.setVerticalAlignment(JLabel.CENTER);
+        // Create text fields for start date and end date
+        startDateField = new JTextField(10);
+        endDateField = new JTextField(10);
 
-        // Set some styles for better visibility
-        placeholderLabel.setForeground(Color.GRAY);
+        // Create button to generate ProdUsage chart
+        JButton generateButton = new JButton("Generate ProdUsage");
+        generateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String startDate = startDateField.getText();
+                String endDate = endDateField.getText();
+                // Validate input and generate ProdUsage chart
+                if (isValidDate(startDate) && isValidDate(endDate)) {
+                    generateProdUsage(startDate, endDate);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please enter valid dates (YYYY-MM-DD).");
+                }
+            }
+        });
 
-        // Add the placeholder label to the panel
-        add(placeholderLabel, BorderLayout.CENTER);
+        // Add components to the panel
+        setLayout(new FlowLayout());
+        add(new JLabel("Start Date:"));
+        add(startDateField);
+        add(new JLabel("End Date:"));
+        add(endDateField);
+        add(generateButton);
+    }
 
-        //managerCmds manCmds = new managerCmds();
-        //manCmds.addIngredient(64, "Alaskan Fresh Caught Salmon", 500, 20.0f, 200);
-        //^^^ tested and working ^^^
+    private boolean isValidDate(String date) {
+        // You can add your own validation logic here
+        // For simplicity, we just check if the date matches the format YYYY-MM-DD
+        return date.matches("\\d{4}-\\d{2}-\\d{2}");
+    }
+
+    private void generateProdUsage(String startDate, String endDate) {
+        // Create an instance of ProdUsage with appropriate parameters
+        Database database = new Database(); // You may need to adjust this depending on your Database class constructor
+        ProdUsage prodUsage = new ProdUsage(database, startDate, endDate);
+
+        // Display ProdUsage in its own window
+        prodUsage.setLocationRelativeTo(null);
+        prodUsage.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        prodUsage.setVisible(true);
     }
 }
