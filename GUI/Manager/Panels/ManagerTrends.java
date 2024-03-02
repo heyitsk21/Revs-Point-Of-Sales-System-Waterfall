@@ -13,8 +13,8 @@ public class ManagerTrends extends JPanel {
         endDateField = new JTextField(10);
 
         // Create button to generate ProdUsage chart
-        JButton generateButton = new JButton("Generate ProdUsage");
-        generateButton.addActionListener(new ActionListener() {
+        JButton prodUsageButton = new JButton("Generate ProdUsage");
+        prodUsageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String startDate = startDateField.getText();
@@ -28,13 +28,30 @@ public class ManagerTrends extends JPanel {
             }
         });
 
+        // Create button to generate Sales Report
+        JButton salesReportButton = new JButton("Generate Sales Report");
+        salesReportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String startDate = startDateField.getText();
+                String endDate = endDateField.getText();
+                // Validate input and generate Sales Report
+                if (isValidDate(startDate) && isValidDate(endDate)) {
+                    generateSalesReport(startDate, endDate);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please enter valid dates (YYYY-MM-DD).");
+                }
+            }
+        });
+
         // Add components to the panel
         setLayout(new FlowLayout());
         add(new JLabel("Start Date:"));
         add(startDateField);
         add(new JLabel("End Date:"));
         add(endDateField);
-        add(generateButton);
+        add(prodUsageButton);
+        add(salesReportButton);
     }
 
     private boolean isValidDate(String date) {
@@ -52,5 +69,16 @@ public class ManagerTrends extends JPanel {
         prodUsage.setLocationRelativeTo(null);
         prodUsage.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         prodUsage.setVisible(true);
+    }
+    
+    private void generateSalesReport(String startDate, String endDate) {
+        // Create an instance of SalesReport with appropriate parameters
+        Database database = new Database(); // You may need to adjust this depending on your Database class constructor
+        SalesReport salesReport = new SalesReport(database, startDate, endDate);
+
+        // Display SalesReport in its own window
+        salesReport.setLocationRelativeTo(null);
+        salesReport.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        salesReport.setVisible(true);
     }
 }
