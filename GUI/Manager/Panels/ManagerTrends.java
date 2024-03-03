@@ -43,6 +43,30 @@ public class ManagerTrends extends JPanel {
                 }
             }
         });
+        
+        // Create button to generate Excess Report
+        JButton excessReportButton = new JButton("Generate Excess Report");
+        excessReportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String startDate = startDateField.getText();
+                // Validate input and generate Excess Report
+                if (isValidDate(startDate)) {
+                    generateExcessReport(startDate);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid start date (YYYY-MM-DD).");
+                }
+            }
+        });
+        
+        // Create button to generate Restock Report
+        JButton restockReportButton = new JButton("Generate Restock Report");
+        restockReportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                generateRestockReport();
+            }
+        });
 
         // Add components to the panel
         setLayout(new FlowLayout());
@@ -52,6 +76,8 @@ public class ManagerTrends extends JPanel {
         add(endDateField);
         add(prodUsageButton);
         add(salesReportButton);
+        add(excessReportButton);
+        add(restockReportButton); // Add the Restock Report button
     }
 
     private boolean isValidDate(String date) {
@@ -80,5 +106,27 @@ public class ManagerTrends extends JPanel {
         salesReport.setLocationRelativeTo(null);
         salesReport.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         salesReport.setVisible(true);
+    }
+    
+    private void generateExcessReport(String startDate) {
+        // Create an instance of ExcessReport with appropriate parameters
+        Database database = new Database(); // You may need to adjust this depending on your Database class constructor
+        ExcessReport excessReport = new ExcessReport(database, startDate);
+
+        // Display ExcessReport in its own window
+        excessReport.setLocationRelativeTo(null);
+        excessReport.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        excessReport.setVisible(true);
+    }
+    
+    private void generateRestockReport() {
+        // Create an instance of RestockReport with appropriate parameters
+        Database database = new Database(); // You may need to adjust this depending on your Database class constructor
+        RestockReport restockReport = new RestockReport(database);
+
+        // Display RestockReport in its own window
+        restockReport.setLocationRelativeTo(null);
+        restockReport.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        restockReport.setVisible(true);
     }
 }
