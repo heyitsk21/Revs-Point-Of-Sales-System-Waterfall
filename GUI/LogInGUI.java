@@ -90,6 +90,7 @@ public class LogInGUI extends JFrame implements ActionListener {
             setVisible(false);
             //JOptionPane.showMessageDialog(this, "Switch to Manager Screen");
             // change to ManagerGUI.java
+
         } else if (authenticate(username, password, false)) {
             // TODO: When Employee Screen java is created, switch to that screen instead of
             // this message
