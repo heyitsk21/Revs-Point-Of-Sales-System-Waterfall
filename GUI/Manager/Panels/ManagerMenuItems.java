@@ -36,7 +36,6 @@ public class ManagerMenuItems extends JPanel {
     //TODO: right now the ingredients is a textbox and it needs to be changed into a table
 
     public ManagerMenuItems() {
-        setLayout(new GridBagLayout());
         manCmds = new managerCmds();
         setLayout(new GridLayout(1, 2));
 
@@ -102,13 +101,6 @@ public class ManagerMenuItems extends JPanel {
         buttonPanel.add(deleteButton);
         leftPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        //Make the left panel fill up 75% of the horizontal space
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 0.7;
-        gbc.weighty = 1.0;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
         add(leftPanel);
 
         //action listeners are defined in classes at the bottom of the file

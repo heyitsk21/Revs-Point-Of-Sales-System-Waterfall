@@ -3,188 +3,226 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 
 public class ManagerInventory extends JPanel {
-    // Inventory myInventory = managerCmds.getInventory();
-    int numberOfItems; // = myInventory.length();
+    // Inventory myInventory = managerCmds.getInventory()
     int[] ingredientIDs; // = myInventory.ingredientIDs;
     String[] names;
     int[] count;
     int [] minamount;
     float[] ppu;
+    int inventorySize;
     int currIngredientIndex = 0;
 
-    JPanel rightPanel = new JPanel();
-    JPanel leftPanel = new JPanel();
-
     managerCmds manCmds;
+    Object[][] inventory;
+    sqlObjects.Inventory myInventory;
 
     public ManagerInventory() {
         this.manCmds = new managerCmds();
-        sqlObjects.Inventory inventory = manCmds.getInventory();
-        this.ingredientIDs = inventory.ingredientIDs;
-        this.names = inventory.names;
-        this.ppu = inventory.ppu;
-        this.count = inventory.count;
-        this.minamount = inventory.minamount;
-        this.numberOfItems = ingredientIDs.length;
-        setLayout(new GridBagLayout());
+        formatInventory();
+        setLayout(new GridLayout(1, 2));
         createLeft();
         createRight();
     }
 
-    private void RefreshGUI(){
-        sqlObjects.Inventory inventory = manCmds.getInventory();
-        this.ingredientIDs = inventory.ingredientIDs;
-        this.names = inventory.names;
-        this.ppu = inventory.ppu;
-        this.count = inventory.count;
-        this.minamount = inventory.minamount;
-        this.numberOfItems = ingredientIDs.length;
-        updateRight();
-        updateLeft();
+    private void formatInventory(){
+        myInventory = manCmds.getInventory();
+        this.ingredientIDs = myInventory.ingredientIDs;
+        this.names = myInventory.names;
+        this.ppu = myInventory.ppu;
+        this.count = myInventory.count;
+        this.minamount = myInventory.minamount;
+        inventorySize = myInventory.ingredientIDs.length;
+        inventory = new Object[inventorySize][3];
+        for (int i = 0; i < inventorySize; i++){
+            inventory[i][0] = myInventory.names[i];
+            inventory[i][1] = myInventory.ppu[i];
+            inventory[i][2] = myInventory.count[i];
+        }
     }
 
-    JScrollPane scrollPane;
+    private void RefreshGUI(){
+        formatInventory();
+        updateLeft();
+        updateRight();
+    }
+
+    JPanel leftPanel;
+    JPanel buttonPanel;
     Font buttonFont = new Font("Arial", Font.PLAIN, 17);
+    private JTable inventoryTable;
+    private DefaultTableModel inventoryTableModel;
+    JButton createButton, deleteButton;
+    String[] columns;
 
     void createLeft() {
-        leftPanel.setLayout(new GridLayout(numberOfItems, 1)); // Vertical layout
-        leftPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        scrollPane = new JScrollPane(leftPanel); // Instantiate scrollPane
+        leftPanel = new JPanel(new BorderLayout());
+        buttonPanel = new JPanel();
+        columns = new String[]{"Ingredient Name", "Price Per Unit", "Count"};
 
-        for (int i = 0; i < numberOfItems; i++) {
-            JButton button = new JButton(names[i] + ", Count: " + count[i]);
-            button.addActionListener(new ButtonClickListener(String.valueOf(i)));
-            button.setFont(buttonFont);
-            leftPanel.add(button);
-        }
+        inventoryTableModel = new DefaultTableModel(inventory, columns) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        inventoryTable = new JTable(inventoryTableModel);
+        inventoryTable.setRowHeight(50);
+        inventoryTable.setFont(new Font("Arial", Font.PLAIN, 15));
+        leftPanel.add(new JScrollPane(inventoryTable), BorderLayout.CENTER);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH; // Fill both horizontally and vertically
-        gbc.weightx = 0.75; // 75% of the horizontal space for the left component
-        gbc.weighty = 1.0;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(scrollPane, gbc); // Add scrollPane to the frame
+        createButton = new JButton("Create");
+        deleteButton = new JButton("Delete");
+        createButton.addActionListener(e -> {
+            System.out.println("New Item will be made!!");
+            int newID = 700;
+
+            boolean isTaken;
+            do {
+                isTaken = false;
+                for (int i = 0; i < ingredientIDs.length; ++i) {
+                    if (newID == ingredientIDs[i]) {
+                        isTaken = true;
+                        newID++;
+                        break;
+                    }
+                }
+            } while (isTaken);
+            manCmds.addIngredient(newID, "Unnamed Item", 0, 0.0f, 0);
+            RefreshGUI();
+        });
+        deleteButton.addActionListener(e -> {
+            System.out.println("Item killed:(");
+            if (currIngredientIndex >= 0 && currIngredientIndex < inventorySize) {
+                int toDeleteID = ingredientIDs[currIngredientIndex];
+                //manCmds.deleteIng(toDeleteID);
+            }
+            RefreshGUI();
+        });
+        createButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        deleteButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        buttonPanel.add(createButton);
+        buttonPanel.add(deleteButton);
+        leftPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(leftPanel); // Add scrollPane to the frame
+
+        ListSelectionModel selectionModel = inventoryTable.getSelectionModel();
+        selectionModel.addListSelectionListener(e -> rowClicked(e));
+    }
+    void updateLeft() {
+        inventoryTableModel.setDataVector(inventory, columns);
+        inventoryTableModel.setRowCount(ingredientIDs.length);
     }
 
+    JPanel rightPanel = new JPanel();
     JLabel nameLabel = new JLabel();
+    JTextField nameInput = new JTextField(10);
     JLabel countLabel = new JLabel();
+    JTextField countInput = new JTextField(10);
     JLabel ppuLabel = new JLabel();
+    JTextField ppuInput = new JTextField(10);
     JLabel minAmntLabel = new JLabel();
-    JLabel headerLabel = new JLabel("Enter ingriedent change:");
-    JTextField userInputField = new JTextField(10);
+    JTextField minAmnInput = new JTextField(10);
+    JButton cancelButton = new JButton();
     JButton submitButton = new JButton();
 
     void createRight() {
-        rightPanel.setLayout(new GridLayout(7, 1));
+        rightPanel.setLayout(new GridLayout(5, 2));
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        Font labelFont = new Font("Arial", Font.PLAIN, 25);
+        Font textFieldFont = new Font("Arial", Font.PLAIN, 15);
 
         // Displays the name of the ingredient
-        nameLabel.setText("Name: " + names[currIngredientIndex]);
-        nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        nameLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        nameLabel.setText("Name:");
+        nameLabel.setFont(labelFont);
         rightPanel.add(nameLabel);
+        nameInput.setFont(textFieldFont);
+        rightPanel.add(nameInput);
 
-        // Displays the count of the ingredient remaining
-
-        countLabel.setText("Count: " + String.valueOf(count[currIngredientIndex]));
-        countLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        countLabel.setFont(new Font("Arial", Font.PLAIN, 25));
-        rightPanel.add(countLabel);
-
-        minAmntLabel.setText("MinAmount: " + String.valueOf(minamount[currIngredientIndex]));
-        minAmntLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        minAmntLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        minAmntLabel.setText("Minimum amount:");
+        minAmntLabel.setFont(labelFont);
         rightPanel.add(minAmntLabel);
+        minAmnInput.setFont(textFieldFont);
+        rightPanel.add(minAmnInput);
 
-        ppuLabel.setText("PPU: " + String.valueOf(ppu[currIngredientIndex]));
-        ppuLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        ppuLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        countLabel.setText("Update count:");
+        countLabel.setFont(labelFont);
+        rightPanel.add(countLabel);
+        countInput.setFont(textFieldFont);
+        rightPanel.add(countInput);
+
+        ppuLabel.setText("Price per unit:");
+        ppuLabel.setFont(labelFont);
         rightPanel.add(ppuLabel);
+        ppuInput.setFont(textFieldFont);
+        rightPanel.add(ppuInput);
 
-
-        // Creates a text box where the manager can set the new amount of item remaining
-
-        headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
-
-        limitInputToNumeric(userInputField);
-        userInputField.setHorizontalAlignment(SwingConstants.CENTER);
-        userInputField.setFont(new Font("Arial", Font.PLAIN, 25));
-        userInputField.setText("0");
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(e -> {
+            System.out.println("Cancel buttons");
+        });
+        rightPanel.add(cancelButton);
 
         submitButton.setText("Submit");
-        submitButton.setHorizontalAlignment(SwingConstants.CENTER);
-        submitButton.setFont(new Font("Arial", Font.PLAIN, 25));
-        submitButton.addActionListener(new SubmitButtonListener());
-        rightPanel.add(headerLabel);
-        rightPanel.add(userInputField);
+        submitButton.addActionListener(e -> {
+            System.out.println("Item updated");
+            int deltaCount = Integer.parseInt(countInput.getText()) - count[currIngredientIndex];
+            manCmds.updateIngredient(ingredientIDs[currIngredientIndex], count[currIngredientIndex], nameInput.getText(), Float.parseFloat(ppuInput.getText()), deltaCount, "Updating ingredient");
+            RefreshGUI();
+        });
         rightPanel.add(submitButton);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH; // Fill both horizontally and vertically
-        gbc.weightx = 0.25;
-        gbc.weighty = 1.0;
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        add(rightPanel, gbc);
+        limitInputToNumeric(countInput);
+
+        add(rightPanel);
     }
 
     void updateRight() {
-        nameLabel.setText("Name: " + names[currIngredientIndex]);
-        countLabel.setText("Count: " + String.valueOf(count[currIngredientIndex]));
-        ppuLabel.setText("PPU: " + String.valueOf(ppu[currIngredientIndex]));
-        minAmntLabel.setText("MinAmount: " + String.valueOf(minamount[currIngredientIndex]));
+        //System.out.println("Set fields");
+        if (currIngredientIndex < 0){
+            nameInput.setText("");
+            countInput.setText("");
+            ppuInput.setText("");
+            minAmnInput.setText("");
+        }else{
+            nameInput.setText(names[currIngredientIndex]);
+            countInput.setText(String.valueOf(count[currIngredientIndex]));
+            ppuInput.setText(String.valueOf(ppu[currIngredientIndex]));
+            minAmnInput.setText(String.valueOf(minamount[currIngredientIndex]));
+        }
+        //System.out.println("Right rebuilt");
     }
 
-    void updateLeft() {
-        leftPanel.removeAll();
-        for (int i = 0; i < numberOfItems; i++) {
-            JButton button = new JButton(names[i] + ", Count: " + count[i]);
-            button.addActionListener(new ButtonClickListener(String.valueOf(i)));
-            button.setFont(buttonFont);
-            leftPanel.add(button);
+    public void rowClicked(ListSelectionEvent event) {
+        currIngredientIndex = inventoryTable.getSelectedRow();
+        boolean rowSelected = false;
+        if(currIngredientIndex >=0){
+            rowSelected = true;
         }
-        leftPanel.revalidate();
-        leftPanel.repaint();
-    }
+        //Buttons enabled if a row is selected
+        //setButtonState(rowSelected);
 
-    private class ButtonClickListener implements ActionListener {
-        private String buttonName;
-
-        public ButtonClickListener(String buttonName) {
-            this.buttonName = buttonName;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // Perform actions when the button is clicked
-            currIngredientIndex = Integer.parseInt(buttonName);
+        if (rowSelected) {
+            //Set the text fields with the values from the selected row
             updateRight();
+        } else {
+            //Clear the text fields if no row is selected
+            //System.out.println("Fields clearing");
         }
     }
 
-    private class SubmitButtonListener implements ActionListener {
-        int newAmount = 0;
-
-        public SubmitButtonListener() {
-            newAmount = Integer.parseInt(userInputField.getText());
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // Perform actions when the button is clicked
-            if (userInputField.getText() != "") {
-                newAmount = Integer.parseInt(userInputField.getText());
-            }
-            RefreshGUI();
-            manCmds.updateIngredient(ingredientIDs[currIngredientIndex], count[currIngredientIndex], "", 0.0f, newAmount, "This change was prossesed by my the mangaer yo.");
-            RefreshGUI();
-        }
+    //Enable or disable buttons
+    private void setButtonState(boolean enabled) {
+        createButton.setEnabled(true);
+        deleteButton.setEnabled(enabled);
+        cancelButton.setEnabled(enabled);
+        submitButton.setEnabled(enabled);
     }
 
     private static void limitInputToNumeric(JTextField textField) {
