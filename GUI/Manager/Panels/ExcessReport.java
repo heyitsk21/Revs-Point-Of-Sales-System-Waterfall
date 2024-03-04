@@ -13,7 +13,7 @@ public class ExcessReport extends JFrame {
     private static final String REPORT_TITLE = "Excess Report";
 
     public ExcessReport(Database database, String startDate) {
-        super(REPORT_TITLE);
+        //super(REPORT_TITLE);
         this.database = database;
 
         JScrollPane scrollPane = createReport(startDate);
@@ -103,13 +103,4 @@ public class ExcessReport extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        Database database = new Database();
-        SwingUtilities.invokeLater(() -> {
-            ExcessReport excessReport = new ExcessReport(database, "start_date");
-            excessReport.setLocationRelativeTo(null);
-            excessReport.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            excessReport.setVisible(true);
-        });
-    }
 }
