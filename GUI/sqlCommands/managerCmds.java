@@ -382,6 +382,47 @@ public class managerCmds {
 
 
     }
+    /*
+     * Strings need to be in this format YYYY-MM-DD
+     * Others will throw an SQL Error 
+     */
+    public sqlObjects.OrderingTrendReport OrderingTrendReport(String lowerBound, String upperBound){
+        try {
+            int size = 0;
+            PreparedStatement prep;
+            ResultSet rs;
+            String cmd = "SELECT DISTINCT MID1, MID2, Count (*) AS count FROM (SELECT t1.MenuID AS MID1,t2.MenuID AS MID2, t1.OrderID FROM OrderMenuItems t1 JOIN OrderMenuItems t2 ON t1.OrderID = t2.OrderID AND t1.menuID <  t2.MenuID JOIN Orders ON Orders.OrderID = t1.OrderID WHERE Orders.OrderDateTime BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)) AS doubleJoin  GROUP BY MID1, MID2 ORDER BY count DESC LIMIT 10;";
+            prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            prep.setString(1, lowerBound);
+            prep.setString(2, upperBound);
+            rs = prep.executeQuery();
+
+
+            rs.last();
+            size = rs.getRow();
+
+            int[] menuID2 = new int[size];
+            int[] menuID1 = new int[size];
+            int[] count = new int[size];
+
+            rs.first();
+            int counter = 0;
+
+            do {
+                menuID1[counter] = rs.getInt("mid1");
+                menuID2[counter] = rs.getInt("mid2");
+                count[counter] = rs.getInt("count");
+                counter++;
+            }while (rs.next());
+            sqlObjects.OrderingTrendReport chartObj = new sqlObjects.OrderingTrendReport(menuID1,menuID2,count);
+            return chartObj;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return null;
+
+    }
+
 
     public sqlObjects.ProductUsageChart ProductUsageChart(java.sql.Date lowerBound, java.sql.Date upperBound){
         try {
