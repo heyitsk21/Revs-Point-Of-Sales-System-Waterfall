@@ -87,12 +87,17 @@ public class LogInGUI extends JFrame implements ActionListener {
             // this message
             ManagerGUI manager = new ManagerGUI();
             manager.setVisible(true);
+            setVisible(false);
+            //JOptionPane.showMessageDialog(this, "Switch to Manager Screen");
+            // change to ManagerGUI.java
+
         } else if (authenticate(username, password, false)) {
             // TODO: When Employee Screen java is created, switch to that screen instead of
             // this message
             //JOptionPane.showMessageDialog(this, "Switch to Employee Screen");
             Employee employeeGUI = new Employee();
             employeeGUI.setVisible(true);
+            setVisible(false);
         }
         else {
             JOptionPane.showMessageDialog(this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
