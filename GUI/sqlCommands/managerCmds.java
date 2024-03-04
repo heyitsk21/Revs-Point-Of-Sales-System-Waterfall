@@ -183,7 +183,7 @@ public class managerCmds {
      * }
      */
 
-    public boolean updateIngredient(int ingredientID, int currentCount, String newName, float newPPU, int deltaCount, String logMessage) {
+    public boolean updateIngredient(int ingredientID, int currentCount, String newName, float newPPU, int deltaCount, int newMinimum, String logMessage) {
         if (newName != null && !newName.isEmpty()) {
             String updateNameCmd = "UPDATE Ingredients SET IngredientName = ? WHERE IngredientID = ?;";
             try {
@@ -215,6 +215,11 @@ public class managerCmds {
                     "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
                     ingredientID, deltaCount, logMessage);
             db.executeSQL(insertLogCmd);
+        }
+
+        if (newMinimum != 0){
+            String updatePPUCmd = String.format("UPDATE Ingredients SET minamount = %.2f WHERE IngredientID = %d;", newMinimum, ingredientID);
+            db.executeSQL(updatePPUCmd);
         }
 
         return true; // Update successful
