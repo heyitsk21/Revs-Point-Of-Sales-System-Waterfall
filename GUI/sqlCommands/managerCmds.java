@@ -391,7 +391,7 @@ public class managerCmds {
             int size = 0;
             PreparedStatement prep;
             ResultSet rs;
-            String cmd = "SELECT DISTINCT MID1, MID2, Count (*) AS count FROM (SELECT t1.MenuID AS MID1,t2.MenuID AS MID2, t1.OrderID FROM OrderMenuItems t1 JOIN OrderMenuItems t2 ON t1.OrderID = t2.OrderID AND t1.menuID <  t2.MenuID JOIN Orders ON Orders.OrderID = t1.OrderID WHERE Orders.OrderDateTime BETWEEN '?' AND '?') AS doubleJoin  GROUP BY MID1, MID2 ORDER BY count DESC LIMIT 10;";
+            String cmd = "SELECT DISTINCT MID1, MID2, Count (*) AS count FROM (SELECT t1.MenuID AS MID1,t2.MenuID AS MID2, t1.OrderID FROM OrderMenuItems t1 JOIN OrderMenuItems t2 ON t1.OrderID = t2.OrderID AND t1.menuID <  t2.MenuID JOIN Orders ON Orders.OrderID = t1.OrderID WHERE Orders.OrderDateTime BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)) AS doubleJoin  GROUP BY MID1, MID2 ORDER BY count DESC LIMIT 10;";
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             prep.setString(1, lowerBound);
             prep.setString(2, upperBound);
