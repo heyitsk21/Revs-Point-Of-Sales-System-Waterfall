@@ -3,11 +3,10 @@ public class GUI {
         //Employee emp = new Employee();
         //emp.setVisible(true);
 
-        ManagerGUI manage = new ManagerGUI();
-        manage.setVisible(true);
+        // ManagerGUI manage = new ManagerGUI();
+        // manage.setVisible(true);
 
-        
-        //LogInGUI login = new LogInGUI();
-        //login.setVisible(true);
+        LogInGUI login = new LogInGUI();
+        login.setVisible(true);
     }
 }

@@ -79,7 +79,6 @@ public class ManagerInventory extends JPanel {
         createButton = new JButton("Create");
         deleteButton = new JButton("Delete");
         createButton.addActionListener(e -> {
-            System.out.println("New Item will be made!!");
             int newID = 700;
 
             boolean isTaken;
@@ -97,10 +96,9 @@ public class ManagerInventory extends JPanel {
             RefreshGUI();
         });
         deleteButton.addActionListener(e -> {
-            System.out.println("Item killed:(");
             if (currIngredientIndex >= 0 && currIngredientIndex < inventorySize) {
                 int toDeleteID = ingredientIDs[currIngredientIndex];
-                //manCmds.deleteIng(toDeleteID);
+                manCmds.deleteIngredient(toDeleteID, count[currIngredientIndex]);
             }
             RefreshGUI();
         });
@@ -165,15 +163,14 @@ public class ManagerInventory extends JPanel {
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(e -> {
-            System.out.println("Cancel buttons");
         });
         rightPanel.add(cancelButton);
 
         submitButton.setText("Submit");
         submitButton.addActionListener(e -> {
-            System.out.println("Item updated");
             int deltaCount = Integer.parseInt(countInput.getText()) - count[currIngredientIndex];
-            manCmds.updateIngredient(ingredientIDs[currIngredientIndex], count[currIngredientIndex], nameInput.getText(), Float.parseFloat(ppuInput.getText()), deltaCount, "Updating ingredient");
+            int newMinimum = Integer.parseInt(minAmnInput.getText());
+            manCmds.updateIngredient(ingredientIDs[currIngredientIndex], count[currIngredientIndex], nameInput.getText(), Float.parseFloat(ppuInput.getText()), deltaCount, newMinimum, "Updating ingredient");
             RefreshGUI();
         });
         rightPanel.add(submitButton);
@@ -184,7 +181,6 @@ public class ManagerInventory extends JPanel {
     }
 
     void updateRight() {
-        //System.out.println("Set fields");
         if (currIngredientIndex < 0){
             nameInput.setText("");
             countInput.setText("");
@@ -196,7 +192,6 @@ public class ManagerInventory extends JPanel {
             ppuInput.setText(String.valueOf(ppu[currIngredientIndex]));
             minAmnInput.setText(String.valueOf(minamount[currIngredientIndex]));
         }
-        //System.out.println("Right rebuilt");
     }
 
     public void rowClicked(ListSelectionEvent event) {
@@ -213,7 +208,6 @@ public class ManagerInventory extends JPanel {
             updateRight();
         } else {
             //Clear the text fields if no row is selected
-            //System.out.println("Fields clearing");
         }
     }
 

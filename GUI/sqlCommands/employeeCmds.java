@@ -64,7 +64,7 @@ public class employeeCmds {
                 return menuItemResult;
             } else {
                 // No menu item found with the provided ID
-                System.out.println("No menu item found with ID: " + menuItemID);
+            
                 return null;
             }
         } catch (SQLException e) {
@@ -123,7 +123,7 @@ public class employeeCmds {
                     // COMPARE IF INGREDIENTS LESS THAN REQUIRED
                     Integer currCount = ingredientToCountInOrder.getOrDefault(ingredientID,0);
                     if (availableCount - currCount < requiredCount) {
-                        System.out.println("Insufficient ingredients for the order with ingredientID: " + ingredientID + " and menuID: " + selectedMenuID);
+                        
                         db.con.rollback(); // Rollback transaction
                         return false;
                     }

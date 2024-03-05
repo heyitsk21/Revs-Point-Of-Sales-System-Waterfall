@@ -52,10 +52,7 @@ CREATE TABLE InventoryLog (
     IngredientID INT,
     AmountChanged NUMERIC(10, 2), 
     LogMessage TEXT,
-    LogDateTime TIMESTAMP,
-    CONSTRAINT fk_ingredient
-        FOREIGN KEY(IngredientID) 
-        REFERENCES Ingredients(IngredientID)
+    LogDateTime TIMESTAMP
 );
 
 -- Create MenuItemIngredients junction table
