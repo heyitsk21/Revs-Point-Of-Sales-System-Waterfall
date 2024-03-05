@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public class managerCmds {
+public class managerCmds extends Client  {
     /*
      * TODO should include the sequel object or whatever yall use to login here so
      * its shared between all calls
@@ -9,6 +9,7 @@ public class managerCmds {
     Database db;
 
     public managerCmds() {
+        super(false);
         db = new Database();
     }
 

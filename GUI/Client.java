@@ -1,7 +1,12 @@
 import java.io.*;
 import java.net.*;
 
-class Client {
+/**
+ * The `Client` class provides an interface for mutual exclusion across multiple POS order terminals and their communication with the database.
+ * 
+ * @author Team 21 Best Table Winners 
+ */
+public class Client {
     private static final int PORT = 8888;
 
     private Socket socket;
@@ -9,6 +14,11 @@ class Client {
     private BufferedReader in;
     private boolean isActive = false;
 
+    /**
+     * Constructs a new `Client` instance.
+     *
+     * @param isActive Specifies whether the client is active and should establish a connection with the server.
+     */
     Client(boolean isActive){
         this.isActive = isActive;
         if(isActive){
@@ -22,7 +32,12 @@ class Client {
             }
         }
     }
-    public void RequestLock(){
+
+    /**
+     * Sends a request to the server and waits for a lock.
+     * If the lock is denied, the method waits until the lock is available.
+     */
+    public void requestAndWaitForLock(){
         if(isActive){
             try{
                 out.println("REQUEST");
@@ -38,12 +53,20 @@ class Client {
     }
     }
     
-    public void ReleaseLock(){
+    /**
+     * Releases the lock by sending a release signal to the server.
+     */
+    public void releaseLock(){
         if(isActive){
             out.println("RELEASE");
         }
     }
-    public void Quit() {
+
+    /**
+     * Closes the connections and signals the server that the client is quitting.
+     * Must be called before Client is garbage collected.
+     */
+    public void quit() {
         if(isActive){
             try{
                 out.println("QUIT");
