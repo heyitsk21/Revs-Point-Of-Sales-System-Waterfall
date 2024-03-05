@@ -173,7 +173,8 @@ public class ManagerInventory extends JPanel {
         submitButton.addActionListener(e -> {
             System.out.println("Item updated");
             int deltaCount = Integer.parseInt(countInput.getText()) - count[currIngredientIndex];
-            manCmds.updateIngredient(ingredientIDs[currIngredientIndex], count[currIngredientIndex], nameInput.getText(), Float.parseFloat(ppuInput.getText()), deltaCount, "Updating ingredient");
+            int newMinimum = Integer.parseInt(minAmnInput.getText());
+            manCmds.updateIngredient(ingredientIDs[currIngredientIndex], count[currIngredientIndex], nameInput.getText(), Float.parseFloat(ppuInput.getText()), deltaCount, newMinimum, "Updating ingredient");
             RefreshGUI();
         });
         rightPanel.add(submitButton);
