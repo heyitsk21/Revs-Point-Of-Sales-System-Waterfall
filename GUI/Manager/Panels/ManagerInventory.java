@@ -100,7 +100,7 @@ public class ManagerInventory extends JPanel {
             System.out.println("Item killed:(");
             if (currIngredientIndex >= 0 && currIngredientIndex < inventorySize) {
                 int toDeleteID = ingredientIDs[currIngredientIndex];
-                //manCmds.deleteIng(toDeleteID);
+                manCmds.deleteIngredient(toDeleteID, );
             }
             RefreshGUI();
         });
