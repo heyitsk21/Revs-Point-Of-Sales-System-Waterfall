@@ -248,6 +248,39 @@ public class managerCmds {
         return true;
     }
 
+    public boolean deleteIngredient(int ingredientID, int ingredientCount){
+        //create an inventory log entry setting the current ingredient count to 0
+        //delete all entries from the menuitems ingredients junction table with the given ingredient id
+        //delete the ingredient from the ingredient id
+        //return true if successful
+
+        // TEST STRING TO JUST SEE IF ACTUAL OUTPUT MATCHED EXPECTED OUTPUT:
+        // String getIngredientCmd = String.format("SELECT Ingredients.IngredientName, Ingredients.IngredientID 
+        // FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID 
+        // JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID 
+        // WHERE Ingredients.IngredientID = %d", ingredientID);
+
+        String deleteIngredientFromJoinCmd = String.format("DELETE FROM MenuItemIngredients WHERE IngredientID = %d", ingredientID);
+        db.executeSQL(deleteIngredientFromJoinCmd);
+
+        String deleteIngredientCmd = String.format("DELETE FROM Ingredients WHERE IngredientID = %d", ingredientID);
+        db.executeSQL(deleteIngredientCmd);
+        // try {
+        //     PreparedStatement prep = db.con.prepareStatement(deleteIngredientCmd);
+        // } catch (SQLException e) {
+        //     System.err.println(e.getMessage());
+        //     return false;
+        // }
+
+        int negateCount = ingredientCount * -1;
+        String deleteLogCmd = String.format( //TODO: parameterize this!
+            "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
+            ingredientID, ingredientCount, "INGREDIENT COUNT SET TO 0: DELETED INGREDIENT WITH NAME " + ingredientName);
+        db.executeSQL(deleteLogCmd);
+        
+        return true;
+    }
+
     public boolean updateMenuItem(int menuItemID, String newName, float newPrice){
         // boolean shouldUpdateName = (newName != null && !newName.isEmpty());
         // boolean shouldUpdatePrice = (newPrice > 0);
