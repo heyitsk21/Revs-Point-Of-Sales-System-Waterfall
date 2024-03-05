@@ -2,12 +2,34 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.io.FileOutputStream;
 
 class Server {
     private static final int PORT = 8888;
     private static BlockingQueue<Socket> requestQueue = new LinkedBlockingDeque<>();
     private static boolean isLocked = false;
+    
+    synchronized static void outputLogsToFile(String input){
+        FileOutputStream outputFile = null;
+        try {
+            outputFile = new FileOutputStream("serverOutput.txt");
+            
+            int c;
+            while (input != null) {
+                outputFile.write(c);
+            }
+        } catch (IOException e) {
+            System.err.println(e);
+        } 
 
+        try {
+            if (outputFile != null){
+                outputFile.close();
+            }
+        } catch (IOException e) {
+            System.err.println(e);;
+        }
+    }
 
     private static void handleClientRequest(Socket socket) {
         try (
