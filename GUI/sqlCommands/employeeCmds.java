@@ -3,12 +3,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-public class employeeCmds {
+public class employeeCmds extends Client {
 
     Database db;
 
     public employeeCmds() 
     {
+        super(false);
         db = new Database();
     }
 
@@ -47,33 +48,7 @@ public class employeeCmds {
         }
         return null;
     }
-    /* 
-    public ResultSet addMenuItemToOrder(int menuItemID) {
-        try {
-            // Execute query to select menu item details
-            String query = "SELECT MenuID, Name, Price FROM MenuItems WHERE MenuID = ?";
-            PreparedStatement prep = db.con.prepareStatement(query);
-            prep.setInt(1, menuItemID);
-            ResultSet menuItemResult = prep.executeQuery();
 
-            if (menuItemResult.next()) {
-                int menuID = menuItemResult.getInt("MenuID");
-                String name = menuItemResult.getString("Name");
-                float price = menuItemResult.getFloat("Price");
-
-                return menuItemResult;
-            } else {
-                // No menu item found with the provided ID
-            
-                return null;
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            return null;
-        }
-    }
-    */
-// OLD SUBMIT ORDER
     public boolean submitOrder(List<Integer> selectedMenuIDs, String customerName, int employeeID) {
         float totalPrice = 0; 
         try {
