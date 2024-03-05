@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,7 +9,7 @@ import java.util.List;
 public class Employee extends JFrame {
     public static List<Integer> selectedMenuIDs;
     public static List<Integer> toBeDeleted;
-    public static JPanel innerOrderPanel;
+    public static JPanel upperOrderPanel;
     public static JPanel pricePanel;
     public static Float currentPrice;
     public static employeeCmds empCmds;
@@ -37,7 +38,7 @@ public class Employee extends JFrame {
         frame.setLayout(new BorderLayout());
 
         orderPanel = new JPanel();
-        innerOrderPanel = new JPanel();
+        upperOrderPanel = new JPanel();
         submitAndDeletePanel = new JPanel();
         pricePanel = new JPanel();
 
@@ -74,39 +75,46 @@ public class Employee extends JFrame {
 
         // CURRENT ORDER
 
+        // orderPanel <scroller, lowerOrderPanel> BOX LAYOUT
+        // scroller <upperOrderPanel> 
+        // upperOrderPanel <menu items> GRID LAYOUT
+        // lowerOrderPanel <pricePanel, submitAndDeletePanel> BOX LAYOUT
+        // pricePanel <total price label> GRID LAYOUT
+        // submitAndDeletePanel <submit button, delete button> GRID LAYOUT
+
         // Create the panel to show what the order currently consists of
+        JPanel lowerOrderPanel = new JPanel();
+        JScrollPane scroller = new JScrollPane(upperOrderPanel);
+        scroller.setAlignmentX(RIGHT_ALIGNMENT);
+
         orderPanel.setBorder(new EtchedBorder());
-        orderPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        innerOrderPanel.setBorder(new EtchedBorder());
-        innerOrderPanel.setLayout(new GridLayout(0, 1));
+        orderPanel.setLayout(new BorderLayout());
+        //orderPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        orderPanel.add(scroller, BorderLayout.CENTER);
+        orderPanel.add(lowerOrderPanel, BorderLayout.SOUTH);
+
+        upperOrderPanel.setBorder(new EtchedBorder());
+        upperOrderPanel.setLayout(new GridLayout(0, 1));
+
+        lowerOrderPanel.add(pricePanel);
+        lowerOrderPanel.add(submitAndDeletePanel);
+        lowerOrderPanel.setLayout(new BoxLayout(lowerOrderPanel, BoxLayout.Y_AXIS));
+        lowerOrderPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
         submitAndDeletePanel.setBorder(new EtchedBorder());
         submitAndDeletePanel.setLayout(new GridLayout(0, 2));
-        // Create and add the delete and submit buttons to the orderPanel
+        submitAndDeletePanel.setMaximumSize(new Dimension(300, 300));
         createDeleteButton("DELETE", submitAndDeletePanel);
         createSubmitButton("Submit", submitAndDeletePanel);
-        // Add the orderPanel to the right of the frame
-        frame.add(orderPanel, BorderLayout.EAST);
-        // Add innerOrderPanel, submitAndDelete, and pricePanel to orderPanel
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        orderPanel.add(innerOrderPanel, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        orderPanel.add(pricePanel, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        orderPanel.add(submitAndDeletePanel, gbc);
-        //add Total Price Label
+
         JLabel totalPrice = new JLabel("Total Price");
         pricePanel.add(totalPrice);
-        pricePanel.setMaximumSize(new Dimension(300, 30));
+        pricePanel.setLayout(new GridLayout(0, 1));
+        pricePanel.setBorder(new EmptyBorder(0, 0, 10, 0));
 
-        // CARD LAYOUT
-
-        // Add the card layout to the frame
+        // Add to the frame
         frame.add(menuPanel, BorderLayout.CENTER);
+        frame.add(orderPanel, BorderLayout.EAST);
         // Set frame size
         frame.setSize(1280, 720);
         // Center the frame
@@ -144,7 +152,7 @@ public class Employee extends JFrame {
 
     private JButton createSubmitButton(String panelName, JPanel panel) {
         JButton button = new JButton(panelName);
-        button.setMinimumSize(new Dimension(200, 70));
+        button.setMinimumSize(new Dimension(200, 100));
         button.setFont(new Font("Arial", Font.PLAIN, 25));
         panel.add(button);
         button.addActionListener(new ActionListener() {
@@ -164,7 +172,7 @@ public class Employee extends JFrame {
     
     private JButton createDeleteButton(String panelName, JPanel panel) {
         JButton button = new JButton(panelName);
-        button.setMinimumSize(new Dimension(200, 70));
+        button.setMinimumSize(new Dimension(200, 100));
         button.setFont(new Font("Arial", Font.PLAIN, 25));
         panel.add(button);
         button.addActionListener(new ActionListener() {
@@ -189,7 +197,7 @@ public class Employee extends JFrame {
         String truncatedPrice = String.format("%.2f", currentPrice);
         JLabel totalPrice = new JLabel("Total Price: $" + truncatedPrice);
         pricePanel.add(totalPrice);
-        innerOrderPanel.repaint();
+        upperOrderPanel.repaint();
         pricePanel.repaint();
     }
     

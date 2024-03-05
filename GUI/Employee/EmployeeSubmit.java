@@ -89,7 +89,7 @@ public class EmployeeSubmit extends JPanel {
                     // Close the frame
                     SwingUtilities.getWindowAncestor(EmployeeSubmit.this).dispose();
                     //removes buttons and repaints
-                    Employee.innerOrderPanel.removeAll();
+                    Employee.upperOrderPanel.removeAll();
                     // reset price
                     Employee.update();
                 }
