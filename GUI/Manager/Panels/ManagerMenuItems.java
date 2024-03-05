@@ -1,3 +1,17 @@
+/**
+ * ManagerMenuItems class represents a JPanel for the manager to view and edit menu items.
+ * It includes functionalities such as creating new items, deleting existing items, and editing attributes.
+ * The panel consists of two main sections: a table on the left displaying menu items and a panel on the right
+ * for editing and submitting changes.
+ *
+ * Usage:
+ * - Click on a row in the table to enable the buttons.
+ * - After clicking on a row, create new items and delete existing items.
+ * - Edit attributes in the panel on the right-hand side.
+ *
+ * Note: Currently, the ingredients are displayed as a textbox and need to be changed into a table.
+ */
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -13,6 +27,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ManagerMenuItems extends JPanel {
+    // Member variables for UI components
     private JTable menuTable;
     private DefaultTableModel tableModel;
     private JButton createButton, deleteButton, cancelButton, submitButton;
@@ -20,21 +35,18 @@ public class ManagerMenuItems extends JPanel {
     private JTextField nameTextField, priceTextField;
     private JPanel rightPanel, leftPanel, buttonPanel;
 
+    // Other member variables
     managerCmds manCmds;
     int currentItem;
-
     sqlObjects.Menu initialMenu;
     sqlObjects.Inventory myInventory;
     Object[][] menu;
 
-    //How to use this panel:
-    //This panel is for the manager to view and edit the menu items
-    //Click on a row in the table to enable the buttons
-    //After clicking on a row, you can create new items and delete existing items
-    //The attributes can be edited and submitted from the panel on the right hand side
-    //Currently, nothing is being done with the ingredients
-    //TODO: right now the ingredients is a textbox and it needs to be changed into a table
-
+    /**
+     * Constructor for ManagerMenuItems class.
+     * Initializes the UI components and sets up the layout.
+     * Disables buttons until a row is selected.
+     */
     public ManagerMenuItems() {
         manCmds = new managerCmds();
         setLayout(new GridLayout(1, 2));
@@ -47,7 +59,11 @@ public class ManagerMenuItems extends JPanel {
         setButtonState(false);
     }
 
-    //Enable or disable buttons
+    /**
+     * Helper method to enable or disable buttons based on the provided boolean value.
+     *
+     * @param enabled True to enable buttons, false to disable.
+     */
     private void setButtonState(boolean enabled) {
         createButton.setEnabled(true);
         deleteButton.setEnabled(enabled);
@@ -55,9 +71,12 @@ public class ManagerMenuItems extends JPanel {
         submitButton.setEnabled(enabled);
     }
 
-    //menu contains the values from the menuItems table in the database
-    //when this is read from the database, the format doesn't match with what we need to show in the UI
-    //helper method formatMenuItems formats the values into a 2D array
+    /**
+     * Helper method to format menu items retrieved from the database into a 2D array for UI display.
+     *
+     * @param myMenu The Menu object containing menu item details.
+     * @return A 2D array representing menu items for display in the UI.
+     */
     private Object[][] formatMenuItems(sqlObjects.Menu myMenu){
         int size = myMenu.menuItemIDs.length;
         Object[][] menuItems = new Object[size][3];
@@ -70,6 +89,9 @@ public class ManagerMenuItems extends JPanel {
         return menuItems;
     }
 
+    /**
+     * Creates the left panel containing a table displaying menu items and buttons for interaction.
+     */
     private void createLeftPanel() {
         leftPanel = new JPanel(new BorderLayout());
         buttonPanel = new JPanel();
@@ -112,6 +134,9 @@ public class ManagerMenuItems extends JPanel {
 
     JLabel checkedItemsLabel;
 
+    /**
+     * Creates the right panel containing text fields and buttons for editing and submitting changes.
+     */
     private void createRightPanel() {
         rightPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -165,6 +190,11 @@ public class ManagerMenuItems extends JPanel {
     Map<String, Integer> ingredientNametoID = new HashMap<>();
     Map<Integer, String> ingredientIDtoName = new HashMap<>();
 
+    /**
+     * Creates a panel with a dropdown for selecting ingredients.
+     *
+     * @return JPanel containing ingredient selection components.
+     */
     public JPanel createIngredientBox(){
         myInventory = manCmds.getInventory();
         comboBox = new JComboBox<>();
@@ -230,6 +260,9 @@ public class ManagerMenuItems extends JPanel {
         return panel;
     }
 
+    /**
+     * Updates the label displaying checked items based on the current list of selected items.
+     */
     private void updateCheckedItemsLabel() {
         StringBuilder labelText = new StringBuilder("Checked Items: ");
         for (String item : checkedItems) {
@@ -239,6 +272,11 @@ public class ManagerMenuItems extends JPanel {
         checkedItemsLabel.setText(labelText.toString());
     }
 
+    /**
+     * Event listener for row selection in the menu table.
+     *
+     * @param event ListSelectionEvent triggered on row selection.
+     */
     public void rowClicked(ListSelectionEvent event) {
         int selectedRow = menuTable.getSelectedRow();
         boolean rowSelected = false;
@@ -271,6 +309,9 @@ public class ManagerMenuItems extends JPanel {
         }
     }
 
+    /**
+     * Refreshes the GUI by updating the menu items and recreating the UI components.
+     */
     public void refreshGUI(){
         removeAll();
         initialMenu = manCmds.getMenu();
@@ -282,6 +323,10 @@ public class ManagerMenuItems extends JPanel {
         repaint();
     }
 
+    /**
+     * Event listener for the "Create" button.
+     * Adds a new menu item with a unique ID and refreshes the GUI.
+     */
     private class CreateButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -305,7 +350,10 @@ public class ManagerMenuItems extends JPanel {
         }
     }
     
-
+    /**
+     * Event listener for the "Delete" button.
+     * Deletes the selected menu item and refreshes the GUI.
+     */
     private class DeleteButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -320,7 +368,10 @@ public class ManagerMenuItems extends JPanel {
         }
     }
     
-    
+    /**
+     * Event listener for the "Cancel" button.
+     * Clears the text fields and deselects rows in the menu table.
+     */
     private class CancelButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -330,6 +381,10 @@ public class ManagerMenuItems extends JPanel {
         }
     }
 
+    /**
+     * Event listener for the "Submit" button.
+     * Updates the selected menu item with edited attributes and ingredients, then refreshes the GUI.
+     */
     private class SubmitButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -351,7 +406,6 @@ public class ManagerMenuItems extends JPanel {
                 }
             }
             refreshGUI();
-            //TODO sql here
         }
     }
     
