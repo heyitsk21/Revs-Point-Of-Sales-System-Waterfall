@@ -34,7 +34,7 @@ public class LogInGUI extends JFrame implements ActionListener {
 
         // Rev's POS System header
         posMessage = new JLabel("Rev's POS System Login Page");
-        posMessage.setBounds(250, 130, 300, 30);
+        posMessage.setBounds(250, 130, 400, 30);
         posMessage.setFont(new Font("Calibri", Font.BOLD, 25));
 
         // username and password entry fields

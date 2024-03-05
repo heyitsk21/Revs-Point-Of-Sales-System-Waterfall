@@ -2,11 +2,11 @@ import java.io.*;
 import java.net.*;
 
 /**
- * The `Client` class represents a client that communicates with a server over a network using sockets.
+ * The `Client` class provides an interface for mutual exclusion across multiple POS order terminals and their communication with the database.
  * 
  * @author Team 21 Best Table Winners 
  */
-class Client {
+public class Client {
     private static final int PORT = 8888;
 
     private Socket socket;
@@ -36,8 +36,6 @@ class Client {
     /**
      * Sends a request to the server and waits for a lock.
      * If the lock is denied, the method waits until the lock is available.
-     *
-     * @throws IOException if an I/O error occurs during communication with the server.
      */
     public void requestAndWaitForLock(){
         if(isActive){
@@ -67,8 +65,6 @@ class Client {
     /**
      * Closes the connections and signals the server that the client is quitting.
      * Must be called before Client is garbage collected.
-     * 
-     * @throws IOException if an I/O error occurs while closing connections.
      */
     public void quit() {
         if(isActive){
