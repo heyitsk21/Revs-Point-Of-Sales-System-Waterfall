@@ -69,6 +69,21 @@ public class ManagerTrends extends JPanel {
             }
         });
 
+        JButton orderTrend = new JButton("Generate Ordering Trend Report");
+        orderTrend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String startDate = startDateField.getText();
+                String endDate = endDateField.getText();
+                // Validate input and generate Excess Report
+                if (isValidDate(startDate) && isValidDate(endDate)) {
+                    generateOrderTrendReport(startDate, endDate);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please enter valid dates (YYYY-MM-DD).");
+                }
+            }
+        });
+
         // Add components to the panel
         setLayout(new FlowLayout());
         add(new JLabel("Start Date:"));
@@ -79,6 +94,7 @@ public class ManagerTrends extends JPanel {
         add(salesReportButton);
         add(excessReportButton);
         add(restockReportButton); // Add the Restock Report button
+        add(orderTrend);
     }
 
     private boolean isValidDate(String date) {
@@ -129,5 +145,14 @@ public class ManagerTrends extends JPanel {
         restockReport.setLocationRelativeTo(null);
         restockReport.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         restockReport.setVisible(true);
+    }
+
+    private void generateOrderTrendReport(String startDate, String endDate) {
+        // Create an instance of OrderTrend with appropriate parameters
+        OrderTrend orderTrend = new OrderTrend(startDate, endDate);
+
+        orderTrend.setLocationRelativeTo(null);
+        orderTrend.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        orderTrend.setVisible(true);
     }
 }
