@@ -7,6 +7,8 @@ public class GUI {
         // manage.setVisible(true);
 
         
+
+        
         LogInGUI login = new LogInGUI();
         login.setVisible(true);
     }
