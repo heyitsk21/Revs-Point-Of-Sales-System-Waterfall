@@ -12,11 +12,9 @@ class Server {
         FileWriter outputFile = null;
         try {
             // outputFile = new FileOutputStream("serverOutput.txt");
-            outputFile = new FileWriter("filename.txt", true); //append:true means that it will just add onto the existing file, rather than overwrite (hopefully)
+            outputFile = new FileWriter("ServerLog.txt", true); //append:true means that it will just add onto the existing file, rather than overwrite (hopefully)
             // int c;
-            while (input != null) {
-                outputFile.write(input);
-            }
+            outputFile.write(input + "\n");
         } catch (IOException e) {
             System.err.println(e);
         } 
@@ -79,7 +77,6 @@ class Server {
             outputLogsToFile("Server is running on port " + PORT);
             // System.out.println("Server is running on port " + PORT);
             while (true) {
-                outputLogsToFile("Waiting for new client connection");
                 // System.out.println("Waiting for new client connection");
                 Socket clientSocket = s.accept();
                 new Thread(() -> handleClientRequest(clientSocket)).start();   
