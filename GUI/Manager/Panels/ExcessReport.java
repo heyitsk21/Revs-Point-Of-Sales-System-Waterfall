@@ -52,31 +52,32 @@ public class ExcessReport extends JFrame {
     }
 
     private void fetchData(String startDate, List<Integer> ingredientIDs, List<String> ingredientNames, List<Integer> counts) {
-        String query = "SELECT i.ingredientid, i.ingredientname, i.count " +
-            "FROM ingredients i " +
-            "LEFT JOIN (" +
-            "   SELECT ingredientid, SUM(amountchanged) AS total_sold " +
-            "   FROM InventoryLog " +
-            "   WHERE amountchanged < 1 " +
-            "     AND logdatetime BETWEEN CAST(? AS TIMESTAMP) AND NOW() " +
-            "   GROUP BY ingredientid " +
-            ") il ON i.ingredientid = il.ingredientid " +
-            "WHERE (il.total_sold IS NULL OR il.total_sold < 0.1 * i.count)";
-
-
+        String query = "SELECT DISTINCT mi.MenuID, mi.ItemName " +
+                       "FROM ingredients i " +
+                       "JOIN menuitemingredients mii ON i.ingredientid = mii.ingredientid " +
+                       "JOIN menuitems mi ON mii.menuid = mi.menuid " +
+                       "LEFT JOIN ( " +
+                       "    SELECT ingredientid, SUM(amountchanged) AS total_sold " +
+                       "    FROM InventoryLog " +
+                       "    WHERE amountchanged < 1 " +
+                       "      AND logdatetime BETWEEN CAST(? AS TIMESTAMP) AND NOW() " +
+                       "    GROUP BY ingredientid " +
+                       ") il ON i.ingredientid = il.ingredientid " +
+                       "WHERE (il.total_sold IS NULL OR il.total_sold < 0.1 * i.count)";
+    
         try {
             PreparedStatement pstmt = database.con.prepareStatement(query);
             pstmt.setString(1, startDate);
             ResultSet resultSet = pstmt.executeQuery();
-
+    
             while (resultSet.next()) {
-                int ingredientID = resultSet.getInt("ingredientid");
-                String ingredientName = resultSet.getString("ingredientname");
-                int count = resultSet.getInt("count");
-
-                ingredientIDs.add(ingredientID);
-                ingredientNames.add(ingredientName);
-                counts.add(count);
+                int menuID = resultSet.getInt("MenuID");
+                String itemName = resultSet.getString("ItemName");
+    
+                // Add the menu item details to the lists
+                ingredientIDs.add(menuID);
+                ingredientNames.add(itemName);
+                counts.add(0); // Placeholder for count, as it's not relevant in this context
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -98,7 +99,6 @@ public class ExcessReport extends JFrame {
         for (int i = 0; i < ingredientIDs.size(); i++) {
             int ingredientID = ingredientIDs.get(i);
             String ingredientName = ingredientNames.get(i);
-            int count = counts.get(i);
 
             g.drawString(String.valueOf(ingredientID), x, y);
             g.drawString(ingredientName, x + columnWidth, y);

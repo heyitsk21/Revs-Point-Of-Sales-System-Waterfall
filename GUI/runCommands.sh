@@ -5,4 +5,6 @@ javac -cp bin -d bin Employee/*.java
 javac -cp bin -d bin Database.java
 javac -cp bin -d bin LogInGUI.java
 javac -cp bin -d bin GUI.java
+javac -cp bin -d bin Client.java
+javac -cp bin -d bin Server.java
 java -cp "bin:postgresql-42.2.8.jar" GUI
