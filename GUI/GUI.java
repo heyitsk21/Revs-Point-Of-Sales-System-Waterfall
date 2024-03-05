@@ -6,7 +6,6 @@ public class GUI {
         // ManagerGUI manage = new ManagerGUI();
         // manage.setVisible(true);
 
-        
         LogInGUI login = new LogInGUI();
         login.setVisible(true);
     }

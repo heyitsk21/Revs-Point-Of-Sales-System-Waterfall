@@ -87,5 +87,24 @@ public class sqlObjects {
 
     }
 
+    public static class OrderingTrendReport{
+        int[] menuID1;
+        int[] menuID2;
+        int[] count;
+
+        OrderingTrendReport(int[] menuID1, int[] menuID2, int[] count) {
+            this.menuID1 = menuID1;
+            this.menuID2 = menuID2;
+            this.count = count;
+
+        }
+
+        int length() {
+            return count.length;
+        }
+
+    }
+
+
 }
 
