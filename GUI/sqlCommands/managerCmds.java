@@ -218,7 +218,7 @@ public class managerCmds {
         }
 
         if (newMinimum != 0){
-            String updatePPUCmd = String.format("UPDATE Ingredients SET minamount = %.2f WHERE IngredientID = %d;", newMinimum, ingredientID);
+            String updatePPUCmd = String.format("UPDATE Ingredients SET minamount = %d WHERE IngredientID = %d;", newMinimum, ingredientID);
             db.executeSQL(updatePPUCmd);
         }
 
