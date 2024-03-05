@@ -56,6 +56,8 @@ public class LogInGUI extends JFrame implements ActionListener {
         add(passwordField);
         add(loginButton);
         add(posMessage);
+
+        this.getRootPane().setDefaultButton(loginButton);
     }
 
     // function to authenticate the user and check if they are a manager or employee
