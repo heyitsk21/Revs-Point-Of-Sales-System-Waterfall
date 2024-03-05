@@ -420,6 +420,7 @@ public class managerCmds {
 
 
     }
+
     /*
      * Strings need to be in this format YYYY-MM-DD
      * Others will throw an SQL Error 

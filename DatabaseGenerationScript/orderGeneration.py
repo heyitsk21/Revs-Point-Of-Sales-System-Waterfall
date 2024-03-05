@@ -38,6 +38,7 @@ class OrderGenerator:
     
     f1 = None
     f2 = None
+    f3 = None
 
     def CreateOrder(self, date, ID):
         name = random.choice(self.NAMEPOOL)
@@ -90,12 +91,15 @@ class OrderGenerator:
             self.NAMEPOOL = [name.strip() for name in file.readlines()]
         self.f1 = open("Orders.csv","w")
         self.f2 = open("JunctionOrdersMenu.csv","w")
+        self.f3 = open("InventoryLog.csv", "w")
         self.f1.write("OrderID,CustomerName,TaxPrice,BasePrice,OrderDateTime,EmployeeID\n")
         self.f2.write("OrderID,MenuID\n")
+        self.f3.write("LogID, IngredientID, AmountChanged,LogMessage, LogDateTime\n")
 
     def __del__(self):
         self.f1.close()
         self.f2.close()
+        self.f3.close()
 
 
 
@@ -105,7 +109,7 @@ def Main():
     day = date.fromisoformat('2023-02-19')
     delta = timedelta(days = 1)
     ID = 0
-    for i in range(0,365):
+    for i in range(0,368):
         # generate a random number of requests per day
         orderMod = random.randrange(0,100)
         for j in range(0,500 + orderMod):
