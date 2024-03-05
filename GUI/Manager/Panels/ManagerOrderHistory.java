@@ -4,6 +4,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * ManagerOrderHistory class represents a JPanel for managing order history in a restaurant system.
+ * It includes features for displaying order details, such as order IDs, customer names, prices,
+ * and timestamps. Users can click on specific orders to view detailed information on the right panel.
+ */
 public class ManagerOrderHistory extends JPanel {
     String[] orderIDs;
     String[] customerNames;
@@ -19,6 +24,11 @@ public class ManagerOrderHistory extends JPanel {
 
     managerCmds manCmds;
 
+    /**
+     * Constructs a ManagerOrderHistory object.
+     * Initializes the necessary components, retrieves order information from the database,
+     * and sets up the layout with left and right panels.
+     */
     public ManagerOrderHistory() {
         this.manCmds = new managerCmds();
         sqlObjects.OrderList orderList = manCmds.getOrders();
@@ -37,6 +47,9 @@ public class ManagerOrderHistory extends JPanel {
         createRight();
     }
 
+    /**
+     * Refreshes the GUI by updating both the left and right panels.
+     */
     private void RefreshGUI(){
         updateRight();
         updateLeft();
@@ -45,6 +58,10 @@ public class ManagerOrderHistory extends JPanel {
     JScrollPane scrollPane;
     Font buttonFont = new Font("Arial", Font.PLAIN, 17);
 
+    /**
+     * Creates the left panel, which contains a list of buttons representing each order.
+     * Each button displays order information, and clicking on it updates the right panel.
+     */
     void createLeft() {
         leftPanel.setLayout(new GridLayout(numberOfItems, 1)); // Vertical layout
         leftPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -74,6 +91,10 @@ public class ManagerOrderHistory extends JPanel {
     JLabel employeeIDLabel = new JLabel();
     JLabel totalPriceLabel = new JLabel();
 
+    /**
+     * Creates the right panel, which displays detailed information about the selected order.
+     * Information includes order ID, customer name, subtotal, tax, total price, date/time, and employee ID.
+     */
     void createRight() {
         rightPanel.setLayout(new GridLayout(7, 1));
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -125,6 +146,9 @@ public class ManagerOrderHistory extends JPanel {
         add(rightPanel, gbc);
     }
 
+    /**
+     * Updates the right panel with the information of the currently selected order.
+     */
     void updateRight() {
         // Displays the name of the ingredient
         orderIDLabel.setText("ID: " + orderIDs[currOrderIndex]);
@@ -137,10 +161,18 @@ public class ManagerOrderHistory extends JPanel {
         employeeIDLabel.setText("Employee: " + employeeIDs[currOrderIndex]);
     }
 
+    /**
+     * Updates the left panel (not implemented in the current code).
+     * This method is kept empty since the left panel does not dynamically change its content.
+     */
     void updateLeft() {
         return;
     }
 
+    /**
+     * ActionListener implementation for handling button clicks in the left panel.
+     * When a button representing an order is clicked, the corresponding order details are displayed.
+     */
     private class ButtonClickListener implements ActionListener {
         private String buttonName;
 
