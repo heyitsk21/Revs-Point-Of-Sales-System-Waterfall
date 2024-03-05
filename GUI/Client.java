@@ -22,7 +22,7 @@ class Client {
             }
         }
     }
-    public void RequestLock(){
+    public void requestAndWaitForLock(){
         if(isActive){
             try{
                 out.println("REQUEST");
@@ -38,12 +38,12 @@ class Client {
     }
     }
     
-    public void ReleaseLock(){
+    public void releaseLock(){
         if(isActive){
             out.println("RELEASE");
         }
     }
-    public void Quit() {
+    public void quit() {
         if(isActive){
             try{
                 out.println("QUIT");
