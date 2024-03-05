@@ -183,7 +183,7 @@ public class managerCmds {
      * }
      */
 
-    public boolean updateIngredient(int ingredientID, int currentCount, String newName, float newPPU, int deltaCount, String logMessage) {
+    public boolean updateIngredient(int ingredientID, int currentCount, String newName, float newPPU, int deltaCount, int newMinimum, String logMessage) {
         if (newName != null && !newName.isEmpty()) {
             String updateNameCmd = "UPDATE Ingredients SET IngredientName = ? WHERE IngredientID = ?;";
             try {
@@ -217,6 +217,11 @@ public class managerCmds {
             db.executeSQL(insertLogCmd);
         }
 
+        if (newMinimum != 0){
+            String updatePPUCmd = String.format("UPDATE Ingredients SET minamount = %.2f WHERE IngredientID = %d;", newMinimum, ingredientID);
+            db.executeSQL(updatePPUCmd);
+        }
+
         return true; // Update successful
     }
 
@@ -240,6 +245,39 @@ public class managerCmds {
             newID, count, "YOOO I CREATED A NEW INGREDIENT WITH NAME " + ingredientName);
         db.executeSQL(insertLogCmd);
 
+        return true;
+    }
+
+    public boolean deleteIngredient(int ingredientID, int ingredientCount){
+        //create an inventory log entry setting the current ingredient count to 0
+        //delete all entries from the menuitems ingredients junction table with the given ingredient id
+        //delete the ingredient from the ingredient id
+        //return true if successful
+
+        // TEST STRING TO JUST SEE IF ACTUAL OUTPUT MATCHED EXPECTED OUTPUT:
+        // String getIngredientCmd = String.format("SELECT Ingredients.IngredientName, Ingredients.IngredientID 
+        // FROM menuitems JOIN menuitemingredients ON menuitems.MenuID = menuitemingredients.MenuID 
+        // JOIN Ingredients ON menuitemingredients.IngredientID = Ingredients.IngredientID 
+        // WHERE Ingredients.IngredientID = %d", ingredientID);
+
+        String deleteIngredientFromJoinCmd = String.format("DELETE FROM MenuItemIngredients WHERE IngredientID = %d", ingredientID);
+        db.executeSQL(deleteIngredientFromJoinCmd);
+
+        String deleteIngredientCmd = String.format("DELETE FROM Ingredients WHERE IngredientID = %d", ingredientID);
+        db.executeSQL(deleteIngredientCmd);
+        // try {
+        //     PreparedStatement prep = db.con.prepareStatement(deleteIngredientCmd);
+        // } catch (SQLException e) {
+        //     System.err.println(e.getMessage());
+        //     return false;
+        // }
+
+        int negateCount = ingredientCount * -1;
+        String deleteLogCmd = String.format( //TODO: parameterize this!
+            "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
+            ingredientID, ingredientCount, "INGREDIENT COUNT SET TO 0: DELETED INGREDIENT WITH NAME " + ingredientName);
+        db.executeSQL(deleteLogCmd);
+        
         return true;
     }
 
