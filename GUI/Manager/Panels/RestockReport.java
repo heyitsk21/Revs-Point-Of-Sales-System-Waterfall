@@ -76,21 +76,21 @@ public class RestockReport extends JFrame {
         int x = 50;
         int startY = 50;
         int rowHeight = 30;
-
-        int y = startY;
+        int columnWidth = 200;
 
         g.drawString("Ingredient", x, startY);
-        g.drawString("Current Amount", x + 200, startY);
-        g.drawString("Minimum Amount", x + 400, startY);
-        y += rowHeight;
+        g.drawString("Current Amount", x + columnWidth, startY);
+        g.drawString("Minimum Amount", x + 2 * columnWidth, startY);
+
+        int y = startY + rowHeight;
         for (int i = 0; i < ingredientNames.size(); i++) {
             String ingredientName = ingredientNames.get(i);
             int count = counts.get(i);
             int min = minimums.get(i);
 
             g.drawString(ingredientName, x, y);
-            g.drawString(String.valueOf(count), x + 200, y);
-            g.drawString(String.valueOf(min), x + 400, y);
+            g.drawString(String.valueOf(count), x + columnWidth, y);
+            g.drawString(String.valueOf(min), x + 2 * columnWidth, y);
 
             y += rowHeight;
         }
