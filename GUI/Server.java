@@ -12,7 +12,7 @@ class Server {
         FileWriter outputFile = null;
         try {
             // outputFile = new FileOutputStream("serverOutput.txt");
-            outputFile = new FileWriter("filename.txt");
+            outputFile = new FileWriter("filename.txt", true); //append:true means that it will just add onto the existing file, rather than overwrite (hopefully)
             // int c;
             while (input != null) {
                 outputFile.write(input);
