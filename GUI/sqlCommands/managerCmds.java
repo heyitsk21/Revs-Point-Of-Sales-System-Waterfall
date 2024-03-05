@@ -275,7 +275,7 @@ public class managerCmds {
         int negateCount = ingredientCount * -1;
         String deleteLogCmd = String.format( //TODO: parameterize this!
             "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
-            ingredientID, ingredientCount, "INGREDIENT COUNT SET TO 0: DELETED INGREDIENT WITH NAME ", ingredientName);
+            ingredientID, ingredientCount, "INGREDIENT COUNT SET TO 0: DELETED INGREDIENT WITH ID ", ingredientID);
         db.executeSQL(deleteLogCmd);
         
         return true;
