@@ -98,7 +98,7 @@ public class ManagerInventory extends JPanel {
         deleteButton.addActionListener(e -> {
             if (currIngredientIndex >= 0 && currIngredientIndex < inventorySize) {
                 int toDeleteID = ingredientIDs[currIngredientIndex];
-                manCmds.deleteIngredient(toDeleteID, );
+                manCmds.deleteIngredient(toDeleteID, count[toDeleteID]);
             }
             RefreshGUI();
         });
