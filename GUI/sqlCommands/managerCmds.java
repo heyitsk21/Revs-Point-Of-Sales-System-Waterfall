@@ -130,7 +130,7 @@ public class managerCmds{
             int counter = 0;
 
             do {
-                ingredientIDs[counter] = allMenuItemIngredients.getInt("IngredientID"); //TODO: check if this columnLabel works. unsure if this is necessary
+                ingredientIDs[counter] = allMenuItemIngredients.getInt("IngredientID");
                 names[counter] = allMenuItemIngredients.getString("IngredientName");
                 counter++;
             } while (allMenuItemIngredients.next()) ;
@@ -274,7 +274,7 @@ public class managerCmds{
             return false;
         }
 
-        String insertLogCmd = String.format( //TODO: parameterize this!
+        String insertLogCmd = String.format( 
             "INSERT INTO InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) VALUES (%d, %d, '%s', NOW());",
             newID, count, "YOOO I CREATED A NEW INGREDIENT WITH NAME " + ingredientName);
         db.executeSQL(insertLogCmd);
@@ -532,12 +532,12 @@ public class managerCmds{
             rs.first();
             int counter = 0;
 
-            do {
+            while (rs.next()) {
                 menuID1[counter] = rs.getString("mid1");
                 menuID2[counter] = rs.getString("mid2");
                 count[counter] = rs.getInt("count");
                 counter++;
-            }while (rs.next());
+            }
             sqlObjects.OrderingTrendReport chartObj = new sqlObjects.OrderingTrendReport(menuID1,menuID2,count);
             return chartObj;
         } catch (SQLException e) {
