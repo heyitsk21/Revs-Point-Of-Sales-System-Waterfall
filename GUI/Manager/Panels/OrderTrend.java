@@ -16,8 +16,6 @@ public class OrderTrend extends JFrame {
     private String[] menuID1;
     private String[] menuID2;
     private int[] count;
-    private String startDate;
-    private String endDate;
     private managerCmds manCmds;
     private sqlObjects.OrderingTrendReport myReport;
 
@@ -37,8 +35,6 @@ public class OrderTrend extends JFrame {
         this.menuID1 = myReport.menuID1;
         this.menuID2 = myReport.menuID2;
         this.count = myReport.count;
-        startDate = date1;
-        endDate = date2;
 
         JScrollPane scrollPane = createReport();
         setContentPane(scrollPane);
