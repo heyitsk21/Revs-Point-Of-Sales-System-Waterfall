@@ -7,7 +7,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  * 
  * @author Team 21 Best Table Winners
  */
-class Server {
+public class Server {
     /** The port number the server listens on. */
     private static final int PORT = 8888;
     /** Queue to hold incoming client requests. */

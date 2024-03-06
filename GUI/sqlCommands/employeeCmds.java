@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 /**
  * Class to handle various operations related to employees, such as retrieving menu items and submitting orders.
+ * 
+ * @author Team 21 Best Table Winners
  */
 public class employeeCmds {
 
