@@ -52,9 +52,10 @@ public class SalesReport extends JFrame {
                 List<Integer> menuIDs = new ArrayList<>();
                 List<String> itemNames = new ArrayList<>();
                 List<Double> totalSales = new ArrayList<>();
-                fetchData(startDate, endDate, menuIDs, itemNames, totalSales);
+                List<Integer> counts = new ArrayList<>();
+                fetchData(startDate, endDate, menuIDs, itemNames, totalSales, counts);
 
-                drawReport(g, menuIDs, itemNames, totalSales);
+                drawReport(g, menuIDs, itemNames, totalSales, counts);
             }
 
             @Override
@@ -98,10 +99,12 @@ public class SalesReport extends JFrame {
                 int menuID = resultSet.getInt("MenuID");
                 String itemName = resultSet.getString("ItemName");
                 double totalSale = resultSet.getDouble("TotalSales");
+                int count = resultSet.getInt("OrderCount");
 
                 menuIDs.add(menuID);
                 itemNames.add(itemName);
                 totalSales.add(totalSale);
+                counts.add(count);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -123,15 +126,22 @@ public class SalesReport extends JFrame {
         int rowHeight = 30;
         int columnWidth = 200;
 
-        int y = startY;
+        g.drawString("Menu ID", x, startY);
+        g.drawString("Item Name", x + columnWidth, startY);
+        g.drawString("Sales", x + 2 * columnWidth, startY);
+        g.drawString("Amount Sold", x + 3*columnWidth, startY);
+
+        int y = startY + rowHeight;
         for (int i = 0; i < menuIDs.size(); i++) {
             int menuID = menuIDs.get(i);
             String itemName = itemNames.get(i);
             double totalSale = totalSales.get(i);
+            int count = counts.get(i);
 
-            g.drawString(String.valueOf(menuID), startX, y);
-            g.drawString(itemName, startX + columnWidth, y);
-            g.drawString(String.format("%.2f", totalSale), startX + 2 * columnWidth, y);
+            g.drawString(String.valueOf(menuID), x, y);
+            g.drawString(itemName, x + columnWidth, y);
+            g.drawString("$" + String.format("%.2f", totalSale), x + 2 * columnWidth, y);
+            g.drawString(String.valueOf(count), x + 3 * columnWidth, y);
 
             y += rowHeight;
         }

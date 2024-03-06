@@ -39,7 +39,7 @@ public class EmployeeDelete extends JPanel {
                     //then remove at that index from the panel
                     int index = Employee.selectedMenuIDs.indexOf(Employee.toBeDeleted.get(i));
                     if (index != -1) {
-                        Employee.innerOrderPanel.remove(index);
+                        Employee.upperOrderPanel.remove(index);
             
                         Employee.selectedMenuIDs.remove(index);
                     }
