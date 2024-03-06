@@ -7,17 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Employee class represents the GUI for employees. It sets up the menu category buttons at the bottom,
- * the panel to select items to add to the order, and the order panel which shows the current order as well
- * as the total price and buttons to delete selected items or submit the current order.
+ * The Employee class represents the graphical user interface for employees.
+ * This class extends JFrame to create the main window of the application.
  */
-
 public class Employee extends JFrame {
+    /** The list of selected menu item IDs. */
     public static List<Integer> selectedMenuIDs;
+    /** The list of menu item IDs to be deleted. */
     public static List<Integer> toBeDeleted;
+    /** The panel for displaying current order details. */
     public static JPanel upperOrderPanel;
+    /** The panel for displaying the total price. */
     public static JPanel pricePanel;
+    /** The current total price. */
     public static Float currentPrice;
+    /** The instance of employeeCmds for managing employee commands. */
     public static employeeCmds empCmds;
 
     private JPanel menuPanel;
@@ -26,7 +30,7 @@ public class Employee extends JFrame {
     private JPanel submitAndDeletePanel;
 
     /**
-     * Constructs a new Employee object. Initializes public lists and the public float currentPrice
+     * Constructs a new Employee object. Initializes public lists and the public float currentPrice.
      */
     public Employee() {
         empCmds = new employeeCmds();
@@ -34,11 +38,11 @@ public class Employee extends JFrame {
         selectedMenuIDs = new ArrayList<>();
         toBeDeleted = new ArrayList<>();
         currentPrice = 0.0f;
-
     }
 
     /**
-     * Creates and displays the GUI. This method sets up the layout and components of the employee window. 
+     * Creates and displays the graphical user interface.
+     * This method sets up the layout and components of the main window.
      */
     private void createAndShowGUI() {
         JFrame frame = new JFrame("Employee GUI");
@@ -54,6 +58,7 @@ public class Employee extends JFrame {
         cardLayout = new CardLayout();
         menuPanel = new JPanel(cardLayout);
         menuPanel.setBorder(new EtchedBorder());
+        // Add different menu sections to the menuPanel
         menuPanel.add(new MenuSection("ValMeals", 600, 699), "ValMeals");
         menuPanel.add(new MenuSection("Burgers", 100, 199), "Burgers");
         menuPanel.add(new MenuSection("Sandwiches", 200, 299), "Sandwiches");
@@ -62,15 +67,13 @@ public class Employee extends JFrame {
         menuPanel.add(new MenuSection("IceCream", 400, 499), "IceCream");
         menuPanel.add(new MenuSection("LimitedTime", 700, 799), "LimitedTime");
 
-        // MENU CATEGORIES
-
         // Create menu categories panel
         JPanel categoriesPanel = new JPanel();
         categoriesPanel.setBorder(new EtchedBorder());
-        //categoriesPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         categoriesPanel.setLayout(new GridLayout(1, 0));
         submitAndDeletePanel.setMaximumSize(new Dimension(100, 80));
-        // Create menu category buttons, also adds them to the panel
+
+        // Create menu category buttons and add them to the panel
         createMenuCatButton("ValMeals", categoriesPanel);
         createMenuCatButton("Burgers", categoriesPanel);
         createMenuCatButton("Sandwiches", categoriesPanel);
@@ -78,19 +81,17 @@ public class Employee extends JFrame {
         createMenuCatButton("Salads", categoriesPanel);
         createMenuCatButton("IceCream", categoriesPanel);
         createMenuCatButton("LimitedTime", categoriesPanel);
+
         // Add the categoriesPanel to the bottom of the frame
         frame.add(categoriesPanel, BorderLayout.SOUTH);
 
-        // CURRENT ORDER
-
-        // Create the panel to show what the order currently consists of
+        // Create the panel to show the current order details
         JPanel lowerOrderPanel = new JPanel();
         JScrollPane scroller = new JScrollPane(upperOrderPanel);
         scroller.setAlignmentX(RIGHT_ALIGNMENT);
 
         orderPanel.setBorder(new EtchedBorder());
         orderPanel.setLayout(new BorderLayout());
-        //orderPanel.add(Box.createRigidArea(new Dimension(0,5)));
         orderPanel.add(scroller, BorderLayout.CENTER);
         orderPanel.add(lowerOrderPanel, BorderLayout.SOUTH);
 
@@ -113,17 +114,15 @@ public class Employee extends JFrame {
         pricePanel.setLayout(new GridLayout(0, 1));
         pricePanel.setBorder(new EmptyBorder(0, 0, 10, 0));
 
-        // Add to the frame
+        // Add panels to the frame
         frame.add(menuPanel, BorderLayout.CENTER);
         frame.add(orderPanel, BorderLayout.EAST);
-        // Set frame size
+
+        // Set frame size and center it
         frame.setSize(1280, 720);
-        // Center the frame
         frame.setLocationRelativeTo(null);
 
-        // DATE TIME USERNAME
-
-        // Adds a panel at the top
+        // Add top panel with date/time and username
         JPanel topPanel = new JPanel();
         JLabel dateTimeLabel = new JLabel();
         java.util.Date date = new java.util.Date();
@@ -148,7 +147,13 @@ public class Employee extends JFrame {
         button.setPreferredSize(new Dimension(180, 100));
         button.setFont(new Font("Arial", Font.PLAIN, 25));
         panel.add(button);
+        // ActionListener to switch to the specified panel
         button.addActionListener(new ActionListener() {
+            /**
+             * Invoked when the menu category button is clicked.
+             * This method switches the view to the specified menu category.
+             * @param e The action event generated by clicking the menu category button.
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(menuPanel, panelName); // Switch to the specified panel
@@ -168,7 +173,13 @@ public class Employee extends JFrame {
         button.setMinimumSize(new Dimension(200, 100));
         button.setFont(new Font("Arial", Font.PLAIN, 25));
         panel.add(button);
+        // ActionListener to open a new frame for submission
         button.addActionListener(new ActionListener() {
+            /**
+             * Invoked when the submit button is clicked.
+             * This method opens a new frame for employee submission.
+             * @param e The action event generated by clicking the submit button.
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Create a new frame for EmployeeSubmit panel
@@ -194,7 +205,13 @@ public class Employee extends JFrame {
         button.setMinimumSize(new Dimension(200, 100));
         button.setFont(new Font("Arial", Font.PLAIN, 25));
         panel.add(button);
+        // ActionListener to open a new frame for deletion
         button.addActionListener(new ActionListener() {
+            /**
+             * Invoked when the delete button is clicked.
+             * This method opens a new frame for employee deletion.
+             * @param e The action event generated by clicking the delete button.
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Create a new frame for EmployeeDelete panel
@@ -213,7 +230,7 @@ public class Employee extends JFrame {
      * Updates the total price displayed on the interface.
      */
     public static void update() {
-        //change total price
+        // Update total price
         pricePanel.removeAll();
         currentPrice = empCmds.getOrderPrice(selectedMenuIDs);
         String truncatedPrice = String.format("%.2f", currentPrice);
@@ -221,6 +238,5 @@ public class Employee extends JFrame {
         pricePanel.add(totalPrice);
         upperOrderPanel.repaint();
         pricePanel.repaint();
-    }
-    
+    }  
 }
