@@ -6,12 +6,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Generates a restock report showing ingredients that are below their minimum amount.
+ *
+ * @author Team 21 Best Table Winners
+ */
 public class RestockReport extends JFrame {
 
     private Database database;
 
     private static final String REPORT_TITLE = "Restock Report";
 
+    /**
+     * Constructs a RestockReport object.
+     *
+     * @param database the database connection
+     */
     public RestockReport(Database database) {
         super(REPORT_TITLE);
         this.database = database;
@@ -22,6 +32,11 @@ public class RestockReport extends JFrame {
         setSize(800, 600);
     }
 
+    /**
+     * Creates a scrollable panel containing the restock report.
+     *
+     * @return a JScrollPane containing the restock report
+     */
     private JScrollPane createReport() {
         JPanel reportPanel = new JPanel() {
             @Override
@@ -32,9 +47,10 @@ public class RestockReport extends JFrame {
 
                 List<String> ingredientNames = new ArrayList<>();
                 List<Integer> counts = new ArrayList<>();
-                fetchData(ingredientNames, counts);
+                List<Integer> minimums = new ArrayList<>();
+                fetchData(ingredientNames, counts, minimums);
 
-                drawReport(g, ingredientNames, counts);
+                drawReport(g, ingredientNames, counts, minimums);
             }
 
             @Override
@@ -50,6 +66,12 @@ public class RestockReport extends JFrame {
         return scrollPane;
     }
 
+    /**
+     * Fetches data from the database for the restock report.
+     *
+     * @param ingredientNames list to store ingredient names
+     * @param counts          list to store ingredient counts
+     */
     private void fetchData(List<String> ingredientNames, List<Integer> counts) {
         String query = "SELECT * FROM ingredients WHERE count < minamount";
 
@@ -60,8 +82,10 @@ public class RestockReport extends JFrame {
             while (resultSet.next()) {
                 String ingredientName = resultSet.getString("ingredientname");
                 int count = resultSet.getInt("count");
+                int min = resultSet.getInt("minamount");
                 ingredientNames.add(ingredientName);
                 counts.add(count);
+                minimums.add(min);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -69,23 +93,42 @@ public class RestockReport extends JFrame {
         }
     }
 
+    /**
+     * Draws the restock report on the specified graphics context.
+     *
+     * @param g              the graphics context
+     * @param ingredientNames list of ingredient names
+     * @param counts         list of ingredient counts
+     */
     private void drawReport(Graphics g, List<String> ingredientNames, List<Integer> counts) {
         int startX = 50;
         int startY = 50;
         int rowHeight = 30;
+        int columnWidth = 200;
 
-        int y = startY;
+        g.drawString("Ingredient", x, startY);
+        g.drawString("Current Amount", x + columnWidth, startY);
+        g.drawString("Minimum Amount", x + 2 * columnWidth, startY);
+
+        int y = startY + rowHeight;
         for (int i = 0; i < ingredientNames.size(); i++) {
             String ingredientName = ingredientNames.get(i);
             int count = counts.get(i);
+            int min = minimums.get(i);
 
-            g.drawString(ingredientName, startX, y);
-            g.drawString(String.valueOf(count), startX + 200, y);
+            g.drawString(ingredientName, x, y);
+            g.drawString(String.valueOf(count), x + columnWidth, y);
+            g.drawString(String.valueOf(min), x + 2 * columnWidth, y);
 
             y += rowHeight;
         }
     }
 
+    /**
+     * The main method to execute the application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         Database database = new Database(); // Initialize your Database instance
         SwingUtilities.invokeLater(() -> {

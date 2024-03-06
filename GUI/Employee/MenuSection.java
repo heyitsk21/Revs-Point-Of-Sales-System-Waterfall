@@ -75,7 +75,7 @@ public class MenuSection extends JPanel {
             JButton button = new JButton(nameAndPrice);
             button.setPreferredSize(new Dimension(100, 50));
             button.setFont(new Font("Arial", Font.PLAIN, 20));
-            Employee.innerOrderPanel.add(button);
+            Employee.upperOrderPanel.add(button);
             Employee.update();
             button.addActionListener(new ActionListener() {
             @Override
