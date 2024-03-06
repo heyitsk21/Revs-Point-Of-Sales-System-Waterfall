@@ -6,6 +6,12 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Employee class represents the GUI for employees. It sets up the menu category buttons at the bottom,
+ * the panel to select items to add to the order, and the order panel which shows the current order as well
+ * as the total price and buttons to delete selected items or submit the current order.
+ */
+
 public class Employee extends JFrame {
     public static List<Integer> selectedMenuIDs;
     public static List<Integer> toBeDeleted;
@@ -18,11 +24,10 @@ public class Employee extends JFrame {
     private CardLayout cardLayout;
     private JPanel orderPanel;
     private JPanel submitAndDeletePanel;
-    //private List<Integer> toBeDeleted;
-    //private List<Integer> selectedMenuIDs; // list to keep track of selected menu items
 
-
-
+    /**
+     * Constructs a new Employee object. Initializes public lists and the public float currentPrice
+     */
     public Employee() {
         empCmds = new employeeCmds();
         createAndShowGUI();
@@ -32,6 +37,9 @@ public class Employee extends JFrame {
 
     }
 
+    /**
+     * Creates and displays the GUI. This method sets up the layout and components of the employee window. 
+     */
     private void createAndShowGUI() {
         JFrame frame = new JFrame("Employee GUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -74,13 +82,6 @@ public class Employee extends JFrame {
         frame.add(categoriesPanel, BorderLayout.SOUTH);
 
         // CURRENT ORDER
-
-        // orderPanel <scroller, lowerOrderPanel> BOX LAYOUT
-        // scroller <upperOrderPanel> 
-        // upperOrderPanel <menu items> GRID LAYOUT
-        // lowerOrderPanel <pricePanel, submitAndDeletePanel> BOX LAYOUT
-        // pricePanel <total price label> GRID LAYOUT
-        // submitAndDeletePanel <submit button, delete button> GRID LAYOUT
 
         // Create the panel to show what the order currently consists of
         JPanel lowerOrderPanel = new JPanel();
@@ -136,6 +137,12 @@ public class Employee extends JFrame {
         frame.setVisible(true);
     }
 
+    /**
+     * Creates a menu category button and adds it to the specified panel.
+     * @param panelName The name of the panel.
+     * @param panel The panel to which the button is added.
+     * @return The created button.
+     */
     private JButton createMenuCatButton(String panelName, JPanel panel) {
         JButton button = new JButton(panelName);
         button.setPreferredSize(new Dimension(180, 100));
@@ -150,6 +157,12 @@ public class Employee extends JFrame {
         return button;
     }
 
+    /**
+     * Creates a submit button and adds it to the specified panel.
+     * @param panelName The name of the panel.
+     * @param panel The panel to which the button is added.
+     * @return The created button.
+     */
     private JButton createSubmitButton(String panelName, JPanel panel) {
         JButton button = new JButton(panelName);
         button.setMinimumSize(new Dimension(200, 100));
@@ -170,6 +183,12 @@ public class Employee extends JFrame {
         return button;
     }
     
+    /**
+     * Creates a delete button and adds it to the specified panel.
+     * @param panelName The name of the panel.
+     * @param panel The panel to which the button is added.
+     * @return The created button.
+     */
     private JButton createDeleteButton(String panelName, JPanel panel) {
         JButton button = new JButton(panelName);
         button.setMinimumSize(new Dimension(200, 100));
@@ -190,6 +209,9 @@ public class Employee extends JFrame {
         return button;
     }
 
+    /**
+     * Updates the total price displayed on the interface.
+     */
     public static void update() {
         //change total price
         pricePanel.removeAll();
