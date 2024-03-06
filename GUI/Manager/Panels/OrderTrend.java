@@ -87,10 +87,14 @@ public class OrderTrend extends JFrame {
      * @param pairCount   list of pair counts
      */
     private void drawReport(Graphics g, List<String> firstMenuID, List<String> secondMenuID, List<Integer> pairCount) {
-        int startX = 50;
+        int x = 50;
         int startY = 50;
         int rowHeight = 30;
         int columnWidth = 300;
+
+        g.drawString("MenuID 1", x, startY);
+        g.drawString("MenuID 2", x + columnWidth, startY);
+        g.drawString("Pair Count", x + 2 * columnWidth, startY);
 
         int y = startY + rowHeight;
         for (int i = 0; i < firstMenuID.size(); i++) {
@@ -98,9 +102,9 @@ public class OrderTrend extends JFrame {
             String secondname = secondMenuID.get(i);
             int aPairCount = pairCount.get(i);
 
-            g.drawString("Menu Item 1: " + String.valueOf(firstname), startX, y);
-            g.drawString("Menu Item 2: " + String.valueOf(secondname), startX + columnWidth, y);
-            g.drawString(String.format("%d", aPairCount), startX + 2 * columnWidth, y);
+            g.drawString("Menu Item 1: " + String.valueOf(firstname), x, y);
+            g.drawString("Menu Item 2: " + String.valueOf(secondname), x + columnWidth, y);
+            g.drawString(String.format("%d", aPairCount), x + 2 * columnWidth, y);
 
             y += rowHeight;
         }

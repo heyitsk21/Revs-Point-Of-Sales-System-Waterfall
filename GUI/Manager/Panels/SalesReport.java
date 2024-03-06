@@ -52,9 +52,10 @@ public class SalesReport extends JFrame {
                 List<Integer> menuIDs = new ArrayList<>();
                 List<String> itemNames = new ArrayList<>();
                 List<Double> totalSales = new ArrayList<>();
-                fetchData(startDate, endDate, menuIDs, itemNames, totalSales);
+                List<Integer> counts = new ArrayList<>();
+                fetchData(startDate, endDate, menuIDs, itemNames, totalSales, counts);
 
-                drawReport(g, menuIDs, itemNames, totalSales);
+                drawReport(g, menuIDs, itemNames, totalSales, counts);
             }
 
             @Override
@@ -78,9 +79,10 @@ public class SalesReport extends JFrame {
      * @param menuIDs    list to store menu IDs
      * @param itemNames  list to store item names
      * @param totalSales list to store total sales
+     * @param counts     list to store amount sold
      */
-    private void fetchData(String startDate, String endDate, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales) {
-        String query = "SELECT menuitems.MenuID, menuitems.ItemName, SUM(menuitems.Price) AS TotalSales " +
+    private void fetchData(String startDate, String endDate, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales, List<Integer> counts) {
+        String query = "SELECT menuitems.MenuID, menuitems.ItemName, SUM(menuitems.Price) AS TotalSales, COUNT(*) AS OrderCount " +
                 "FROM orders " +
                 "JOIN ordermenuitems ON orders.OrderID = ordermenuitems.OrderID " +
                 "JOIN menuitems ON ordermenuitems.MenuID = menuitems.MenuID " +
@@ -116,22 +118,30 @@ public class SalesReport extends JFrame {
      * @param menuIDs    list of menu IDs
      * @param itemNames  list of item names
      * @param totalSales list of total sales
+     * @param counts     list of amount sold
      */
-    private void drawReport(Graphics g, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales) {
-        int startX = 50;
+    private void drawReport(Graphics g, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales, List<Integer> counts) {
+        int x = 50;
         int startY = 50;
         int rowHeight = 30;
         int columnWidth = 200;
 
-        int y = startY;
+        g.drawString("Menu ID", x, startY);
+        g.drawString("Item Name", x + columnWidth, startY);
+        g.drawString("Sales", x + 2 * columnWidth, startY);
+        g.drawString("Amount Sold", x + 3*columnWidth, startY);
+
+        int y = startY + rowHeight;
         for (int i = 0; i < menuIDs.size(); i++) {
             int menuID = menuIDs.get(i);
             String itemName = itemNames.get(i);
             double totalSale = totalSales.get(i);
+            int count = counts.get(i);
 
-            g.drawString(String.valueOf(menuID), startX, y);
-            g.drawString(itemName, startX + columnWidth, y);
-            g.drawString(String.format("%.2f", totalSale), startX + 2 * columnWidth, y);
+            g.drawString(String.valueOf(menuID), x, y);
+            g.drawString(itemName, x + columnWidth, y);
+            g.drawString("$" + String.format("%.2f", totalSale), x + 2 * columnWidth, y);
+            g.drawString(String.valueOf(count), x + 3 * columnWidth, y);
 
             y += rowHeight;
         }
