@@ -99,6 +99,7 @@ public class ExcessReport extends JFrame {
         for (int i = 0; i < ingredientIDs.size(); i++) {
             int ingredientID = ingredientIDs.get(i);
             String ingredientName = ingredientNames.get(i);
+            int count = counts.get(i);
 
             g.drawString(String.valueOf(ingredientID), x, y);
             g.drawString(ingredientName, x + columnWidth, y);
