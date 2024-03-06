@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class OrderTrend extends JFrame {
 
-    private int[] menuID1;
-    private int[] menuID2;
+    private String[] menuID1;
+    private String[] menuID2;
     private int[] count;
     private String startDate;
     private String endDate;
@@ -56,18 +56,12 @@ public class OrderTrend extends JFrame {
 
                 g.drawString(REPORT_TITLE, getWidth() / 2 - 50, 20);
 
-                List<Integer> firstMenuID = new ArrayList<>();
-                List<Integer> secondMenuID = new ArrayList<>();
+                List<String> firstMenuID = new ArrayList<>();
+                List<String> secondMenuID = new ArrayList<>();
                 List<Integer> pairCount = new ArrayList<>();
-                for (int element : menuID1) {
-                    firstMenuID.add(element);
-                }
-                for (int element : menuID2) {
-                    secondMenuID.add(element);
-                }
-                for (int element : count) {
-                    pairCount.add(element);
-                }
+                for (String element : menuID1){firstMenuID.add(element);}
+                for (String element : menuID2){secondMenuID.add(element);}
+                for (int element : count){pairCount.add(element);}
 
                 drawReport(g, firstMenuID, secondMenuID, pairCount);
             }
@@ -85,28 +79,20 @@ public class OrderTrend extends JFrame {
         return scrollPane;
     }
 
-    /**
-     * Draws the order trend report on the specified graphics context.
-     *
-     * @param g           the graphics context
-     * @param firstMenuID list of menu IDs for the first category
-     * @param secondMenuID list of menu IDs for the second category
-     * @param pairCount   list of counts for each pair of menu IDs
-     */
-    private void drawReport(Graphics g, List<Integer> firstMenuID, List<Integer> secondMenuID, List<Integer> pairCount) {
+    private void drawReport(Graphics g, List<String> firstMenuID, List<String> secondMenuID, List<Integer> pairCount) {
         int startX = 50;
         int startY = 50;
         int rowHeight = 30;
-        int columnWidth = 200;
+        int columnWidth = 300;
 
         int y = startY;
         for (int i = 0; i < firstMenuID.size(); i++) {
-            int firstID = firstMenuID.get(i);
-            int secondID = secondMenuID.get(i);
+            String firstname = firstMenuID.get(i);
+            String secondname = secondMenuID.get(i);
             int aPairCount = pairCount.get(i);
 
-            g.drawString("MenuID 1 " + String.valueOf(firstID), startX, y);
-            g.drawString("MenuID 2 " + String.valueOf(secondID), startX + columnWidth, y);
+            g.drawString("Menu Item 1: " + String.valueOf(firstname), startX, y);
+            g.drawString("Menu Item 2: " + String.valueOf(secondname), startX + columnWidth, y);
             g.drawString(String.format("%d", aPairCount), startX + 2 * columnWidth, y);
 
             y += rowHeight;

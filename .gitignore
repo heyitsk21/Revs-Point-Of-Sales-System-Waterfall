@@ -7,6 +7,9 @@
 # Password
 login.txt
 
+#Server log
+ServerLog.txt
+
 # BlueJ files
 *.ctxt
 
