@@ -5,6 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.awt.Font;
 
+/**
+ * The `LogInGUI` class represents the login interface for the POS system.
+ * It provides fields for entering a username and password, and a login button to authenticate users.
+ * The class interacts with the `Database` class to verify user credentials.
+ * 
+ * @author Team 21 Best Table Winners
+ */
 public class LogInGUI extends JFrame implements ActionListener {
 
     private JTextField usernameField;
@@ -60,8 +67,14 @@ public class LogInGUI extends JFrame implements ActionListener {
         this.getRootPane().setDefaultButton(loginButton);
     }
 
-    // function to authenticate the user and check if they are a manager or employee
-    // connects to the database and checks if the username and password are valid
+    /**
+     * Authenticates the user by checking the entered credentials against the database.
+     * 
+     * @param username The entered username.
+     * @param password The entered password.
+     * @param isManager A flag indicating whether the user is a manager.
+     * @return true if authentication is successful, false otherwise.
+     */
     private boolean authenticate(String username, String password, boolean isManager) {
         String query = "SELECT employeename, password, ismanager FROM employee WHERE employeename = ? AND password = ?;";
         try {
@@ -78,6 +91,10 @@ public class LogInGUI extends JFrame implements ActionListener {
         return false;
     }
 
+    /**
+     * Handles the action when the login button is pressed.
+     * Authenticates the user and switches to the appropriate screen based on the user's role.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String username = usernameField.getText();
@@ -85,21 +102,19 @@ public class LogInGUI extends JFrame implements ActionListener {
 
         // Check if the entered credentials are valid
         if (authenticate(username, password, true)) {
-            // TODO: When Manager Screen java is created, switch to that screen instead of
-            // this message
             ManagerGUI manager = new ManagerGUI();
             manager.setVisible(true);
             setVisible(false);
+            // When Manager Screen java is created, switch to that screen instead of this message
             //JOptionPane.showMessageDialog(this, "Switch to Manager Screen");
             // change to ManagerGUI.java
 
         } else if (authenticate(username, password, false)) {
-            // TODO: When Employee Screen java is created, switch to that screen instead of
-            // this message
-            //JOptionPane.showMessageDialog(this, "Switch to Employee Screen");
             Employee employeeGUI = new Employee();
             employeeGUI.setVisible(true);
             setVisible(false);
+            // When Employee Screen java is created, switch to that screen instead of this message
+            //JOptionPane.showMessageDialog(this, "Switch to Employee Screen");
         }
         else {
             JOptionPane.showMessageDialog(this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
