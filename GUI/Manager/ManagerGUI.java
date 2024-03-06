@@ -5,17 +5,30 @@ import javax.swing.border.EtchedBorder;
 
 import java.awt.*;
 
+/**
+ * ManagerGUI class represents the graphical user interface for a restaurant management system.
+ * It includes switchable layouts using CardLayout, allowing the manager to navigate between
+ * different functionalities such as trends, inventory, menu items, and order history.
+ */
 public class ManagerGUI extends JFrame {
     // Switchable layouts
     private JPanel cardPanel;
     private CardLayout cardLayout;
     String currentCardName;
 
+    /**
+     * Constructs a ManagerGUI object and initializes the graphical user interface.
+     * Creates and displays a JFrame with switchable panels, buttons, and additional information.
+     */
     public ManagerGUI() {
         // Calls managerGUI
         createAndShowGUI();
     }
 
+    /**
+     * Creates and displays the graphical user interface with a JFrame, switchable card panels,
+     * buttons for navigation, and additional information at the top.
+     */
     private void createAndShowGUI() {
         JFrame frame = new JFrame("Manager GUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,7 +110,13 @@ public class ManagerGUI extends JFrame {
         frame.setVisible(true);
     }
 
-
+    /**
+     * Creates a JButton for navigation between panels with the specified name.
+     * Configures the button with a specific size, font, and ActionListener for switching panels.
+     *
+     * @param panelName The name of the panel to switch to when the button is clicked.
+     * @return The configured JButton for panel navigation.
+     */
     private JButton createButton(String panelName) {
         JButton button = new JButton(panelName);
         button.setPreferredSize(new Dimension(300, 50));
@@ -111,12 +130,23 @@ public class ManagerGUI extends JFrame {
         return button;
     }
 
+    /**
+     * Updates the provided JLabel with the current date and time.
+     *
+     * @param dateTimeLabel The JLabel to be updated with the current date and time.
+     */
     private void updateDateTime(JLabel dateTimeLabel) {
         java.util.Date date = new java.util.Date();
         String dateTimeString = "Date/Time: " + date.toString();
         dateTimeLabel.setText(dateTimeString);
     }
 
+    /**
+     * Rebuilds the current card in the cardPanel by removing existing components
+     * and adding new instances of card panels. Ensures that the current card is updated.
+     *
+     * @param container The container to rebuild, typically the cardPanel.
+     */
     private void rebuildCurrentCard(Container container) {
         Component[] components = container.getComponents();
         for (Component component : components) {
