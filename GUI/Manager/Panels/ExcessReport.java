@@ -49,10 +49,9 @@ public class ExcessReport extends JFrame {
 
                 List<Integer> ingredientIDs = new ArrayList<>();
                 List<String> ingredientNames = new ArrayList<>();
-                List<Integer> counts = new ArrayList<>();
-                fetchData(startDate, ingredientIDs, ingredientNames, counts);
+                fetchData(startDate, ingredientIDs, ingredientNames);
 
-                drawReport(g, ingredientIDs, ingredientNames, counts);
+                drawReport(g, ingredientIDs, ingredientNames);
             }
 
             @Override
@@ -74,9 +73,8 @@ public class ExcessReport extends JFrame {
      * @param startDate       the start date for the report
      * @param ingredientIDs   list to store ingredient IDs
      * @param ingredientNames list to store ingredient names
-     * @param counts          list to store counts
      */
-    private void fetchData(String startDate, List<Integer> ingredientIDs, List<String> ingredientNames, List<Integer> counts) {
+    private void fetchData(String startDate, List<Integer> ingredientIDs, List<String> ingredientNames) {
         String query = "SELECT DISTINCT mi.MenuID, mi.ItemName " +
                        "FROM ingredients i " +
                        "JOIN menuitemingredients mii ON i.ingredientid = mii.ingredientid " +
@@ -102,7 +100,6 @@ public class ExcessReport extends JFrame {
                 // Add the menu item details to the lists
                 ingredientIDs.add(menuID);
                 ingredientNames.add(itemName);
-                counts.add(0); // Placeholder for count, as it's not relevant in this context
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -116,9 +113,8 @@ public class ExcessReport extends JFrame {
      * @param g               the graphics context
      * @param ingredientIDs   list of ingredient IDs
      * @param ingredientNames list of ingredient names
-     * @param counts          list of counts
      */
-    private void drawReport(Graphics g, List<Integer> ingredientIDs, List<String> ingredientNames, List<Integer> counts) {
+    private void drawReport(Graphics g, List<Integer> ingredientIDs, List<String> ingredientNames) {
         int x = 50;
         int startY = 50;
         int rowHeight = 30;
