@@ -92,8 +92,8 @@ public class OrderTrend extends JFrame {
         int rowHeight = 30;
         int columnWidth = 300;
 
-        g.drawString("MenuName 1", x, startY);
-        g.drawString("MenuName 2", x + columnWidth, startY);
+        g.drawString("Menu Item 1", x, startY);
+        g.drawString("Menu Item 2", x + columnWidth, startY);
         g.drawString("Pair Count", x + 2 * columnWidth, startY);
 
         int y = startY + rowHeight;
@@ -102,8 +102,8 @@ public class OrderTrend extends JFrame {
             String secondname = secondMenuID.get(i);
             int aPairCount = pairCount.get(i);
 
-            g.drawString("Menu Item 1: " + String.valueOf(firstname), x, y);
-            g.drawString("Menu Item 2: " + String.valueOf(secondname), x + columnWidth, y);
+            g.drawString(String.valueOf(firstname), x, y);
+            g.drawString(String.valueOf(secondname), x + columnWidth, y);
             g.drawString(String.format("%d", aPairCount), x + 2 * columnWidth, y);
 
             y += rowHeight;

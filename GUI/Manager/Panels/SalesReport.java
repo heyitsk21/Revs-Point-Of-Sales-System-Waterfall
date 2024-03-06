@@ -100,10 +100,12 @@ public class SalesReport extends JFrame {
                 int menuID = resultSet.getInt("MenuID");
                 String itemName = resultSet.getString("ItemName");
                 double totalSale = resultSet.getDouble("TotalSales");
+                int count = resultSet.getInt("OrderCount");
 
                 menuIDs.add(menuID);
                 itemNames.add(itemName);
                 totalSales.add(totalSale);
+                counts.add(count);
             }
         } catch (SQLException e) {
             e.printStackTrace();

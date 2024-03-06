@@ -119,18 +119,21 @@ public class ExcessReport extends JFrame {
      * @param counts          list of counts
      */
     private void drawReport(Graphics g, List<Integer> ingredientIDs, List<String> ingredientNames, List<Integer> counts) {
-        int startX = 50;
+        int x = 50;
         int startY = 50;
         int rowHeight = 30;
+        int columnWidth = 200;
 
-        int y = startY;
+        g.drawString("Ingredient ID", x, startY);
+        g.drawString("Ingredient Name", x + columnWidth, startY);
+
+        int y = startY + rowHeight;
         for (int i = 0; i < ingredientIDs.size(); i++) {
             int ingredientID = ingredientIDs.get(i);
             String ingredientName = ingredientNames.get(i);
-            int count = counts.get(i);
 
-            g.drawString(String.valueOf(ingredientID), startX, y);
-            g.drawString(ingredientName, startX + 100, y);
+            g.drawString(String.valueOf(ingredientID), x, y);
+            g.drawString(ingredientName, x + columnWidth, y);
 
             y += rowHeight;
         }
