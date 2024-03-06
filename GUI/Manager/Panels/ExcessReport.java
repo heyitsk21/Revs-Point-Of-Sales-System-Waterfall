@@ -135,7 +135,7 @@ public class ExcessReport extends JFrame {
 
             g.drawString(String.valueOf(ingredientID), x, y);
             g.drawString(ingredientName, x + columnWidth, y);
-            g.drawString(String.valueOf(count), x + 2 * columnWidth, y);
+
 
             y += rowHeight;
         }

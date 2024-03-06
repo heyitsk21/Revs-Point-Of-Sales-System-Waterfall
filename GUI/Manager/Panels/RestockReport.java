@@ -47,10 +47,9 @@ public class RestockReport extends JFrame {
 
                 List<String> ingredientNames = new ArrayList<>();
                 List<Integer> counts = new ArrayList<>();
-                List<Integer> minimums = new ArrayList<>();
-                fetchData(ingredientNames, counts, minimums);
+                fetchData(ingredientNames, counts);
 
-                drawReport(g, ingredientNames, counts, minimums);
+                drawReport(g, ingredientNames, counts);
             }
 
             @Override
@@ -82,10 +81,8 @@ public class RestockReport extends JFrame {
             while (resultSet.next()) {
                 String ingredientName = resultSet.getString("ingredientname");
                 int count = resultSet.getInt("count");
-                int min = resultSet.getInt("minamount");
                 ingredientNames.add(ingredientName);
                 counts.add(count);
-                minimums.add(min);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -104,21 +101,14 @@ public class RestockReport extends JFrame {
         int startX = 50;
         int startY = 50;
         int rowHeight = 30;
-        int columnWidth = 200;
 
-        g.drawString("Ingredient", x, startY);
-        g.drawString("Current Amount", x + columnWidth, startY);
-        g.drawString("Minimum Amount", x + 2 * columnWidth, startY);
-
-        int y = startY + rowHeight;
+        int y = startY;
         for (int i = 0; i < ingredientNames.size(); i++) {
             String ingredientName = ingredientNames.get(i);
             int count = counts.get(i);
-            int min = minimums.get(i);
 
-            g.drawString(ingredientName, x, y);
-            g.drawString(String.valueOf(count), x + columnWidth, y);
-            g.drawString(String.valueOf(min), x + 2 * columnWidth, y);
+            g.drawString(ingredientName, startX, y);
+            g.drawString(String.valueOf(count), startX + 200, y);
 
             y += rowHeight;
         }
