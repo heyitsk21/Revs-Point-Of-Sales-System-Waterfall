@@ -1,11 +1,6 @@
 import java.sql.*;
 
 public class managerCmds{
-    /*
-     * TODO should include the sequel object or whatever yall use to login here so
-     * its shared between all calls
-     */
-
     Database db;
 
     public managerCmds() {
@@ -13,8 +8,6 @@ public class managerCmds{
     }
 
     public sqlObjects.Inventory getInventory() {
-        Client c = new Client(true);
-        c.requestAndWaitForLock();
         try {
             int size = 0;
             PreparedStatement prep;
@@ -51,8 +44,6 @@ public class managerCmds{
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        c.releaseLock();
-        c.quit();
         return null;
     }
 
