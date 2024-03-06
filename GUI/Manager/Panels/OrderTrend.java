@@ -1,22 +1,31 @@
 import javax.swing.*;
 import java.awt.*;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Generates an order trend report based on menu IDs and counts within a specified date range.
+ *
+ * @author Team 21 Best Table Winners
+ */
 public class OrderTrend extends JFrame {
+
     private int[] menuID1;
     private int[] menuID2;
     private int[] count;
-    String startDate;
-    String endDate;
-    managerCmds manCmds;
-    sqlObjects.OrderingTrendReport myReport;
+    private String startDate;
+    private String endDate;
+    private managerCmds manCmds;
+    private sqlObjects.OrderingTrendReport myReport;
 
     private static final String REPORT_TITLE = "Order Trend Report";
 
+    /**
+     * Constructs an OrderTrend object with the specified date range.
+     *
+     * @param date1 the start date of the report
+     * @param date2 the end date of the report
+     */
     public OrderTrend(String date1, String date2) {
         super(REPORT_TITLE);
         manCmds = new managerCmds();
@@ -34,6 +43,11 @@ public class OrderTrend extends JFrame {
         setSize(800, 600);
     }
 
+    /**
+     * Creates a scrollable panel containing the order trend report.
+     *
+     * @return a JScrollPane containing the order trend report
+     */
     private JScrollPane createReport() {
         JPanel reportPanel = new JPanel() {
             @Override
@@ -45,9 +59,15 @@ public class OrderTrend extends JFrame {
                 List<Integer> firstMenuID = new ArrayList<>();
                 List<Integer> secondMenuID = new ArrayList<>();
                 List<Integer> pairCount = new ArrayList<>();
-                for (int element : menuID1){firstMenuID.add(element);}
-                for (int element : menuID2){secondMenuID.add(element);}
-                for (int element : count){pairCount.add(element);}
+                for (int element : menuID1) {
+                    firstMenuID.add(element);
+                }
+                for (int element : menuID2) {
+                    secondMenuID.add(element);
+                }
+                for (int element : count) {
+                    pairCount.add(element);
+                }
 
                 drawReport(g, firstMenuID, secondMenuID, pairCount);
             }
@@ -65,6 +85,14 @@ public class OrderTrend extends JFrame {
         return scrollPane;
     }
 
+    /**
+     * Draws the order trend report on the specified graphics context.
+     *
+     * @param g           the graphics context
+     * @param firstMenuID list of menu IDs for the first category
+     * @param secondMenuID list of menu IDs for the second category
+     * @param pairCount   list of counts for each pair of menu IDs
+     */
     private void drawReport(Graphics g, List<Integer> firstMenuID, List<Integer> secondMenuID, List<Integer> pairCount) {
         int startX = 50;
         int startY = 50;
@@ -85,6 +113,11 @@ public class OrderTrend extends JFrame {
         }
     }
 
+    /**
+     * The main method to execute the application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         Database database = new Database();
         SwingUtilities.invokeLater(() -> {
