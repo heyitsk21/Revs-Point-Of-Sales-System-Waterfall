@@ -132,7 +132,8 @@ public class ManagerMenuItems extends JPanel {
         deleteButton.addActionListener(new DeleteButtonListener());
     }
 
-    JLabel checkedItemsLabel;
+    JLabel checkedItemsLabel = new JLabel("");
+    JPanel ingredientsPanel = new JPanel();
 
     /**
      * Creates the right panel containing text fields and buttons for editing and submitting changes.
@@ -146,6 +147,10 @@ public class ManagerMenuItems extends JPanel {
         priceLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         ingredientsLabel = new JLabel("Ingredients: ");
         ingredientsLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+
+        ingredientsPanel.setLayout(new GridLayout(2, 1));
+        ingredientsPanel.add(ingredientsLabel);
+        ingredientsPanel.add(checkedItemsLabel);
 
         nameTextField = new JTextField();
         priceTextField = new JTextField();
@@ -164,7 +169,7 @@ public class ManagerMenuItems extends JPanel {
         rightPanel.add(nameTextField);
         rightPanel.add(priceLabel);
         rightPanel.add(priceTextField);
-        rightPanel.add(checkedItemsLabel);
+        rightPanel.add(ingredientsPanel);
         rightPanel.add(ingredientDrop);
         rightPanel.add(cancelButton);
         rightPanel.add(submitButton);
@@ -209,8 +214,6 @@ public class ManagerMenuItems extends JPanel {
         }
 
         selectedItem = ingredientNames[0];
-        
-        checkedItemsLabel = new JLabel("Checked Items: ");
         updateCheckedItemsLabel(); // Call the method with the label
 
         // Populate the JComboBox with items
@@ -264,7 +267,7 @@ public class ManagerMenuItems extends JPanel {
      * Updates the label displaying checked items based on the current list of selected items.
      */
     private void updateCheckedItemsLabel() {
-        StringBuilder labelText = new StringBuilder("Checked Items: ");
+        StringBuilder labelText = new StringBuilder("");
         for (String item : checkedItems) {
             labelText.append(item).append(", ");
         }

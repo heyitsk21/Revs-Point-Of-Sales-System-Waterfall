@@ -155,7 +155,9 @@ public class ManagerInventory extends JPanel {
      * Creates and initializes the right panel containing input fields for updating inventory items.
      */
     void createRight() {
-        rightPanel.setLayout(new GridLayout(5, 2));
+        cancelButton.setFont(new Font("Arial", Font.PLAIN, 25));
+        submitButton.setFont(new Font("Arial", Font.PLAIN, 25));
+        rightPanel.setLayout(new GridLayout(5, 2, 10, 10));
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         Font labelFont = new Font("Arial", Font.PLAIN, 25);
         Font textFieldFont = new Font("Arial", Font.PLAIN, 15);
@@ -243,7 +245,7 @@ public class ManagerInventory extends JPanel {
             //Clear the text fields if no row is selected
         }
     }
-    
+
     /**
      * Limits the input of a JTextField to numeric values only.
      *
