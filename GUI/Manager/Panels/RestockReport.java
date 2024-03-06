@@ -47,9 +47,10 @@ public class RestockReport extends JFrame {
 
                 List<String> ingredientNames = new ArrayList<>();
                 List<Integer> counts = new ArrayList<>();
-                fetchData(ingredientNames, counts);
+                List<Integer> minimums = new ArrayList<>();
+                fetchData(ingredientNames, counts, minimums);
 
-                drawReport(g, ingredientNames, counts);
+                drawReport(g, ingredientNames, counts, minimums);
             }
 
             @Override
@@ -70,8 +71,9 @@ public class RestockReport extends JFrame {
      *
      * @param ingredientNames list to store ingredient names
      * @param counts          list to store ingredient counts
+     * @param minimums        list to store ingredient minimum amounts
      */
-    private void fetchData(List<String> ingredientNames, List<Integer> counts) {
+    private void fetchData(List<String> ingredientNames, List<Integer> counts, List<Integer> minimums) {
         String query = "SELECT * FROM ingredients WHERE count < minamount";
 
         try {
@@ -81,8 +83,10 @@ public class RestockReport extends JFrame {
             while (resultSet.next()) {
                 String ingredientName = resultSet.getString("ingredientname");
                 int count = resultSet.getInt("count");
+                int min = resultSet.getInt("minamount");
                 ingredientNames.add(ingredientName);
                 counts.add(count);
+                minimums.add(min);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,19 +100,27 @@ public class RestockReport extends JFrame {
      * @param g              the graphics context
      * @param ingredientNames list of ingredient names
      * @param counts         list of ingredient counts
+     * @param minimums       list of ingredient minimum amounts
      */
-    private void drawReport(Graphics g, List<String> ingredientNames, List<Integer> counts) {
-        int startX = 50;
+    private void drawReport(Graphics g, List<String> ingredientNames, List<Integer> counts, List<Integer> minimums) {
+        int x = 50;
         int startY = 50;
         int rowHeight = 30;
+        int columnWidth = 200;
 
-        int y = startY;
+        g.drawString("Ingredient", x, startY);
+        g.drawString("Current Amount", x + columnWidth, startY);
+        g.drawString("Minimum Amount", x + 2 * columnWidth, startY);
+
+        int y = startY + rowHeight;
         for (int i = 0; i < ingredientNames.size(); i++) {
             String ingredientName = ingredientNames.get(i);
             int count = counts.get(i);
+            int min = minimums.get(i);
 
-            g.drawString(ingredientName, startX, y);
-            g.drawString(String.valueOf(count), startX + 200, y);
+            g.drawString(ingredientName, x, y);
+            g.drawString(String.valueOf(count), x + columnWidth, y);
+            g.drawString(String.valueOf(min), x + 2 * columnWidth, y);
 
             y += rowHeight;
         }
