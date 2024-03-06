@@ -5,10 +5,19 @@ import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.util.Calendar;
 
+/**
+ * ManagerTrends class represents a JPanel for managing various trend reports in a restaurant system.
+ * It includes functionality to generate trend reports such as ProdUsage, Sales Report, Excess Report,
+ * Restock Report, and Order Trend Report based on specified start and end dates.
+ */
 public class ManagerTrends extends JPanel {
     private JTextField startDateField;
     private JTextField endDateField;
 
+    /**
+     * Constructs a ManagerTrends object.
+     * Initializes text fields for start and end dates and buttons for generating different trend reports.
+     */
     public ManagerTrends() {
         // Create text fields for start date and end date
         startDateField = new JTextField(10);
@@ -98,12 +107,24 @@ public class ManagerTrends extends JPanel {
         add(orderTrend);
     }
 
+    /**
+     * Validates a given date string against the format YYYY-MM-DD.
+     *
+     * @param date The date string to be validated.
+     * @return True if the date is in the valid format, false otherwise.
+     */
     private boolean isValidDate(String date) {
         // You can add your own validation logic here
         // For simplicity, we just check if the date matches the format YYYY-MM-DD
         return date.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 
+    /**
+     * Generates and displays a ProdUsage chart based on the specified start and end dates.
+     *
+     * @param startDate The start date for the ProdUsage chart.
+     * @param endDate   The end date for the ProdUsage chart.
+     */
     private void generateProdUsage(String startDate, String endDate) {
         // Create an instance of ProdUsage with appropriate parameters
         Database database = new Database(); // You may need to adjust this depending on your Database class constructor
@@ -115,6 +136,12 @@ public class ManagerTrends extends JPanel {
         prodUsage.setVisible(true);
     }
     
+    /**
+     * Generates and displays a Sales Report based on the specified start and end dates.
+     *
+     * @param startDate The start date for the Sales Report.
+     * @param endDate   The end date for the Sales Report.
+     */
     private void generateSalesReport(String startDate, String endDate) {
         // Create an instance of SalesReport with appropriate parameters
         Database database = new Database(); // You may need to adjust this depending on your Database class constructor
@@ -126,6 +153,11 @@ public class ManagerTrends extends JPanel {
         salesReport.setVisible(true);
     }
     
+    /**
+     * Generates and displays an Excess Report based on the specified start date.
+     *
+     * @param startDate The start date for the Excess Report.
+     */
     private void generateExcessReport(String startDate) {
         // Create an instance of ExcessReport with appropriate parameters
         Database database = new Database(); // You may need to adjust this depending on your Database class constructor
@@ -137,6 +169,9 @@ public class ManagerTrends extends JPanel {
         excessReport.setVisible(true);
     }
     
+    /**
+     * Generates and displays a Restock Report.
+     */
     private void generateRestockReport() {
         // Create an instance of RestockReport with appropriate parameters
         Database database = new Database(); // You may need to adjust this depending on your Database class constructor
@@ -148,6 +183,12 @@ public class ManagerTrends extends JPanel {
         restockReport.setVisible(true);
     }
 
+    /**
+     * Generates and displays an Order Trend Report based on the specified start and end dates.
+     *
+     * @param startDate The start date for the Order Trend Report.
+     * @param endDate   The end date for the Order Trend Report.
+     */
     private void generateOrderTrendReport(String startDate, String endDate) {
         // Create an instance of OrderTrend with appropriate parameters
         OrderTrend orderTrend = new OrderTrend(startDate, endDate);
