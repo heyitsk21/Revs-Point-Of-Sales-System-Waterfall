@@ -4,6 +4,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 /**
  *  A server implementation that handles client requests for mutual exclusion. Outputs to a file ServerLog.txt
+ * 
+ * @author Team 21 Best Table Winners
  */
 class Server {
     /** The port number the server listens on. */

@@ -1,5 +1,7 @@
 /**
  * The sqlObjects class contains several nested static classes that neatly package data to be recived from the database.
+ * 
+ * @author Team 21 Best Table Winners
  */
 public class sqlObjects {
 
