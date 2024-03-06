@@ -333,7 +333,6 @@ public class ManagerMenuItems extends JPanel {
     private class CreateButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            //get the biggest ID and add 1 TODO add category functionality when that is implemented in the front end
             int newID = 700;
             boolean isTaken;
     
@@ -367,7 +366,6 @@ public class ManagerMenuItems extends JPanel {
                 manCmds.deleteMenuItem(toDeleteID);
             }
             refreshGUI();
-            // TODO sql here
         }
     }
     
