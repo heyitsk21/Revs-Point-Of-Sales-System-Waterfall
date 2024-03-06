@@ -6,6 +6,9 @@ import java.util.List;
 /**
  * Generates an order trend report based on menu IDs and counts within a specified date range.
  *
+ * The OrderTrend class creates a graphical representation of the trend in orders between two dates,
+ * showing pairs of menu items and their corresponding counts.
+ *
  * @author Team 21 Best Table Winners
  */
 public class OrderTrend extends JFrame {
@@ -79,6 +82,14 @@ public class OrderTrend extends JFrame {
         return scrollPane;
     }
 
+    /**
+     * Draws the order trend report on the specified graphics context.
+     *
+     * @param g           the graphics context
+     * @param firstMenuID list of first menu IDs
+     * @param secondMenuID list of second menu IDs
+     * @param pairCount   list of pair counts
+     */
     private void drawReport(Graphics g, List<String> firstMenuID, List<String> secondMenuID, List<Integer> pairCount) {
         int startX = 50;
         int startY = 50;
