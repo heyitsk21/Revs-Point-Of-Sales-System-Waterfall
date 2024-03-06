@@ -6,24 +6,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Generates a produce usage chart based on negative inventory changes within a specified date range.
- *
- * @author Team 21 Best Table Winners
- */
 public class ProdUsage extends JFrame {
 
     private Database database;
 
     private static final String CHART_TITLE = "Produce Usage (negative)";
 
-    /**
-     * Constructs a ProdUsage object with the specified database connection and date range.
-     *
-     * @param database  the database connection
-     * @param startDate the start date of the date range
-     * @param endDate   the end date of the date range
-     */
     public ProdUsage(Database database, String startDate, String endDate) {
         super(CHART_TITLE);
         this.database = database;
@@ -34,13 +22,6 @@ public class ProdUsage extends JFrame {
         setSize(800, 600);
     }
 
-    /**
-     * Creates a scrollable panel containing the produce usage chart.
-     *
-     * @param startDate the start date of the date range
-     * @param endDate   the end date of the date range
-     * @return a JScrollPane containing the produce usage chart
-     */
     private JScrollPane createChart(String startDate, String endDate) {
         JPanel chartPanel = new JPanel() {
             @Override
@@ -69,14 +50,6 @@ public class ProdUsage extends JFrame {
         return scrollPane;
     }
 
-    /**
-     * Fetches data from the database for the produce usage chart.
-     *
-     * @param startDate             the start date of the date range
-     * @param endDate               the end date of the date range
-     * @param ingredientNames       list to store ingredient names
-     * @param totalAmountChangedList list to store total amount changed for each ingredient
-     */
     private void fetchData(String startDate, String endDate, List<String> ingredientNames, List<Integer> totalAmountChangedList) {
         String query = "SELECT IL.IngredientID, I.IngredientName, SUM(IL.AmountChanged) AS TotalAmountChanged " +
                 "FROM InventoryLog IL JOIN Ingredients I ON IL.IngredientID = I.IngredientID " +
@@ -101,13 +74,6 @@ public class ProdUsage extends JFrame {
         }
     }
 
-    /**
-     * Draws the produce usage chart on the specified graphics context.
-     *
-     * @param g                     the graphics context
-     * @param ingredientNames       list of ingredient names
-     * @param totalAmountChangedList list of total amount changed for each ingredient
-     */
     private void drawChart(Graphics g, List<String> ingredientNames, List<Integer> totalAmountChangedList) {
         int startX = 150;
         int startY = 50;
@@ -135,11 +101,6 @@ public class ProdUsage extends JFrame {
         }
     }
 
-    /**
-     * The main method to execute the application.
-     *
-     * @param args command-line arguments
-     */
     public static void main(String[] args) {
         Database database = new Database();
         SwingUtilities.invokeLater(() -> {

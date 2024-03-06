@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public class managerCmds{
+public class managerCmds extends Client  {
     /*
      * TODO should include the sequel object or whatever yall use to login here so
      * its shared between all calls
@@ -9,12 +9,11 @@ public class managerCmds{
     Database db;
 
     public managerCmds() {
+        super(false);
         db = new Database();
     }
 
     public sqlObjects.Inventory getInventory() {
-        Client c = new Client(true);
-        c.requestAndWaitForLock();
         try {
             int size = 0;
             PreparedStatement prep;
@@ -51,8 +50,6 @@ public class managerCmds{
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        c.releaseLock();
-        c.quit();
         return null;
     }
 
@@ -434,7 +431,7 @@ public class managerCmds{
             int size = 0;
             PreparedStatement prep;
             ResultSet rs;
-            String cmd = "SELECT DISTINCT MID1, MID2, Count (*) AS count FROM (SELECT n1.itemname AS MID1, n2.itemname AS MID2, t1.OrderID FROM OrderMenuItems t1 JOIN OrderMenuItems t2 ON t1.OrderID = t2.OrderID AND t1.menuID <  t2.MenuID JOIN Orders ON Orders.OrderID = t1.OrderID Join MenuItems n1 ON t1.MenuID = n1.MenuID JOIN MenuItems n2 on n2.MenuID = t2.MenuID WHERE Orders.OrderDateTime BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)) AS doubleJoin  GROUP BY MID1, MID2 ORDER BY count DESC LIMIT 10;";
+            String cmd = "SELECT DISTINCT MID1, MID2, Count (*) AS count FROM (SELECT t1.MenuID AS MID1,t2.MenuID AS MID2, t1.OrderID FROM OrderMenuItems t1 JOIN OrderMenuItems t2 ON t1.OrderID = t2.OrderID AND t1.menuID <  t2.MenuID JOIN Orders ON Orders.OrderID = t1.OrderID WHERE Orders.OrderDateTime BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)) AS doubleJoin  GROUP BY MID1, MID2 ORDER BY count DESC LIMIT 10;";
             prep = db.con.prepareStatement(cmd, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             prep.setString(1, lowerBound);
             prep.setString(2, upperBound);
@@ -444,16 +441,16 @@ public class managerCmds{
             rs.last();
             size = rs.getRow();
 
-            String[] menuID2 = new String[size];
-            String[] menuID1 = new String[size];
+            int[] menuID2 = new int[size];
+            int[] menuID1 = new int[size];
             int[] count = new int[size];
 
             rs.first();
             int counter = 0;
 
             do {
-                menuID1[counter] = rs.getString("mid1");
-                menuID2[counter] = rs.getString("mid2");
+                menuID1[counter] = rs.getInt("mid1");
+                menuID2[counter] = rs.getInt("mid2");
                 count[counter] = rs.getInt("count");
                 counter++;
             }while (rs.next());
@@ -501,5 +498,4 @@ public class managerCmds{
 
     }
 }
-
 
