@@ -3,17 +3,32 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Generates an order trend report based on menu IDs and counts within a specified date range.
+ *
+ * The OrderTrend class creates a graphical representation of the trend in orders between two dates,
+ * showing pairs of menu items and their corresponding counts.
+ *
+ * @author Team 21 Best Table Winners
+ */
 public class OrderTrend extends JFrame {
+
     private String[] menuID1;
     private String[] menuID2;
     private int[] count;
-    String startDate;
-    String endDate;
-    managerCmds manCmds;
-    sqlObjects.OrderingTrendReport myReport;
+    private String startDate;
+    private String endDate;
+    private managerCmds manCmds;
+    private sqlObjects.OrderingTrendReport myReport;
 
     private static final String REPORT_TITLE = "Order Trend Report";
 
+    /**
+     * Constructs an OrderTrend object with the specified date range.
+     *
+     * @param date1 the start date of the report
+     * @param date2 the end date of the report
+     */
     public OrderTrend(String date1, String date2) {
         super(REPORT_TITLE);
         manCmds = new managerCmds();
@@ -31,6 +46,11 @@ public class OrderTrend extends JFrame {
         setSize(800, 600);
     }
 
+    /**
+     * Creates a scrollable panel containing the order trend report.
+     *
+     * @return a JScrollPane containing the order trend report
+     */
     private JScrollPane createReport() {
         JPanel reportPanel = new JPanel() {
             @Override
@@ -62,6 +82,14 @@ public class OrderTrend extends JFrame {
         return scrollPane;
     }
 
+    /**
+     * Draws the order trend report on the specified graphics context.
+     *
+     * @param g           the graphics context
+     * @param firstMenuID list of first menu IDs
+     * @param secondMenuID list of second menu IDs
+     * @param pairCount   list of pair counts
+     */
     private void drawReport(Graphics g, List<String> firstMenuID, List<String> secondMenuID, List<Integer> pairCount) {
         int startX = 50;
         int startY = 50;
@@ -82,6 +110,11 @@ public class OrderTrend extends JFrame {
         }
     }
 
+    /**
+     * The main method to execute the application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         Database database = new Database();
         SwingUtilities.invokeLater(() -> {

@@ -6,12 +6,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Generates a restock report showing ingredients that are below their minimum amount.
+ *
+ * @author Team 21 Best Table Winners
+ */
 public class RestockReport extends JFrame {
 
     private Database database;
 
     private static final String REPORT_TITLE = "Restock Report";
 
+    /**
+     * Constructs a RestockReport object.
+     *
+     * @param database the database connection
+     */
     public RestockReport(Database database) {
         super(REPORT_TITLE);
         this.database = database;
@@ -22,6 +32,11 @@ public class RestockReport extends JFrame {
         setSize(800, 600);
     }
 
+    /**
+     * Creates a scrollable panel containing the restock report.
+     *
+     * @return a JScrollPane containing the restock report
+     */
     private JScrollPane createReport() {
         JPanel reportPanel = new JPanel() {
             @Override
@@ -50,6 +65,12 @@ public class RestockReport extends JFrame {
         return scrollPane;
     }
 
+    /**
+     * Fetches data from the database for the restock report.
+     *
+     * @param ingredientNames list to store ingredient names
+     * @param counts          list to store ingredient counts
+     */
     private void fetchData(List<String> ingredientNames, List<Integer> counts) {
         String query = "SELECT * FROM ingredients WHERE count < minamount";
 
@@ -69,6 +90,13 @@ public class RestockReport extends JFrame {
         }
     }
 
+    /**
+     * Draws the restock report on the specified graphics context.
+     *
+     * @param g              the graphics context
+     * @param ingredientNames list of ingredient names
+     * @param counts         list of ingredient counts
+     */
     private void drawReport(Graphics g, List<String> ingredientNames, List<Integer> counts) {
         int startX = 50;
         int startY = 50;
@@ -86,6 +114,11 @@ public class RestockReport extends JFrame {
         }
     }
 
+    /**
+     * The main method to execute the application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         Database database = new Database(); // Initialize your Database instance
         SwingUtilities.invokeLater(() -> {
