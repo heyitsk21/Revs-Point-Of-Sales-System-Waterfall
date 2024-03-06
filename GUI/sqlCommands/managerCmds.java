@@ -1,12 +1,25 @@
 import java.sql.*;
 
+
+/**
+ * Class to handle various operations related to managers, such as managing inventory, menu items, and orders.
+ * @author best table winners
+ */
 public class managerCmds{
     Database db;
-
+    /**
+     * Constructor to initialize the database connection.
+     */
     public managerCmds() {
         db = new Database();
     }
 
+
+        /**
+     * Retrieves the inventory from the database.
+     * 
+     * @return Inventory object containing the retrieved inventory items.
+     */
     public sqlObjects.Inventory getInventory() {
         try {
             int size = 0;
@@ -46,7 +59,11 @@ public class managerCmds{
         }
         return null;
     }
-
+    /**
+     * Retrieves the menu items from the database.
+     * 
+     * @return Menu object containing the retrieved menu items.
+     */
     public sqlObjects.Menu getMenu() {
         try {
             int size = 0;
@@ -82,7 +99,12 @@ public class managerCmds{
         }
         return null;
     }
-
+   /**
+     * Retrieves the ingredients of a menu item from the database.
+     * 
+     * @param menuItemID ID of the menu item.
+     * @return Ingredients object containing the retrieved ingredients from the given Menu Item.
+     */
     public sqlObjects.MenuItemIngredients getMenuItemIngredients(int menuItemID){
         try{
     
@@ -121,6 +143,11 @@ public class managerCmds{
         return new sqlObjects.MenuItemIngredients(new int[0],new String[0]);
     }
 
+    /**
+     * Retrieves the list of orders from the database.
+     * 
+     * @return OrderList object containing the retrieved orders.
+     */
     public sqlObjects.OrderList getOrders() {
         try {
             int size = 0;
@@ -165,6 +192,20 @@ public class managerCmds{
         return null;
     }
 
+
+    /**
+ * Updates the information of an ingredient in the database.
+ * 
+ * @param ingredientID   The ID of the ingredient to be updated.
+ * @param currentCount   The current count of the ingredient.
+ * @param newName        The new name of the ingredient (null or empty to skip).
+ * @param newPPU         The new price per unit of the ingredient (0 or negative to skip).
+ * @param deltaCount     The change in count of the ingredient.
+ * @param newMinimum     The new minimum amount of the ingredient (0 to skip).
+ * @param logMessage     The log message associated with the update.
+ * @return True if the update was successful, false otherwise.
+ */
+
     public boolean updateIngredient(int ingredientID, int currentCount, String newName, float newPPU, int deltaCount, int newMinimum, String logMessage) {
         if (newName != null && !newName.isEmpty()) {
             String updateNameCmd = "UPDATE Ingredients SET IngredientName = ? WHERE IngredientID = ?;";
@@ -207,6 +248,17 @@ public class managerCmds{
         return true; // Update successful
     }
 
+
+    /**
+ * Adds a new ingredient to the database.
+ * 
+ * @param newID          The ID of the new ingredient.
+ * @param ingredientName The name of the new ingredient.
+ * @param count          The count of the new ingredient.
+ * @param PPU            The price per unit of the new ingredient.
+ * @param minamount      The minimum amount of the new ingredient.
+ * @return True if the addition was successful, false otherwise.
+ */
     public boolean addIngredient(int newID,String ingredientName, int count, float PPU, int minamount){
         String addIngredientCmd = "INSERT INTO Ingredients (IngredientID, Ingredientname, Count, PPU, minamount) VALUES (?,?,?,?,?);";
         try {
@@ -230,6 +282,14 @@ public class managerCmds{
         return true;
     }
 
+
+    /**
+ * Deletes an ingredient from the database.
+ * 
+ * @param ingredientID    The ID of the ingredient to be deleted.
+ * @param ingredientCount The count of the ingredient to be deleted.
+ * @return True if the deletion was successful, false otherwise.
+ */
     public boolean deleteIngredient(int ingredientID, int ingredientCount){
 
         String deleteIngredientFromJoinCmd = String.format("DELETE FROM MenuItemIngredients WHERE IngredientID = %d", ingredientID);
@@ -248,6 +308,15 @@ public class managerCmds{
         return true;
     }
 
+
+    /**
+ * Updates the information of a menu item in the database.
+ * 
+ * @param menuItemID The ID of the menu item to be updated.
+ * @param newName    The new name of the menu item (null or empty to skip).
+ * @param newPrice   The new price of the menu item (0 or negative to skip).
+ * @return True if the update was successful, false otherwise.
+ */
     public boolean updateMenuItem(int menuItemID, String newName, float newPrice){
     
         if (newName != null && !newName.isEmpty()) {
@@ -272,6 +341,15 @@ public class managerCmds{
         return true;
     }
 
+
+    /**
+ * Adds a new menu item to the database.
+ * 
+ * @param newID        The ID of the new menu item.
+ * @param menuItemName The name of the new menu item.
+ * @param price        The price of the new menu item.
+ * @return True if the addition was successful, false otherwise.
+ */
     public boolean addMenuItem(int newID, String menuItemName, float price){
         String addMenuItemCmd = "INSERT INTO MenuItems (MenuID, ItemName, Price) VALUES (?,?,?);";
         try {
@@ -287,6 +365,12 @@ public class managerCmds{
         return true;
     }
 
+    /**
+ * Deletes a menu item from the database.
+ * 
+ * @param menuItemID The ID of the menu item to be deleted.
+ * @return True if the deletion was successful, false otherwise.
+ */
     public boolean deleteMenuItem(int menuItemID){
         String deleteCmd = String.format("DELETE FROM menuitemIngredients WHERE MenuID= %d;", menuItemID);
         db.executeSQL(deleteCmd);
@@ -295,18 +379,41 @@ public class managerCmds{
         return true;
     }
     
+    /**
+ * Adds an ingredient to a menu item in the database.
+ * 
+ * @param menuItemID   The ID of the menu item.
+ * @param ingredientID The ID of the ingredient to be added to the menu item.
+ * @return True if the addition was successful, false otherwise.
+ */
     public boolean addMenuItemIngredient(int menuItemID,int ingredientID){
         String addMenuIngCmd = String.format("INSERT INTO menuitemIngredients (MenuID, IngredientID) values (%d,%d);", menuItemID, ingredientID);
         db.executeSQL(addMenuIngCmd);
         return true;
     }
 
+    /**
+ * Deletes an ingredient from a menu item in the database.
+ * 
+ * @param menuItemID   The ID of the menu item.
+ * @param ingredientID The ID of the ingredient to be deleted from the menu item.
+ * @return True if the deletion was successful, false otherwise.
+ */
     public boolean deleteMenuItemIngredient(int menuItemID, int ingredientID){
         String deleteCmd = String.format("DELETE FROM menuitemIngredients WHERE MenuID= %d AND ingredientID= %d;", menuItemID, ingredientID);
         db.executeSQL(deleteCmd);
         return true;
     }
 
+    /**
+ * Updates the information of an order in the database.
+ * 
+ * @param orderID      The ID of the order to be updated.
+ * @param customerName The new name of the customer (null or empty to skip).
+ * @param basePrice    The new base price of the order (0 or negative to skip).
+ * @param employeeID   The ID of the employee associated with the order (0 or negative to skip).
+ * @return True if the update was successful, false otherwise.
+ */
     public boolean updateOrder(int orderID,String customerName,float basePrice,int employeeID){
         if (customerName != null && !customerName.isEmpty()) {
             String updateNameCmd = "UPDATE orders SET CustomerName = ? WHERE menuid = ?;";
@@ -337,12 +444,24 @@ public class managerCmds{
 
     }
 
+    /**
+ * Deletes an order from the database.
+ * 
+ * @param orderID The ID of the order to be deleted.
+ * @return True if the deletion was successful, false otherwise.
+ */
     public boolean deleteOrder(int orderID){
         String deleteCmd = String.format("DELETE FROM Orders WHERE OrderID= %d;", orderID);
         db.executeSQL(deleteCmd);
         return true;
     }
 
+    
+/**
+ * Generates a restock report of inventory items with counts below their minimum amounts.
+ * 
+ * @return Inventory object containing the inventory items that need restocking.
+ */
     public sqlObjects.Inventory RestockReport(){
         try {
             int size = 0;
@@ -384,10 +503,13 @@ public class managerCmds{
 
     }
 
-    /*
-     * Strings need to be in this format YYYY-MM-DD
-     * Others will throw an SQL Error 
-     */
+/**
+ * Generates a report on ordering trends within a specified date range.
+ * 
+ * @param lowerBound The lower bound of the date range (YYYY-MM-DD).
+ * @param upperBound The upper bound of the date range (YYYY-MM-DD).
+ * @return OrderingTrendReport object containing the ordering trends within the specified date range.
+ */
     public sqlObjects.OrderingTrendReport OrderingTrendReport(String lowerBound, String upperBound){
         try {
             int size = 0;
@@ -425,7 +547,13 @@ public class managerCmds{
 
     }
 
-
+/**
+ * Generates a chart of product usage within a specified date range.
+ * 
+ * @param lowerBound The lower bound of the date range.
+ * @param upperBound The upper bound of the date range.
+ * @return ProductUsageChart object containing the product usage within the specified date range.
+ */
     public sqlObjects.ProductUsageChart ProductUsageChart(java.sql.Date lowerBound, java.sql.Date upperBound){
         try {
             int size = 0;
