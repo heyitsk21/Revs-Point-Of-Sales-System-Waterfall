@@ -40,7 +40,7 @@ class OrderGenerator:
     f2 = None
     f3 = None
 
-    def CreateOrder(self, date, ID):
+    def CreateOrder(self, date, ID, LogId):
         name = random.choice(self.NAMEPOOL)
         #Pick a random name with equal weight to all choices
 
@@ -79,8 +79,11 @@ class OrderGenerator:
         #is an object of the time class https://docs.python.org/3/library/datetime.html#time-objects    
         dt= datetime.combine(date, t)
         self.f1.write(str(ID)+','+name + ',' + str(tax) + ','+ str(totalPrice) +',' + str(dt) + ',' + str(empID)+'\n')
-        #insert into junction table between order and menu items 
-        return
+        for i in range(random.randrange(2,5)):
+            self.f3.write(str(LogId)+','+ str(random.randrange(1,63)) + ',' + str(random.randrange(-5,-1)) + ', Place by Order: ' + str(ID) + ',' + str(dt) + '\n' )
+            LogId += 1
+            #insert into junction table between order and menu items 
+        return LogId + 1
 
     def CalculateTax(self, price):
         price *= 0.0825
@@ -109,15 +112,16 @@ def Main():
     day = date.fromisoformat('2023-02-19')
     delta = timedelta(days = 1)
     ID = 0
+    LogId = 0
     for i in range(0,368):
         # generate a random number of requests per day
         orderMod = random.randrange(0,100)
         for j in range(0,500 + orderMod):
-            og.CreateOrder(day,ID)
+            LogId = og.CreateOrder(day,ID,LogId)
             ID += 1
         if(day == date.fromisoformat('2024-01-19') or day == date.fromisoformat('2023-08-19')):
             for j in range(0,5500):
-                og.CreateOrder(day,ID)
+                LogId  = og.CreateOrder(day,ID, LogId)
                 ID += 1
         day += delta
         print(day)

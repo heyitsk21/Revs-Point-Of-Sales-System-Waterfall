@@ -97,7 +97,7 @@ public class OrderTrend extends JFrame {
         g.drawString("Pair Count", x + 2 * columnWidth, startY);
 
         int y = startY + rowHeight;
-        for (int i = 0; i < firstMenuID.size(); i++) {
+        for (int i = 0; i < firstMenuID.size() - 1; i++) {
             String firstname = firstMenuID.get(i);
             String secondname = secondMenuID.get(i);
             int aPairCount = pairCount.get(i);
