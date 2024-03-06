@@ -10,10 +10,15 @@ public class OrderTrend extends JFrame {
     private int[] menuID1;
     private int[] menuID2;
     private int[] count;
+<<<<<<< HEAD
     String startDate;
     String endDate;
     managerCmds manCmds;
     sqlObjects.OrderingTrendReport myReport;
+=======
+    private managerCmds manCmds;
+    private sqlObjects.OrderingTrendReport myReport;
+>>>>>>> 8d8fed4c5fb306815c83822f4c40493ff1afb1dc
 
     private static final String REPORT_TITLE = "Order Trend Report";
 
@@ -25,8 +30,6 @@ public class OrderTrend extends JFrame {
         this.menuID1 = myReport.menuID1;
         this.menuID2 = myReport.menuID2;
         this.count = myReport.count;
-        startDate = date1;
-        endDate = date2;
 
         JScrollPane scrollPane = createReport();
         setContentPane(scrollPane);
@@ -71,7 +74,11 @@ public class OrderTrend extends JFrame {
         int rowHeight = 30;
         int columnWidth = 200;
 
+<<<<<<< HEAD
         int y = startY;
+=======
+        int y = startY + rowHeight;
+>>>>>>> 8d8fed4c5fb306815c83822f4c40493ff1afb1dc
         for (int i = 0; i < firstMenuID.size(); i++) {
             int firstID = firstMenuID.get(i);
             int secondID = secondMenuID.get(i);

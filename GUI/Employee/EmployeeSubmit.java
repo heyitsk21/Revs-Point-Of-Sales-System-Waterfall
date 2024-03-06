@@ -77,9 +77,7 @@ public class EmployeeSubmit extends JPanel {
                 } 
                 else {
                     int employeeID = Integer.parseInt(IDField.getText());
-                    long startTime = System.nanoTime();
                     boolean success = Employee.empCmds.submitOrder(Employee.selectedMenuIDs, nameField.getText(), employeeID);
-                    long endTime = System.nanoTime();
                     if(!success) {
                         JOptionPane.showMessageDialog(employeeSubmit, "There was an error processing the order, please contact a manager", "Error", JOptionPane.ERROR_MESSAGE);
                     }
