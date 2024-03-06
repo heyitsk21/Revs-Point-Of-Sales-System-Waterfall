@@ -320,7 +320,7 @@ public class ManagerMenuItems extends JPanel {
         initialMenu = manCmds.getMenu();
         menu = formatMenuItems(initialMenu);
         createLeftPanel();
-        createRightPanel();
+        add(rightPanel);
         //Disable buttons until a row is selected
         setButtonState(false);
         repaint();
