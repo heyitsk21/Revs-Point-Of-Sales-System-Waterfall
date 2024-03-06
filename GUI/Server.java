@@ -2,18 +2,27 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
-
+/**
+ *  A server implementation that handles client requests for mutual exclusion. Outputs to a file ServerLog.txt
+ */
 class Server {
+    /** The port number the server listens on. */
     private static final int PORT = 8888;
+    /** Queue to hold incoming client requests. */
     private static BlockingQueue<Socket> requestQueue = new LinkedBlockingDeque<>();
+    /** Flag indicating whether the server has lent out its lock. */
     private static boolean isLocked = false;
     
+    /**
+     * Outputs logs to a file.
+     * 
+     * @param input The string to be logged.
+     */
     synchronized static void outputLogsToFile(String input){
         FileWriter outputFile = null;
         try {
             // outputFile = new FileOutputStream("serverOutput.txt");
             outputFile = new FileWriter("ServerLog.txt", true); //append:true means that it will just add onto the existing file, rather than overwrite (hopefully)
-            // int c;
             outputFile.write(input + "\n");
         } catch (IOException e) {
             System.err.println(e);
@@ -28,6 +37,11 @@ class Server {
         }
     }
 
+        /**
+     * Handles client requests.
+     * 
+     * @param socket The socket connected to the client.
+     */
     private static void handleClientRequest(Socket socket) {
         try (
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -65,7 +79,11 @@ class Server {
                 }
             }
         
-
+    /**
+     * Main method to start the server and accept client connections.
+     * 
+     * @param args Command line arguments (not used).
+     */
     public static void main(String[] args) {
 
         try {
