@@ -8,6 +8,9 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 
+/**
+ * ManagerInventory class represents a JPanel for managing inventory items.
+ */
 public class ManagerInventory extends JPanel {
     // Inventory myInventory = managerCmds.getInventory()
     int[] ingredientIDs; // = myInventory.ingredientIDs;
@@ -22,6 +25,10 @@ public class ManagerInventory extends JPanel {
     Object[][] inventory;
     sqlObjects.Inventory myInventory;
 
+    /**
+     * Constructs a ManagerInventory object.
+     * Initializes the manager commands, formats the inventory, and sets up the layout.
+     */
     public ManagerInventory() {
         this.manCmds = new managerCmds();
         formatInventory();
@@ -30,6 +37,10 @@ public class ManagerInventory extends JPanel {
         createRight();
     }
 
+    /**
+     * Formats the inventory data for display.
+     * Retrieves inventory information using manager commands and sets up the data for display.
+     */
     private void formatInventory(){
         myInventory = manCmds.getInventory();
         this.ingredientIDs = myInventory.ingredientIDs;
@@ -46,6 +57,9 @@ public class ManagerInventory extends JPanel {
         }
     }
 
+    /**
+     * Refreshes the GUI by updating the inventory data and both left and right panels.
+     */
     private void RefreshGUI(){
         formatInventory();
         updateLeft();
@@ -60,6 +74,9 @@ public class ManagerInventory extends JPanel {
     JButton createButton, deleteButton;
     String[] columns;
 
+    /**
+     * Creates and initializes the left panel containing the inventory table.
+     */
     void createLeft() {
         leftPanel = new JPanel(new BorderLayout());
         buttonPanel = new JPanel();
@@ -113,6 +130,10 @@ public class ManagerInventory extends JPanel {
         ListSelectionModel selectionModel = inventoryTable.getSelectionModel();
         selectionModel.addListSelectionListener(e -> rowClicked(e));
     }
+
+    /**
+     * Updates the left panel with the latest inventory data.
+     */
     void updateLeft() {
         inventoryTableModel.setDataVector(inventory, columns);
         inventoryTableModel.setRowCount(ingredientIDs.length);
@@ -130,8 +151,13 @@ public class ManagerInventory extends JPanel {
     JButton cancelButton = new JButton();
     JButton submitButton = new JButton();
 
+    /**
+     * Creates and initializes the right panel containing input fields for updating inventory items.
+     */
     void createRight() {
-        rightPanel.setLayout(new GridLayout(5, 2));
+        cancelButton.setFont(new Font("Arial", Font.PLAIN, 25));
+        submitButton.setFont(new Font("Arial", Font.PLAIN, 25));
+        rightPanel.setLayout(new GridLayout(5, 2, 10, 10));
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         Font labelFont = new Font("Arial", Font.PLAIN, 25);
         Font textFieldFont = new Font("Arial", Font.PLAIN, 15);
@@ -180,6 +206,9 @@ public class ManagerInventory extends JPanel {
         add(rightPanel);
     }
 
+    /**
+     * Updates the right panel with the latest data based on the selected inventory item.
+     */
     void updateRight() {
         if (currIngredientIndex < 0){
             nameInput.setText("");
@@ -194,6 +223,12 @@ public class ManagerInventory extends JPanel {
         }
     }
 
+    /**
+     * Handles the event when a row is selected in the inventory table.
+     * Updates the 'currIngredientIndex' and calls the 'updateRight' method to display details.
+     *
+     * @param event The ListSelectionEvent triggered by selecting a row in the JTable.
+     */
     public void rowClicked(ListSelectionEvent event) {
         currIngredientIndex = inventoryTable.getSelectedRow();
         boolean rowSelected = false;
@@ -211,14 +246,11 @@ public class ManagerInventory extends JPanel {
         }
     }
 
-    //Enable or disable buttons
-    private void setButtonState(boolean enabled) {
-        createButton.setEnabled(true);
-        deleteButton.setEnabled(enabled);
-        cancelButton.setEnabled(enabled);
-        submitButton.setEnabled(enabled);
-    }
-
+    /**
+     * Limits the input of a JTextField to numeric values only.
+     *
+     * @param textField The JTextField to which the numeric input limitation should be applied.
+     */
     private static void limitInputToNumeric(JTextField textField) {
         AbstractDocument document = (AbstractDocument) textField.getDocument();
         document.setDocumentFilter(new DocumentFilter() {
