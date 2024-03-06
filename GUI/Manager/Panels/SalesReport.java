@@ -6,12 +6,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Generates a sales report based on orders within a specified date range.
+ *
+ * @author Team 21 Best Table Winners
+ */
 public class SalesReport extends JFrame {
 
     Database database;
 
     private static final String REPORT_TITLE = "Sales Report";
 
+    /**
+     * Constructs a SalesReport object.
+     *
+     * @param database  the database connection
+     * @param startDate the start date of the report
+     * @param endDate   the end date of the report
+     */
     public SalesReport(Database database, String startDate, String endDate) {
         super(REPORT_TITLE);
         this.database = database;
@@ -22,6 +34,13 @@ public class SalesReport extends JFrame {
         setSize(800, 600);
     }
 
+    /**
+     * Creates a scrollable panel containing the sales report.
+     *
+     * @param startDate the start date of the report
+     * @param endDate   the end date of the report
+     * @return a JScrollPane containing the sales report
+     */
     private JScrollPane createReport(String startDate, String endDate) {
         JPanel reportPanel = new JPanel() {
             @Override
@@ -52,8 +71,23 @@ public class SalesReport extends JFrame {
         return scrollPane;
     }
 
-    private void fetchData(String startDate, String endDate, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales, List<Integer> counts) {
-        String query = "SELECT menuitems.MenuID, menuitems.ItemName, SUM(menuitems.Price) AS TotalSales, COUNT(*) AS OrderCount " + "FROM orders " + "JOIN ordermenuitems ON orders.OrderID = ordermenuitems.OrderID " + "JOIN menuitems ON ordermenuitems.MenuID = menuitems.MenuID " + "WHERE orders.OrderDateTime BETWEEN TO_TIMESTAMP(?, 'YYYY-MM-DD') AND TO_TIMESTAMP(?, 'YYYY-MM-DD') " + "GROUP BY menuitems.MenuID, menuitems.ItemName " + "ORDER BY TotalSales DESC";
+    /**
+     * Fetches data from the database for the sales report.
+     *
+     * @param startDate  the start date of the report
+     * @param endDate    the end date of the report
+     * @param menuIDs    list to store menu IDs
+     * @param itemNames  list to store item names
+     * @param totalSales list to store total sales
+     */
+    private void fetchData(String startDate, String endDate, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales) {
+        String query = "SELECT menuitems.MenuID, menuitems.ItemName, SUM(menuitems.Price) AS TotalSales " +
+                "FROM orders " +
+                "JOIN ordermenuitems ON orders.OrderID = ordermenuitems.OrderID " +
+                "JOIN menuitems ON ordermenuitems.MenuID = menuitems.MenuID " +
+                "WHERE orders.OrderDateTime BETWEEN TO_TIMESTAMP(?, 'YYYY-MM-DD') AND TO_TIMESTAMP(?, 'YYYY-MM-DD') " +
+                "GROUP BY menuitems.MenuID, menuitems.ItemName " +
+                "ORDER BY TotalSales DESC";
 
         try {
             PreparedStatement pstmt = database.con.prepareStatement(query);
@@ -78,8 +112,16 @@ public class SalesReport extends JFrame {
         }
     }
 
-    private void drawReport(Graphics g, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales, List<Integer> counts) {
-        int x = 50;
+    /**
+     * Draws the sales report on the specified graphics context.
+     *
+     * @param g          the graphics context
+     * @param menuIDs    list of menu IDs
+     * @param itemNames  list of item names
+     * @param totalSales list of total sales
+     */
+    private void drawReport(Graphics g, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales) {
+        int startX = 50;
         int startY = 50;
         int rowHeight = 30;
         int columnWidth = 200;
@@ -105,6 +147,11 @@ public class SalesReport extends JFrame {
         }
     }
 
+    /**
+     * The main method to execute the application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         Database database = new Database();
         SwingUtilities.invokeLater(() -> {
