@@ -6,12 +6,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Generates a sales report based on orders within a specified date range.
+ *
+ * @author Team 21 Best Table Winners
+ */
 public class SalesReport extends JFrame {
 
     Database database;
 
     private static final String REPORT_TITLE = "Sales Report";
 
+    /**
+     * Constructs a SalesReport object.
+     *
+     * @param database  the database connection
+     * @param startDate the start date of the report
+     * @param endDate   the end date of the report
+     */
     public SalesReport(Database database, String startDate, String endDate) {
         super(REPORT_TITLE);
         this.database = database;
@@ -22,6 +34,13 @@ public class SalesReport extends JFrame {
         setSize(800, 600);
     }
 
+    /**
+     * Creates a scrollable panel containing the sales report.
+     *
+     * @param startDate the start date of the report
+     * @param endDate   the end date of the report
+     * @return a JScrollPane containing the sales report
+     */
     private JScrollPane createReport(String startDate, String endDate) {
         JPanel reportPanel = new JPanel() {
             @Override
@@ -33,10 +52,9 @@ public class SalesReport extends JFrame {
                 List<Integer> menuIDs = new ArrayList<>();
                 List<String> itemNames = new ArrayList<>();
                 List<Double> totalSales = new ArrayList<>();
-                List<Integer> counts = new ArrayList<>();
-                fetchData(startDate, endDate, menuIDs, itemNames, totalSales, counts);
+                fetchData(startDate, endDate, menuIDs, itemNames, totalSales);
 
-                drawReport(g, menuIDs, itemNames, totalSales, counts);
+                drawReport(g, menuIDs, itemNames, totalSales);
             }
 
             @Override
@@ -52,8 +70,23 @@ public class SalesReport extends JFrame {
         return scrollPane;
     }
 
-    private void fetchData(String startDate, String endDate, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales, List<Integer> counts) {
-        String query = "SELECT menuitems.MenuID, menuitems.ItemName, SUM(menuitems.Price) AS TotalSales, COUNT(*) AS OrderCount " + "FROM orders " + "JOIN ordermenuitems ON orders.OrderID = ordermenuitems.OrderID " + "JOIN menuitems ON ordermenuitems.MenuID = menuitems.MenuID " + "WHERE orders.OrderDateTime BETWEEN TO_TIMESTAMP(?, 'YYYY-MM-DD') AND TO_TIMESTAMP(?, 'YYYY-MM-DD') " + "GROUP BY menuitems.MenuID, menuitems.ItemName " + "ORDER BY TotalSales DESC";
+    /**
+     * Fetches data from the database for the sales report.
+     *
+     * @param startDate  the start date of the report
+     * @param endDate    the end date of the report
+     * @param menuIDs    list to store menu IDs
+     * @param itemNames  list to store item names
+     * @param totalSales list to store total sales
+     */
+    private void fetchData(String startDate, String endDate, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales) {
+        String query = "SELECT menuitems.MenuID, menuitems.ItemName, SUM(menuitems.Price) AS TotalSales " +
+                "FROM orders " +
+                "JOIN ordermenuitems ON orders.OrderID = ordermenuitems.OrderID " +
+                "JOIN menuitems ON ordermenuitems.MenuID = menuitems.MenuID " +
+                "WHERE orders.OrderDateTime BETWEEN TO_TIMESTAMP(?, 'YYYY-MM-DD') AND TO_TIMESTAMP(?, 'YYYY-MM-DD') " +
+                "GROUP BY menuitems.MenuID, menuitems.ItemName " +
+                "ORDER BY TotalSales DESC";
 
         try {
             PreparedStatement pstmt = database.con.prepareStatement(query);
@@ -65,12 +98,10 @@ public class SalesReport extends JFrame {
                 int menuID = resultSet.getInt("MenuID");
                 String itemName = resultSet.getString("ItemName");
                 double totalSale = resultSet.getDouble("TotalSales");
-                int count = resultSet.getInt("OrderCount");
 
                 menuIDs.add(menuID);
                 itemNames.add(itemName);
                 totalSales.add(totalSale);
-                counts.add(count);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -78,33 +109,39 @@ public class SalesReport extends JFrame {
         }
     }
 
-    private void drawReport(Graphics g, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales, List<Integer> counts) {
-        int x = 50;
+    /**
+     * Draws the sales report on the specified graphics context.
+     *
+     * @param g          the graphics context
+     * @param menuIDs    list of menu IDs
+     * @param itemNames  list of item names
+     * @param totalSales list of total sales
+     */
+    private void drawReport(Graphics g, List<Integer> menuIDs, List<String> itemNames, List<Double> totalSales) {
+        int startX = 50;
         int startY = 50;
         int rowHeight = 30;
         int columnWidth = 200;
 
-        g.drawString("Menu ID", x, startY);
-        g.drawString("Item Name", x + columnWidth, startY);
-        g.drawString("Sales", x + 2 * columnWidth, startY);
-        g.drawString("Amount Sold", x + 3*columnWidth, startY);
-
-        int y = startY + rowHeight;
+        int y = startY;
         for (int i = 0; i < menuIDs.size(); i++) {
             int menuID = menuIDs.get(i);
             String itemName = itemNames.get(i);
             double totalSale = totalSales.get(i);
-            int count = counts.get(i);
 
-            g.drawString(String.valueOf(menuID), x, y);
-            g.drawString(itemName, x + columnWidth, y);
-            g.drawString("$" + String.format("%.2f", totalSale), x + 2 * columnWidth, y);
-            g.drawString(String.valueOf(count), x + 3 * columnWidth, y);
+            g.drawString(String.valueOf(menuID), startX, y);
+            g.drawString(itemName, startX + columnWidth, y);
+            g.drawString(String.format("%.2f", totalSale), startX + 2 * columnWidth, y);
 
             y += rowHeight;
         }
     }
 
+    /**
+     * The main method to execute the application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         Database database = new Database();
         SwingUtilities.invokeLater(() -> {
