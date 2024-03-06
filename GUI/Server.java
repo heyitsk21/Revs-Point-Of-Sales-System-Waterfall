@@ -38,12 +38,10 @@ class Server {
                 // System.out.println("Received request from client: " + clientRequest);
                 if (clientRequest.equals("REQUEST")) {
                     if (!isLocked) {
-                        outputLogsToFile("GRANTED");
-                        // out.println("GRANTED");
+                        out.println("GRANTED");
                         isLocked = true;
                     } else {
-                        outputLogsToFile("DENIED");
-                        // out.println("DENIED");
+                        out.println("DENIED");
                         requestQueue.add(socket);
                     }
                 } else if (clientRequest.equals("RELEASE")) {
@@ -51,7 +49,6 @@ class Server {
                         Socket nextClient = requestQueue.poll();
                         PrintWriter toNext = new PrintWriter(nextClient.getOutputStream(), true);
                         toNext.println("GRANTED");
-                        outputLogsToFile("GRANTED");
                     } 
                     else{
                        isLocked = false;

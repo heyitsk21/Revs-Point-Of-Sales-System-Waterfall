@@ -3,13 +3,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-public class employeeCmds extends Client {
+public class employeeCmds{
 
     Database db;
 
     public employeeCmds() 
     {
-        super(false);
         db = new Database();
     }
 
@@ -50,6 +49,8 @@ public class employeeCmds extends Client {
     }
 
     public boolean submitOrder(List<Integer> selectedMenuIDs, String customerName, int employeeID) {
+        Client c = new Client(true);
+        c.requestAndWaitForLock();
         float totalPrice = 0; 
         try {
             // STARTS TRANSACTION MODE, REMOVED IN FINALLY LOOP
@@ -98,7 +99,8 @@ public class employeeCmds extends Client {
                     // COMPARE IF INGREDIENTS LESS THAN REQUIRED
                     Integer currCount = ingredientToCountInOrder.getOrDefault(ingredientID,0);
                     if (availableCount - currCount < requiredCount) {
-                        
+                        c.releaseLock();
+                        c.quit();
                         db.con.rollback(); // Rollback transaction
                         return false;
                     }
@@ -151,7 +153,8 @@ public class employeeCmds extends Client {
             
             // COMMIT TRANSACTION
             db.con.commit();
-            
+            c.releaseLock();
+            c.quit();
             // IF SUCCESS, RETURN TRUE
             return true;
         } catch (SQLException e) {
@@ -162,6 +165,8 @@ public class employeeCmds extends Client {
             } catch (SQLException ex) {
                 System.err.println(ex.getMessage());
             }
+            c.releaseLock();
+            c.quit();
             return false;
         } finally {
             try {
