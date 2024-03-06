@@ -8,18 +8,35 @@ import java.sql.Statement;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
+/**
+ * The `Database` class handles the connection to a PostgreSQL database and provides methods
+ * to execute SQL queries and commands.
+ * 
+ * @author Team 21 Best Table Winners
+ */
 public class Database {
 
     Connection con;
 
+    /**
+     * Constructs a new `Database` object and establishes a connection to the database.
+     */
     public Database() {
         con = connectToDatabase();
     }
 
+    /**
+     * Closes the database connection when the object is garbage collected.
+     */
     protected void finalize() {
         closeConnection();
     }
 
+    /**
+     * Establishes a connection to the PostgreSQL database using credentials from a "login.txt" file.
+     * 
+     * @return The database connection.
+     */
     private Connection connectToDatabase() {
         // Read credentials from login.txt
         String database_user = "";
@@ -46,6 +63,12 @@ public class Database {
         return conn;
     }
 
+    /**
+     * Executes an SQL query or command and returns the result set for SELECT queries.
+     * 
+     * @param sql The SQL query or command to execute.
+     * @return The result set for SELECT queries; null for non-SELECT queries.
+     */
     public ResultSet executeSQL(String sql) {
         ResultSet result = null;
 
@@ -64,6 +87,9 @@ public class Database {
         return result;
     }
 
+    /**
+     * Closes the database connection.
+     */
     public void closeConnection() {
         try {
             con.close();
