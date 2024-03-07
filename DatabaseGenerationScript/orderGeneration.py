@@ -80,7 +80,7 @@ class OrderGenerator:
         dt= datetime.combine(date, t)
         self.f1.write(str(ID)+','+name + ',' + str(tax) + ','+ str(totalPrice) +',' + str(dt) + ',' + str(empID)+'\n')
         for i in range(random.randrange(2,5)):
-            self.f3.write(str(LogId)+','+ str(random.randrange(1,63)) + ',' + str(random.randrange(-5,-1)) + ', Place by Order: ' + str(ID) + ',' + str(dt) + '\n' )
+            self.f3.write(str(random.randrange(1,63)) + ',' + str(random.randrange(-5,-1)) + ', Place by Order: ' + str(ID) + ',' + str(dt) + '\n' )
             LogId += 1
             #insert into junction table between order and menu items 
         return LogId + 1
@@ -97,7 +97,7 @@ class OrderGenerator:
         self.f3 = open("InventoryLog.csv", "w")
         self.f1.write("OrderID,CustomerName,TaxPrice,BasePrice,OrderDateTime,EmployeeID\n")
         self.f2.write("OrderID,MenuID\n")
-        self.f3.write("LogID, IngredientID, AmountChanged,LogMessage, LogDateTime\n")
+        self.f3.write(" IngredientID, AmountChanged,LogMessage, LogDateTime\n")
 
     def __del__(self):
         self.f1.close()

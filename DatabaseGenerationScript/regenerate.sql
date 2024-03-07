@@ -97,7 +97,7 @@ CREATE TABLE OrderMenuItems (
 
 \COPY Orders (OrderID, CustomerName, TaxPrice, BasePrice, OrderDateTime, EmployeeID) FROM 'DatabaseGenerationScript/Orders.csv' DELIMITER ',' CSV HEADER;
 
-\COPY InventoryLog (LogID, IngredientID, AmountChanged, LogMessage, LogDateTime) FROM 'DatabaseGenerationScript/InventoryLog.csv' DELIMITER ',' CSV HEADER;
+\COPY InventoryLog (IngredientID, AmountChanged, LogMessage, LogDateTime) FROM 'DatabaseGenerationScript/InventoryLog.csv' DELIMITER ',' CSV HEADER;
 
 \COPY OrderMenuItems  (OrderID, MenuID) FROM 'DatabaseGenerationScript/JunctionOrdersMenu.csv' DELIMITER ',' CSV HEADER;
 

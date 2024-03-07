@@ -86,7 +86,7 @@ public class ExcessReport extends JFrame {
                        "      AND logdatetime BETWEEN CAST(? AS TIMESTAMP) AND NOW() " +
                        "    GROUP BY ingredientid " +
                        ") il ON i.ingredientid = il.ingredientid " +
-                       "WHERE (il.total_sold IS NULL OR il.total_sold < 0.1 * i.count)";
+                       "WHERE (il.total_sold IS NULL OR -1*il.total_sold < 0.1 * i.count)";
 
         try {
             PreparedStatement pstmt = database.con.prepareStatement(query);
